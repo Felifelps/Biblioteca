@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<link rel='stylesheet' href={{url_for('static', filename='css.css')}}>
+</head>
+<body>
+    <form method="post">
+        <input type='text' name='username' placeholder='Digite ou crie um username'>
+        <br>
+        <input type='password' name='password' placeholder='Digite sua senha'>
+        <br>
+        <input type=submit value='Login'>
+    </form>
+    <p>Não tem uma conta? <a href='/signup'>Crie uma.</a></p>
+</body>
+</html>

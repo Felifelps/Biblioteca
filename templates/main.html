@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Main</title>
+<link rel='stylesheet' href={{url_for('static', filename='css.css')}}>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        <b>{{ messages[-1] }}</b>
+        {% if logged == True %}
+            <p>Bem-vindo {{ username }}!</p>
+            <a href={{ url_for('logout') }}><button> Logout </button></a>
+            <br>
+            {% if files %}
+                <p> Seus arquivos </p>
+                <ul>
+                    {% for file in files %}
+                        <li><a href="/{{ username }}/{{ file.id }}/download" download>{{ file.name }} | {{ file.upload_date.strftime('%d/%m/%y') }} </a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Nenhum arquivo enviado</p>
+            {% endif %}
+            <br>
+        {% else %}
+            <p> Nenhum usuário logado. Fazer <a href={{ url_for('login') }}>login</a>?</p>
+        {% endif %}
+    {% endwith %}
+     
+    <form method='POST' enctype='multipart/form-data' action={{ url_for('upload') }}>
+        <label for='file'>Faça upload de um arquivo</label>
+        <br>
+        <br>
+        <input type='file' name='file' id='file'>
+        <br>
+        <br>
+        <input type='submit'>
+    </form>
+</body>
+</html>
