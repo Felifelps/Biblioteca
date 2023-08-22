@@ -5,6 +5,8 @@ from werkzeug.utils import secure_filename
 from pee_wee import User, File, db
 app = Flask(__name__)
 
+port = int(os.environ.get("PORT", 5000))
+
 app.secret_key = 'b3d0e0519f154a4b2978d1ed3b861bc6f6dd7d7832b2156955f00102386cb194'
 
 @app.before_request
@@ -110,12 +112,11 @@ def download(username, fileid):
             username
         ),
         file.name,
-        
     )
 
 @app.errorhandler(404)
 def page_not_found(error):
     return '<h1>Meio perdido?</h1><p>Página não encontrada, <b>404 NOT FOUND</b></p>', 404
 
-#if __name__ == '__main__':
-#    app.run('0.0.0.0', debug=True)
+if __name__ == "__main__":
+    app.run(port=port)
