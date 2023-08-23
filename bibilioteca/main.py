@@ -1,8 +1,6 @@
 from flask import Flask, url_for, flash, render_template, request, make_response, redirect, abort, session, send_from_directory, send_file
-from markupsafe import escape
 import os, datetime
-from werkzeug.utils import secure_filename
-from pee_wee import User, File, db
+from bibilioteca.pee_wee import User, File, db
 app = Flask(__name__)
 
 port = int(os.environ.get("PORT", 5000))

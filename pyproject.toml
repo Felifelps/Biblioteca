@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "bibilioteca"
+version = "0.1.0"
+description = ""
+authors = ["Felifelps <felipefelipe23456@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bcrypt = "^4.0.1"
+flask = "^2.3.3"
+peewee = "^3.16.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
