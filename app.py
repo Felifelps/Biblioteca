@@ -1,3 +1,3 @@
-import webbrowser
+from api import app
 
-webbrowser.open('http://localhost:5000')
+app.run(debug=True, host='0.0.0.0')
