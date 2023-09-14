@@ -1,7 +1,14 @@
 from flask import Flask
 from flask import render_template
+from flask_cors import CORS
 
 app = Flask('Biblioteca')
+
+cors = CORS(app, resources={
+    r"/*": {
+        "origins": "*"
+    }
+})
 
 #Search books page
 @app.route('/search/')
