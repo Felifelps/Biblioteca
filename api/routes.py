@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 from flask_cors import CORS
+from api.data_handler import DataHandler
 
 app = Flask('Biblioteca')
 
@@ -66,6 +67,11 @@ def delete_bookcase(id):
     return '<h1>Delete bookcases</h1>'
 
 #Main page
-@app.route('//')
+@app.route('/', methods=["GET", "POST"])
 def main():
+    if request.method == 'POST':
+        new_file = open('teste.file', 'wb')
+        for i in request.files['file']:
+            new_file.write(i)
+        DataHandler().upload_file(name)
     return render_template('index.html')

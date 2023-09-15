@@ -1,17 +1,20 @@
 import firebase_admin, datetime, os
 from firebase_admin import firestore_async, credentials, storage
 from bcrypt import gensalt, hashpw, checkpw
+from threading import Thread
 
 firebase_admin.initialize_app(
-    credentials.Certificate(os.path.join('credentials', 'credentials.json'))
+    credentials.Certificate(os.path.join('.credentials', 'credentials.json')),
+    {"storageBucket": "biblioteca-inteligente-72a6c.appspot.com"}
 )
 
 class DataHandler:
     DB = firestore_async.client()
     USERS = DB.collection('users')
+    bucket = storage.bucket()
     
-    def new_user(self, username, password):
-        if self.get_user(username) != False: return False
+    async def new_user(self, username, password):
+        if await self.get_user(username) != False: return False
         salt = gensalt()
         user_data = {
             'username': username,
@@ -19,15 +22,16 @@ class DataHandler:
             'password': self.hash_password(password, salt),
             'files': 0
         }
-        self.USERS.document(username).set(user_data)
-        self.USERS.document(username).collection('files')
+        user = await self.USERS.document(username)
+        await user.set(user_data)
+        await user.collection('files')
         return self.get_user(username)
     
-    def get_users(self, only_ids=True):
-        return [user.id if only_ids else user.to_dict() for user in self.USERS.stream()]
+    async def get_users(self, only_ids=True):
+        return [user.id if only_ids else user.to_dict() async for user in self.USERS.stream()]
     
-    def get_user(self, username, password_and_salt=False):
-        for user in self.get_users(False):
+    async def get_user(self, username, password_and_salt=False):
+        for user in await self.get_users(False):
             if user['username'] == username: 
                 if not password_and_salt:
                     user.pop('password')
@@ -35,55 +39,60 @@ class DataHandler:
                 return user
         return False
     
-    def get_user_files(self, username, only_ids=True):
+    async def get_user_files(self, username, only_ids=True):
         files = []
-        for file in self.USERS.document(username).collection('files').stream():
-            print(file)
+        async for file in self.USERS.document(username).collection('files').stream():
             files.append(file.id if only_ids else file.to_dict())
         return files
     
     def hash_password(self, password, salt):
         return hashpw(bytes(str(password), encoding='utf-8'), salt)
     
-    def check_password(self, username, password):
-        hashed_password = bytes(self.get_user(username, password_and_salt=True)['password'])
+    async def check_password(self, username, password):
+        hashed_password = bytes(await self.get_user(username, password_and_salt=True)['password'])
         return checkpw(bytes(str(password), encoding='utf-8'), hashed_password)
     
-    def new_file(self, username, filename):
+    async def new_file(self, username, file_obj):
         '''
         quando o usuáro mandar um arquivo, ele fica armazenado temporariamente na pasta temporary
         o servidor manda esse arquivo para o google drive, salva o registro dele no banco de dados e
         apaga o temporário depois
         '''
-        id = self.get_user(username)['files'] + 1
+        id = await self.get_user(username)['files'] + 1
         file_data = {
             'id': id,
-            'filename': filename,
+            'filename': file_obj.filename,
             'upload_date': datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         }
-        temporary_path = os.path.join('temporary', filename)
-        self.DRIVE.upload_file(temporary_path, file_name=f'{username}-{id}-{filename}')
-        self.remove_all_temp_file()
-        self.DB.document(f'users/{username}/files/{id}').set(file_data)
-        self.USERS.document(username).update({'files': id})
+        self.upload_file(file_obj)
+        await self.DB.document(f'users/{username}/files/{id}').set(file_data)
+        await self.USERS.document(username).update({'files': id})
+    
+    def upload_file(self, file_obj):
+        try:
+            blob = self.bucket.blob(file_obj.filename)
+        except:
+            blob = self.bucket.blob(file_obj.name)
+        
+        Thread(target=lambda: blob.upload_from_file(file_obj)).start()
     
     def remove_all_temp_file(self):
         for file in os.listdir('temporary'):
             os.remove(os.path.join('temporary', file))
     
-    def get_file(self, username, id):
-        for file in self.get_user_files(username, only_ids=False):
+    async def get_file(self, username, id):
+        for file in await self.get_user_files(username, only_ids=False):
             print(str(file['id']) == str(id), id)
             if str(file['id']) == str(id): return file
         return False
 
-    def get_file_by_name(self, username, filename):
-        for file in self.get_user_files(username, only_ids=False):
+    async def get_file_by_name(self, username, filename):
+        for file in await self.get_user_files(username, only_ids=False):
             if file['filename'] == filename: return file
         return False
     
-    def delete_file(self, username, id):
-        self.DRIVE.delete_file(f'{username}-{id}-{self.get_file(username, id)["filename"]}')
+    async def delete_file(self, username, id):
+        self.bucket.blob()
         self.DB.document(f'users/{username}/files/{id}').delete()
 
     def delete_user(self, username):
@@ -103,6 +112,3 @@ class DataHandler:
             return file['filename']
         except:
             return False
-
-
-
