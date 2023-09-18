@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask import render_template
 from flask_cors import CORS
 from api.data_handler import DataHandler
+import asyncio, os
 
 app = Flask('Biblioteca')
 
@@ -66,12 +67,17 @@ def edit_bookcase(id):
 def delete_bookcase(id):
     return '<h1>Delete bookcases</h1>'
 
+#Sign up
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    if request.method == 'POST':
+        print(request.form)
+        asyncio.ensure_future(DataHandler().new_user(**request.form))
+    return render_template('user.html')
+
 #Main page
 @app.route('/', methods=["GET", "POST"])
 def main():
     if request.method == 'POST':
-        new_file = open('teste.file', 'wb')
-        for i in request.files['file']:
-            new_file.write(i)
-        DataHandler().upload_file(name)
+        DataHandler().upload_file(request.files['file'])
     return render_template('index.html')
