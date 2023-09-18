@@ -79,5 +79,5 @@ def signup():
 @app.route('/', methods=["GET", "POST"])
 def main():
     if request.method == 'POST':
-        DataHandler().upload_file(request.files['file'])
+        DataHandler().upload_user_images('2018125194-3', request.files['file'])
     return render_template('index.html')

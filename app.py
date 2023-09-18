@@ -16,11 +16,8 @@ async def main():
     
     await DataHandler().delete_user('2018125194-3')
     '''
-    print(DataHandler().get_file_by_name(''))
+    
 
-loop = asyncio.new_event_loop()
-loop.run_until_complete(main())
-
-
-
-#app.run(debug=True, host='0.0.0.0')
+#loop = asyncio.new_event_loop()
+#loop.run_until_complete(main())
+app.run(debug=True, host='0.0.0.0')
