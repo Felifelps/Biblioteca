@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask import render_template
 from flask_cors import CORS
-from api.data_handler import DataHandler
 import asyncio, os
 
 app = Flask('Biblioteca')
@@ -71,7 +70,6 @@ def delete_bookcase(id):
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     if request.method == 'POST':
-        print(request.form)
         asyncio.ensure_future(DataHandler().new_user(**request.form))
     return render_template('user.html')
 
