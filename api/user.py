@@ -1,14 +1,29 @@
 from api.connector import Connector
-import datetime, asyncio
+import datetime
 
 class User(Connector):
-    def user_exists(RG):
-        def inner(self, func):
-            if 'error' in asyncio.ensure_future(self.get(RG)): 
-                return self.error('Usuário não encontrado.')
-            return asyncio.ensure_future(func()) 
-        return inner
+    def user_exists(exists=True):
+        def decorator(func):
+            async def wrapper(*args, **kwargs):
+                self, RG, *_ = args
+                if RG in await self.all() != exists: 
+                    return self.error(f'Usuário {"não encontrado." if exists else "já existente."}')
+                return await func(*args, **kwargs)
+            return wrapper
+        return decorator
     
+    async def all(self, only_ids=True):
+        return [i.id if only_ids else i.to_dict() async for i in self.USERS.stream()]
+    
+    async def get(self, RG):
+        try:
+            async for user in self.USERS.where(filter=self.field_filter('RG', '==', RG)).stream():
+                return user.to_dict()
+            return self.error('Usuário não encontrado.')
+        except Exception as e:
+            return self.error('Um erro ocorreu.', str(e))
+    
+    @user_exists(False)
     async def new(
         self, 
         RG,
@@ -23,7 +38,6 @@ class User(Connector):
         escola="",
         curso_serie=""
     ):
-        if 'error' not in await self.get(RG): return self.error('RG já cadastrado.')
         user_data = {
             'RG': RG,
             'nome': nome,
@@ -39,29 +53,30 @@ class User(Connector):
             'data_cadastro': datetime.datetime.today().strftime('%d/%m/%y'),
             'valido': False        
         }
-        await self.USERS.document(RG).set(user_data)
-        return user_data
+        try:
+            await self.USERS.document(RG).set(user_data)
+            return user_data
+        except Exception as e:
+            return self.error('Um erro ocorreu', str(e))
     
-    async def update(self, RG, *kwargs):
-        await self.USERS.document(RG).update(kwargs)
+    @user_exists()
+    async def update(self, RG, **kwargs):
+        try:
+            await self.USERS.document(RG).update(kwargs)
+        except Exception as e:
+            return self.error('Não foi possível atualizar.', str(e))
     
-    @user_exists
+    @user_exists()
     async def delete(self, RG):
         try:
             await self.USERS.document(RG).delete()
-        except:
-            return self.error('Não foi possível excluir')
-        
-    async def all(self, only_ids=True):
-        return [i.id if only_ids else i.to_dict() async for i in self.USERS.list_documents()]
+        except Exception as e:
+            return self.error('Não foi possível excluir.', str(e))
     
-    async def get(self, RG):
-        async for user in self.USERS.where(filter=self.field_filter('RG', '==', RG)).stream():
-            return user.to_dict()
-        return self.error('Usuário não encontrado')
-    
+    @user_exists()
     async def validate(self, RG):
-        await self.USERS.document(RG).update({
-            'valido': True
-        })
+        try:
+            await self.USERS.document(RG).update({'valido': True})
+        except Exception as e:
+            return self.error('Não foi possível validar.', str(e))
         

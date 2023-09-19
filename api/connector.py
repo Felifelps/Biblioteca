@@ -15,8 +15,11 @@ class Connector:
     bucket = storage.bucket()
     field_filter = FieldFilter
     
-    def error(self, error):
-        return {'error': error}
+    def error(self, error, log=None):
+        message = {'message': error}
+        if log: 
+            message['log'] = log
+        return message
     
 '''
 cdds = {

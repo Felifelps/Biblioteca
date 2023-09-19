@@ -1,12 +1,30 @@
 from api.connector import Connector
 
 class Book(Connector):
-    async def __init__(self):
-        self.id = 0
-        print(self.BOOKS.count().stream())
+    def book_exists(exists=True):
+        def decorator(func):
+            async def wrapper(*args, **kwargs):
+                self, RG = args[0], args[1]
+                if 'message' in await self.get(RG) == exists: 
+                    return self.error('Livro não encontrado.')
+                return await func(*args, **kwargs)
+            return wrapper
+        return decorator
     
-    async def new_book(
-        self, 
+    async def all(self, only_ids=True):
+        return [i.id if only_ids else i.to_dict() async for i in self.bookS.stream()]
+    
+    async def get(self, RG):
+        try:
+            async for book in self.bookS.where(filter=self.field_filter('RG', '==', RG)).stream():
+                return book.to_dict()
+            return self.error('Livro não encontrado.')
+        except Exception as e:
+            return self.error('Um erro ocorreu.', str(e))
+    
+    @book_exists(False)
+    async def new(
+        self,  
         titulo,
         autor,
         editora,
@@ -16,7 +34,6 @@ class Book(Connector):
         estante,
         prateleira
     ):
-        if await self.get_book(self.id) == None: return False
         book_data = {
             'id': self.id,
             'titulo': titulo,
@@ -29,25 +46,31 @@ class Book(Connector):
             'prateleira': prateleira,
             'disponivel': True     
         }
-        await self.BOOKS.document(self.id).set(book_data)
-        return book_data
+        try:
+            await self.bookS.document(RG).set(book_data)
+            return book_data
+        except Exception as e:
+            return self.error('Um erro ocorreu', str(e))
     
-    async def update_book(self, RG, *kwargs):
-        await self.bookS.document(RG).update(kwargs)
-        
-    async def delete_book(self, RG):
-        await self.bookS.document(RG).delete()
+    @book_exists()
+    async def update(self, RG, **kwargs):
+        try:
+            await self.bookS.document(RG).update(kwargs)
+        except Exception as e:
+            return self.error('Não foi possível atualizar.', str(e))
     
-    async def get_books(self, only_ids=True):
-        return [book.id if only_ids else book.to_dict() async for book in self.bookS.stream()]
+    @book_exists()
+    async def delete(self, RG):
+        try:
+            await self.bookS.document(RG).delete()
+        except Exception as e:
+            return self.error('Não foi possível excluir.', str(e))
     
-    async def get_book(self, RG):
-        for book in await self.get_books(False):
-            if book['RG'] == RG: return book
-        return False
-    
-    async def validate_book(self, RG):
-        await self.bookS.document(RG).update({
-            'valido': True
-        })
+    @book_exists()
+    async def validate(self, RG):
+        try:
+            await self.bookS.document(RG).update({'valido': True})
+        except Exception as e:
+            return self.error('Não foi possível validar.', str(e))
+
         
