@@ -1,31 +1,27 @@
 from api.connector import Connector
 import datetime
 
-class User(Connector):
-    def user_exists(exists=True):
-        def decorator(func):
-            async def wrapper(*args, **kwargs):
-                self, RG, *_ = args
-                if RG in await self.all() != exists: 
-                    return self.error(f'Usuário {"não encontrado." if exists else "já existente."}')
-                return await func(*args, **kwargs)
-            return wrapper
-        return decorator
+class User:
+    def user_exists(func):
+        async def wrapper(*args, **kwargs):
+            RG, *_ = args
+            if RG not in await User.all(): 
+                return Connector.message(f'Usuário não encontrado.')
+            return await func(*args, **kwargs)
+        return wrapper
     
-    async def all(self, only_ids=True):
-        return [i.id if only_ids else i.to_dict() async for i in self.USERS.stream()]
+    @Connector.catch_error
+    async def all(only_ids=True):
+        return [user.id if only_ids else user.to_dict() async for user in Connector.USERS.stream()]
     
-    async def get(self, RG):
-        try:
-            async for user in self.USERS.where(filter=self.field_filter('RG', '==', RG)).stream():
-                return user.to_dict()
-            return self.error('Usuário não encontrado.')
-        except Exception as e:
-            return self.error('Um erro ocorreu.', str(e))
+    @Connector.catch_error
+    async def get(RG):
+        async for user in Connector.USERS.where(filter=Connector.field_filter('RG', '==', RG)).stream():
+            return user.to_dict()
+        return Connector.message('Usuário não encontrado.')
     
-    @user_exists(False)
-    async def new(
-        self, 
+    @Connector.catch_error
+    async def new( 
         RG,
         nome,
         data_nascimento,
@@ -38,6 +34,8 @@ class User(Connector):
         escola="",
         curso_serie=""
     ):
+        if RG in await User.all(): 
+            return Connector.message('Usuário já existente')
         user_data = {
             'RG': RG,
             'nome': nome,
@@ -54,29 +52,25 @@ class User(Connector):
             'valido': False        
         }
         try:
-            await self.USERS.document(RG).set(user_data)
+            await Connector.USERS.document(RG).set(user_data)
             return user_data
         except Exception as e:
-            return self.error('Um erro ocorreu', str(e))
+            return Connector.message('Um erro ocorreu', str(e))
     
-    @user_exists()
-    async def update(self, RG, **kwargs):
-        try:
-            await self.USERS.document(RG).update(kwargs)
-        except Exception as e:
-            return self.error('Não foi possível atualizar.', str(e))
+    @Connector.catch_error
+    @user_exists
+    async def update(RG, **kwargs):
+        await Connector.USERS.document(RG).update(kwargs)
+        return Connector.message('Usuário atualizado.')
     
-    @user_exists()
-    async def delete(self, RG):
-        try:
-            await self.USERS.document(RG).delete()
-        except Exception as e:
-            return self.error('Não foi possível excluir.', str(e))
+    @Connector.catch_error
+    @user_exists
+    async def delete(RG):
+        await Connector.USERS.document(RG).delete()
+        return Connector.message('Usuário excluído.')
     
-    @user_exists()
-    async def validate(self, RG):
-        try:
-            await self.USERS.document(RG).update({'valido': True})
-        except Exception as e:
-            return self.error('Não foi possível validar.', str(e))
-        
+    @Connector.catch_error
+    @user_exists
+    async def validate(RG):
+        await Connector.USERS.document(RG).update({'valido': True})
+        return Connector.message('Usuário validado.')

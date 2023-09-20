@@ -1,25 +1,37 @@
-from firebase_admin import firestore_async, credentials, storage
+from firebase_admin import firestore_async, credentials
+from google.cloud.firestore_v1.base_query import FieldFilter
+from mega import Mega
+from threading import Thread
 
 import firebase_admin, os
-from google.cloud.firestore_v1.base_query import FieldFilter
 
 firebase_admin.initialize_app(
-    credentials.Certificate(os.path.join('.credentials', 'credentials.json')),
-    {"storageBucket": "biblioteca-inteligente-72a6c.appspot.com"}
-)       
+    credentials.Certificate(os.path.join('.credentials', 'credentials.json'))
+)
+
+#mega = Mega()
+#Thread(target=lambda: mega.login('felipefelipe23456@gmail.com', 'mgalomniaco')).start()
 
 class Connector:
     DB = firestore_async.client()
     USERS = DB.collection('users')
     BOOKS = DB.collection('books')
-    bucket = storage.bucket()
     field_filter = FieldFilter
+    #MEGA = mega
     
-    def error(self, error, log=None):
-        message = {'message': error}
+    def message(message, log=None):
+        message = {'message': message}
         if log: 
             message['log'] = log
         return message
+    
+    def catch_error(func):
+        async def wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except Exception as e:
+                return Connector.message('Um erro ocorreu.', str(e))
+        return wrapper
     
 '''
 cdds = {

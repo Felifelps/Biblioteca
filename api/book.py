@@ -1,30 +1,30 @@
 from api.connector import Connector
 
-class Book(Connector):
-    def book_exists(exists=True):
-        def decorator(func):
-            async def wrapper(*args, **kwargs):
-                self, RG = args[0], args[1]
-                if 'message' in await self.get(RG) == exists: 
-                    return self.error('Livro não encontrado.')
-                return await func(*args, **kwargs)
-            return wrapper
-        return decorator
+class Book:
+    quantity = 0
     
-    async def all(self, only_ids=True):
-        return [i.id if only_ids else i.to_dict() async for i in self.bookS.stream()]
+    def book_exists(func):
+        async def wrapper(*args, **kwargs):
+            id, *_ = args
+            if id not in await Book.all(): 
+                return Connector.message('Livro não encontrado.')
+            return await func(*args, **kwargs)
+        return wrapper
+        
+    @Connector.catch_error
+    async def all(only_ids=True):
+        books = [book.id if only_ids else book.to_dict() async for book in Connector.BOOKS.stream()]
+        Book.quantity = len(books)
+        return books
+        
+    @Connector.catch_error
+    async def get(id):
+        async for book in Connector.BOOKS.where(filter=Connector.field_filter('id', '==', id)).stream():
+            return book.to_dict()
+        return Connector.message('Livro não encontrado.')
     
-    async def get(self, RG):
-        try:
-            async for book in self.bookS.where(filter=self.field_filter('RG', '==', RG)).stream():
-                return book.to_dict()
-            return self.error('Livro não encontrado.')
-        except Exception as e:
-            return self.error('Um erro ocorreu.', str(e))
-    
-    @book_exists(False)
-    async def new(
-        self,  
+    @Connector.catch_error
+    async def new( 
         titulo,
         autor,
         editora,
@@ -34,8 +34,10 @@ class Book(Connector):
         estante,
         prateleira
     ):
+        print(Book.quantity)
+        id = Book.quantity + 1
         book_data = {
-            'id': self.id,
+            'id': id,
             'titulo': titulo,
             'autor': autor,
             'editora': editora,
@@ -47,30 +49,27 @@ class Book(Connector):
             'disponivel': True     
         }
         try:
-            await self.bookS.document(RG).set(book_data)
+            await Connector.BOOKS.document(id).set(book_data)
+            Book.quantity = id
             return book_data
         except Exception as e:
-            return self.error('Um erro ocorreu', str(e))
+            return Connector.message('Um erro ocorreu', str(e))
     
-    @book_exists()
-    async def update(self, RG, **kwargs):
-        try:
-            await self.bookS.document(RG).update(kwargs)
-        except Exception as e:
-            return self.error('Não foi possível atualizar.', str(e))
+    @Connector.catch_error
+    @book_exists
+    async def update(id, **kwargs):
+        await Connector.BOOKS.document(id).update(kwargs)
+        return Connector.message('Livro atualizado.')
     
-    @book_exists()
-    async def delete(self, RG):
-        try:
-            await self.bookS.document(RG).delete()
-        except Exception as e:
-            return self.error('Não foi possível excluir.', str(e))
+    @Connector.catch_error
+    @book_exists
+    async def delete(id):
+        await Connector.BOOKS.document(id).delete()
+        return Connector.message('Livro excluído.')
     
-    @book_exists()
-    async def validate(self, RG):
-        try:
-            await self.bookS.document(RG).update({'valido': True})
-        except Exception as e:
-            return self.error('Não foi possível validar.', str(e))
-
+    @Connector.catch_error
+    @book_exists
+    async def validate(id):
+        await Connector.BOOKS.document(id).update({'valido': True})
+        return Connector.message('Livro validado.')
         
