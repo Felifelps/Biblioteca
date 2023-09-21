@@ -1,20 +1,27 @@
-from api import User, Files, Book
-import asyncio
+from api import User, Files, Book, Lending
+from api.connector import Connector
+import asyncio, json
+
+def dump(dictionary):
+    print(json.dumps(dictionary, indent=4))
 
 async def main():
+    '''
     a = await Book.new(
         'Mulheres sem sombra',
         'Silvia Tubert',
         'Editora Rosa dos Tempos',
         '1',
-        600,
+        '600',
         'Maternidade-Aspectos analíticos.2.Reprodução-Inovações tecnológicas',
         '4',
         '1'
     )
-    print(a)
+    '''
+            
+    dump(await Lending.new('2018125194-3', '20'))
+    dump(await Lending.all(False))
     
-
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
 #app.run(debug=True, host='0.0.0.0')

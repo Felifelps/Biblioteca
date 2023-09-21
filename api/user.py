@@ -1,12 +1,12 @@
-from api.connector import Connector
+from api.connector import Connector, firestore_async
 import datetime
 
 class User:
     def user_exists(func):
         async def wrapper(*args, **kwargs):
-            RG, *_ = args
-            if RG not in await User.all(): 
-                return Connector.message(f'Usuário não encontrado.')
+            user = await User.get(args[0])
+            if 'message' in user.keys(): 
+                return user
             return await func(*args, **kwargs)
         return wrapper
     
@@ -32,7 +32,8 @@ class User:
         profissao="",
         tel_profissional="",
         escola="",
-        curso_serie=""
+        curso_serie="",
+        **kwargs
     ):
         if RG in await User.all(): 
             return Connector.message('Usuário já existente')
@@ -49,7 +50,9 @@ class User:
             'escola': escola,
             'curso_serie': curso_serie,
             'data_cadastro': datetime.datetime.today().strftime('%d/%m/%y'),
-            'valido': False        
+            'valido': False,
+            'favoritos': [],
+            'livro': False     
         }
         try:
             await Connector.USERS.document(RG).set(user_data)
@@ -69,8 +72,17 @@ class User:
         await Connector.USERS.document(RG).delete()
         return Connector.message('Usuário excluído.')
     
-    @Connector.catch_error
-    @user_exists
+    async def __favorite(RG, book_id, favorite=True):
+        operation = firestore_async.firestore.ArrayUnion if favorite else firestore_async.firestore.ArrayRemove
+        await User.update(RG, favoritos=operation([book_id]))
+        return Connector.message(f'Livro {"" if favorite else "des"}favoritado.')
+    
+    async def favorite(RG, book_id):
+        return await User.__favorite(RG, book_id)
+        
+    async def unfavorite(RG, book_id):
+        return await User.__favorite(RG, book_id, False)
+    
     async def validate(RG):
-        await Connector.USERS.document(RG).update({'valido': True})
+        await User.update(RG, valido=True)
         return Connector.message('Usuário validado.')

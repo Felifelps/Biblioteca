@@ -14,8 +14,9 @@ firebase_admin.initialize_app(
 
 class Connector:
     DB = firestore_async.client()
-    USERS = DB.collection('users')
-    BOOKS = DB.collection('books')
+    USERS = DB.collection('leitores')
+    BOOKS = DB.collection('livros')
+    LENDINGS = DB.collection('emprestimos')
     field_filter = FieldFilter
     #MEGA = mega
     
@@ -27,10 +28,10 @@ class Connector:
     
     def catch_error(func):
         async def wrapper(*args, **kwargs):
-            try:
-                return await func(*args, **kwargs)
-            except Exception as e:
-                return Connector.message('Um erro ocorreu.', str(e))
+            #try:
+            return await func(*args, **kwargs)
+            #except Exception as e:
+            #    return Connector.message('Um erro ocorreu.', str(e))
         return wrapper
     
 '''
