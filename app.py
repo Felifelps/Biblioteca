@@ -2,8 +2,9 @@ from api import User, Files, Book, Lending
 from api.connector import Connector
 import asyncio, json
 
-def dump(dictionary):
-    print(json.dumps(dictionary, indent=4))
+def dump(*dicts):
+    for i in dicts:
+        print(json.dumps(i, indent=4))
 
 async def main():
     '''
@@ -17,10 +18,28 @@ async def main():
         '4',
         '1'
     )
+    
+    dump(await User.new(
+        '2018125194-2', 
+        'cavalo',
+        '18/08/2006',
+        'Brejo Santo',
+        'felipefelipe23456@gmail.com',
+        '63250000',
+        '88 994426429',
+        'Vila Fronteiro'
+    ))
     '''
-            
-    dump(await Lending.new('2018125194-3', '20'))
-    dump(await Lending.all(False))
+    await User.reserve('2018125194-2', '1')
+    dump(
+        await User.get('2018125194-2'),
+        await Book.get('1')
+    )
+    dump(
+        #await Lending.new('2018125194-2')
+        await Lending.finalize('3')
+    )
+    
     
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())

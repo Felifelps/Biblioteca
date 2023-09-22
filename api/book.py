@@ -44,7 +44,7 @@ class Book:
             'assuntos': assuntos,
             'estante': estante,
             'prateleira': prateleira,
-            'leitor': False     
+            'leitor': False   
         }
         await Connector.BOOKS.document(str(id)).set(book_data)
         Book.quantity = id
@@ -61,3 +61,9 @@ class Book:
     async def delete(id):
         await Connector.BOOKS.document(str(id)).delete()
         return Connector.message('Livro excluído.')
+    
+    async def reserve(id, RG):
+        return await Book.update(id, leitor=RG)
+    
+    async def give_back(id):
+        return await Book.update(id, leitor=False)

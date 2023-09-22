@@ -1,3 +1,4 @@
+from datetime import datetime
 from firebase_admin import firestore_async, credentials
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
@@ -14,6 +15,7 @@ firebase_admin.initialize_app(
 
 class Connector:
     DB = firestore_async.client()
+    TRANSACTION = DB.transaction()
     USERS = DB.collection('leitores')
     BOOKS = DB.collection('livros')
     LENDINGS = DB.collection('emprestimos')
@@ -26,12 +28,23 @@ class Connector:
             message['log'] = log
         return message
     
+    def today():
+        return datetime.today().strftime('%d/%m/%y às %H:%M:%S')
+    
     def catch_error(func):
         async def wrapper(*args, **kwargs):
             #try:
             return await func(*args, **kwargs)
             #except Exception as e:
             #    return Connector.message('Um erro ocorreu.', str(e))
+        return wrapper
+    
+    def sync_catch_error(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                return Connector.message('Um erro ocorreu.', str(e))
         return wrapper
     
 '''

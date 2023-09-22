@@ -1,4 +1,6 @@
 from api.connector import Connector, firestore_async
+from api.book import Book
+from api.email import Email
 import datetime
 
 class User:
@@ -26,6 +28,7 @@ class User:
         nome,
         data_nascimento,
         local_nascimento,
+        email,
         CEP,
         tel_pessoal,
         residencia,
@@ -42,6 +45,7 @@ class User:
             'nome': nome,
             'data_nascimento': data_nascimento,
             'local_nascimento': local_nascimento,
+            'email': email,
             'CEP': CEP,
             'tel_pessoal': tel_pessoal,
             'residencia': residencia,
@@ -49,16 +53,13 @@ class User:
             'tel_profissional': tel_profissional,
             'escola': escola,
             'curso_serie': curso_serie,
-            'data_cadastro': datetime.datetime.today().strftime('%d/%m/%y'),
+            'data_cadastro': Connector.today(),
             'valido': False,
             'favoritos': [],
             'livro': False     
         }
-        try:
-            await Connector.USERS.document(RG).set(user_data)
-            return user_data
-        except Exception as e:
-            return Connector.message('Um erro ocorreu', str(e))
+        await Connector.USERS.document(RG).set(user_data)
+        return user_data
     
     @Connector.catch_error
     @user_exists
@@ -86,3 +87,25 @@ class User:
     async def validate(RG):
         await User.update(RG, valido=True)
         return Connector.message('Usuário validado.')
+    
+    @Connector.catch_error
+    @user_exists
+    async def reserve(RG, book_id):
+        user_data = await User.get(RG)
+        if user_data['livro']:
+            return Connector.message('O usuário já reservou um livro.')
+        await User.update(RG, livro=book_id)
+        await Book.reserve(book_id, RG)
+        return Connector.message('Livro reservado.')
+    
+    @Connector.catch_error
+    @user_exists
+    async def cancel_reserve(RG):
+        user_data = await User.get(RG)
+        if not user_data['livro']:
+            return Connector.message('O usuário jnão reservou um livro.')
+        await Book.give_back(user_data['livro'])
+        await User.update(RG, livro=False)
+        return Connector.message('Reserva cancelada.')
+        
+    
