@@ -1,24 +1,36 @@
 from api.connector import Connector
 
+class BookReference:
+    def __init__(self, **kwargs):
+        self.fields = list(kwargs.keys())
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        
+    def __str__(self) -> str:
+        return f'<BookReference(id={self.id}, titulo="{self.titulo}")>'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+    
+    def to_dict(self):
+        return {attr: getattr(self, attr) for attr in self.fields}
+    
+    @Connector.catch_error   
+    async def save(self):
+        await Connector.BOOKS.document(self.id).update(self.to_dict())
+    
+    @Connector.catch_error
+    async def delete(self):
+        await Connector.BOOKS.document(self.id).delete()
+        del self
+
 class Book:
     quantity = None
-    def book_exists(func):
-        async def wrapper(*args, **kwargs):
-            book = await Book.get(args[0])
-            if 'message' in book.keys(): 
-                return book
-            return await func(*args, **kwargs)
-        return wrapper
-        
     @Connector.catch_error
-    async def all(only_ids=True):
-        return [book.id if only_ids else book.to_dict() async for book in Connector.BOOKS.stream()]
-        
-    @Connector.catch_error
-    async def get(id):
-        async for book in Connector.BOOKS.where(filter=Connector.field_filter('id', '==', str(id))).stream():
-            return book.to_dict()
-        return Connector.message('Livro não encontrado.')
+    async def query(field_path="", op_string="", value="", only_ids=False):
+        if not all([field_path, op_string, str(value)]):
+            return [book.id if only_ids else BookReference(**book.to_dict()) async for book in Connector.BOOKS.stream()]
+        return [book.id if only_ids else BookReference(**book.to_dict()) async for book in Connector.BOOKS.where(filter=Connector.field_filter(field_path, op_string, str(value))).stream()]        
     
     @Connector.catch_error
     async def new( 
@@ -32,7 +44,7 @@ class Book:
         prateleira,
         **kwargs
     ):
-        if Book.quantity == None: Book.quantity = len(await Book.all())
+        if Book.quantity == None: Book.quantity = len(await Book.query(only_ids=True))
         id = Book.quantity + 1
         book_data = {
             'id': str(id),
@@ -48,22 +60,4 @@ class Book:
         }
         await Connector.BOOKS.document(str(id)).set(book_data)
         Book.quantity = id
-        return book_data
-    
-    @Connector.catch_error
-    @book_exists
-    async def update(id, **kwargs):
-        await Connector.BOOKS.document(str(id)).update(kwargs)
-        return Connector.message('Livro atualizado.')
-    
-    @Connector.catch_error
-    @book_exists
-    async def delete(id):
-        await Connector.BOOKS.document(str(id)).delete()
-        return Connector.message('Livro excluído.')
-    
-    async def reserve(id, RG):
-        return await Book.update(id, leitor=RG)
-    
-    async def give_back(id):
-        return await Book.update(id, leitor=False)
+        return BookReference(**book_data)

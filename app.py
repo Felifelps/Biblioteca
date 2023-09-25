@@ -4,7 +4,14 @@ import asyncio, json
 
 def dump(*dicts):
     for i in dicts:
-        print(json.dumps(i, indent=4))
+        if isinstance(i, list):
+            dump(*i)
+        else:
+            try: 
+                i = i.to_dict()
+            except Exception as e:
+                print(e)
+            print(json.dumps(i, indent=4))
 
 async def main():
     '''
@@ -29,16 +36,23 @@ async def main():
         '88 994426429',
         'Vila Fronteiro'
     ))
-    '''
-    await User.reserve('2018125194-2', '1')
-    dump(
-        await User.get('2018125194-2'),
-        await Book.get('1')
-    )
-    dump(
-        #await Lending.new('2018125194-2')
-        await Lending.finalize('3')
-    )
+    
+    #dump(
+    #    await User.query()
+    #)
+    book = await Book.new(
+        'pokemon',
+        'joel',
+        'editora brasil',
+        '1°',
+        '666',
+        'Pokemon',
+        '1',
+        '2'
+    )'''
+    print(await User.query('RG', '==', '20181221'))
+    
+    
     
     
 loop = asyncio.new_event_loop()

@@ -1,50 +1,46 @@
-from api.book import Book
-from api.connector import Connector, firestore_async
-from api.user import User
-
-from datetime import datetime
+from api.connector import Connector
+    
+class LendingReference:
+    def __init__(self, **kwargs):
+        self.fields = list(kwargs.keys())
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        
+    def __str__(self) -> str:
+        return f'<LendingReference(id={self.id}, livro="{self.livro}", leitor="{self.leitor}")>'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+    
+    def to_dict(self):
+        return {attr: getattr(self, attr) for attr in self.fields}
+    
+    @Connector.catch_error   
+    async def save(self):
+        await Connector.LENDINGS.document(self.id).update(self.to_dict())
+    
+    @Connector.catch_error
+    async def delete(self):
+        await Connector.LENDINGS.document(self.id).delete()
+        del self
 
 class Lending:
     quantity = None
-    
-    def lending_exists(func):
-        async def wrapper(*args, **kwargs):
-            lending = await Lending.get(args[0])
-            if 'message' in lending.keys():
-                return lending
-            return await func(*args, **kwargs)
-        return wrapper
-    
     @Connector.catch_error
-    async def all(only_ids=True):
-        return [lending.id if only_ids else lending.to_dict() async for lending in Connector.LENDINGS.stream()]
-        
-    @Connector.catch_error
-    async def get(id):
-        async for lending in Connector.LENDINGS.where(filter=Connector.field_filter('id', '==', str(id))).stream():
-            return lending.to_dict()
-        return Connector.message('Empréstimo não encontrado.')
+    async def query(field_path="", op_string="", value="", only_ids=False):
+        if not all([field_path, op_string, str(value)]):
+            return [lending.id if only_ids else LendingReference(**lending.to_dict()) async for lending in Connector.LENDINGS.stream()]
+        return [lending.id if only_ids else LendingReference(**lending.to_dict()) async for lending in Connector.LENDINGS.where(filter=Connector.field_filter(field_path, op_string, str(value))).stream()]        
     
-    @Connector.catch_error
-    async def new(RG):
-        user_data = await User.get(RG)
-        if 'message' in user_data.keys(): 
-            return user_data
-        elif not user_data['livro']:
-            return Connector.message('O usuário não reservou um livro.')
-        
-        book_data = await Book.get(user_data['livro'])
-        if 'message' in book_data.keys():
-            return book_data
-        
+    async def new(RG, book_id):
         if Lending.quantity == None: 
-            Lending.quantity = len(await Lending.all())
+            Lending.quantity = len(await Lending.query(only_ids=True))
             
         id = Lending.quantity + 1
         lend_data = {
             'id': str(id),
             'leitor': RG,
-            'livro': user_data['livro'],
+            'livro': book_id,
             'multa': 0,
             'data_emprestimo': Connector.today(),
             'renovado': False,
@@ -52,48 +48,6 @@ class Lending:
         }
         await Connector.LENDINGS.document(str(id)).set(lend_data)
         Lending.quantity += 1
-        return lend_data
-    
-    @Connector.catch_error
-    async def update(id, **kwargs):
-        await Connector.LENDINGS.document(str(id)).update(kwargs)
-        return Connector.message('Empréstimo alterado.')
-    
-    @Connector.catch_error
-    async def delete(id):
-        await Connector.LENDINGS.document(str(id)).delete()
-        return Connector.message('Empréstimo alterado.')
-    
-    @Connector.catch_error
-    async def finalize(id):
-        lending_data = await Lending.get(id)
-        if 'message' in lending_data.keys():
-            return lending_data
-        elif lending_data['data_finalizacao']:
-            return Connector.message('Empréstimo ja finalizado.')
-        await Lending.update(
-            id, 
-            data_finalizacao=Connector.today()
-        )
-        await User.cancel_reserve(lending_data['leitor'])
-        return Connector.message('Empréstimo finalizado.')
-
-    @Connector.catch_error
-    async def p():
-        pass
-    
-    @Connector.catch_error
-    async def check_lending(id):
-        lending = await Lending.get(id)
-        data_emprestimo = datetime.strptime(lending['data_emprestimo'], '%d/%m/%y às %H:%M:%S')
-        
-        if not lending['pego'] and (datetime.today() - data_emprestimo).days > 2:
-            Lending.finalize(id)
-            return Connector.message('O usuário reservou o livro e não foi buscá-lo. Reserva cancelada.')
-        elif not lending['renovado'] and (datetime.today() - data_emprestimo).days > 12:
-            pass
-        
-    
-
+        return LendingReference(**lend_data)
 
         
