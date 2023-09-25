@@ -28,9 +28,15 @@ class Book:
     quantity = None
     @Connector.catch_error
     async def query(field_path="", op_string="", value="", only_ids=False):
-        if not all([field_path, op_string, str(value)]):
-            return [book.id if only_ids else BookReference(**book.to_dict()) async for book in Connector.BOOKS.stream()]
-        return [book.id if only_ids else BookReference(**book.to_dict()) async for book in Connector.BOOKS.where(filter=Connector.field_filter(field_path, op_string, str(value))).stream()]        
+        result = []
+        #if all the str args are not ""
+        if all([field_path, op_string, value]):
+            async for book in Connector.BOOKS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
+                result.append(book.id if only_ids else book.to_dict())
+        else:
+            async for book in Connector.BOOKS.stream():
+                result.append(book.id if only_ids else book.to_dict())
+        return None if result == [] else result    
     
     @Connector.catch_error
     async def new( 

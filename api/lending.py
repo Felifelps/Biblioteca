@@ -28,9 +28,15 @@ class Lending:
     quantity = None
     @Connector.catch_error
     async def query(field_path="", op_string="", value="", only_ids=False):
-        if not all([field_path, op_string, str(value)]):
-            return [lending.id if only_ids else LendingReference(**lending.to_dict()) async for lending in Connector.LENDINGS.stream()]
-        return [lending.id if only_ids else LendingReference(**lending.to_dict()) async for lending in Connector.LENDINGS.where(filter=Connector.field_filter(field_path, op_string, str(value))).stream()]        
+        result = []
+        #if all the str args are not ""
+        if all([field_path, op_string, value]):
+            async for lending in Connector.LENDINGS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
+                result.append(lending.id if only_ids else lending.to_dict())
+        else:
+            async for lending in Connector.LENDINGS.stream():
+                result.append(lending.id if only_ids else lending.to_dict())
+        return None if result == [] else result    
     
     async def new(RG, book_id):
         if Lending.quantity == None: 

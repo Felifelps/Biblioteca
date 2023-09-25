@@ -28,9 +28,13 @@ class User:
     @Connector.catch_error
     async def query(field_path="", op_string="", value="", only_ids=False):
         result = []
-        querys = [Connector.USERS.where(filter=Connector.field_filter(field_path, op_string, value)), Connector.USERS]
-        async for user in querys[int(all([field_path, op_string, value]))]:
-            result.append(user.id if only_ids else UserReference(**user.to_dict()))
+        #if all the str args are not ""
+        if all([field_path, op_string, value]):
+            async for user in Connector.USERS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
+                result.append(user.id if only_ids else user.to_dict())
+        else:
+            async for user in Connector.USERS.stream():
+                result.append(user.id if only_ids else user.to_dict())
         return None if result == [] else result     
     
     @Connector.catch_error

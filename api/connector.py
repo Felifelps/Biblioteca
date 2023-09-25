@@ -1,17 +1,18 @@
+from asyncio import ensure_future
+from bcrypt import checkpw, gensalt, hashpw
 from datetime import datetime
-from firebase_admin import firestore_async, credentials
+from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
+from os.path import join
 from threading import Thread
 
-import firebase_admin, os
-
-firebase_admin.initialize_app(
-    credentials.Certificate(os.path.join('.credentials', 'credentials.json'))
+initialize_app(
+    credentials.Certificate(join('.credentials', 'credentials.json'))
 )
 
-#mega = Mega()
-#Thread(target=lambda: mega.login('felipefelipe23456@gmail.com', 'mgalomniaco')).start()
+mega = Mega()
+mega.login('felipefelipe23456@gmail.com', 'mgalomniaco')
 
 class Connector:
     DB = firestore_async.client()
@@ -19,8 +20,25 @@ class Connector:
     USERS = DB.collection('leitores')
     BOOKS = DB.collection('livros')
     LENDINGS = DB.collection('emprestimos')
+    ADM = DB.document('adm/data')
     field_filter = FieldFilter
-    #MEGA = mega
+    admin_data = {}
+    MEGA = mega
+    
+    async def load_admin_data():
+        Connector.admin_data = (await Connector.ADM.get()).to_dict()
+        return Connector.admin_data
+    
+    async def save_admin_data():
+        await Connector.ADM.update(Connector.admin_data)
+        
+    def change_admin_password(password):
+        salt = gensalt()
+        Connector.admin_data['salt'] = salt
+        Connector.admin_data['password'] = hashpw(bytes(password, encoding='utf-8'), salt)
+        
+    def check_admin_password(password):
+        return checkpw(bytes(password, encoding='utf-8'), Connector.admin_data['password'])
     
     def message(message, log=None):
         message = {'message': message}

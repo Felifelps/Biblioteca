@@ -1,15 +1,29 @@
 from api.connector import Connector
-from threading import Thread
+from os import remove, path
+from queue import Queue
+from threading import Lock, Thread
 
-import os
+queue = Queue()
 
-class Files(Connector):
-    def upload_file(self, file_path, filename=None):
-        if not filename: filename = os.path.basename(file_path)
-        Thread(target=lambda: self.MEGA.upload(self.temp(file_path))).start()
-        
-    def temp(self, name):
-        return os.path.join('temp', name)
+class Files:
     
-    def remove(self, name):
-        os.remove(self.temp(name))
+    def update_files_reference(func):
+        def wrapper(*args, **kwargs):
+            value = func()
+            Thread(target=lambda: queue.put(Connector.MEGA.get_files())).start()
+            return value
+        return wrapper
+    
+    def files():
+        return queue.get() if queue.queue.clear() == None else None
+    
+    @update_files_reference
+    def upload_file(file_path, filename=None):
+        if not filename: filename = path.basename(file_path)
+        Thread(target=lambda: Connector.MEGA.upload(Files.temp(file_path))).start()
+    
+    def temp(name):
+        return path.join('temp', name)
+    
+    def remove(name):
+        remove(Files.temp(name))
