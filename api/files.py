@@ -1,26 +1,31 @@
 from api.connector import Connector
 from os import remove, path
 from queue import Queue
-from threading import Lock, Thread
+from threading import current_thread, Thread
+from time import time
 
-queue = Queue()
+mega = Connector.MEGA
 
 class Files:
+    files = {file['a']['n'] : (key, file) for key, file in mega.get_files().items()}
     
-    def update_files_reference(func):
-        def wrapper(*args, **kwargs):
-            value = func()
-            Thread(target=lambda: queue.put(Connector.MEGA.get_files())).start()
-            return value
-        return wrapper
+    def get_file(name):
+        if name not in Files.files.keys():
+            Files.files[name] = mega.find(name)
+        print(Files.files)
+        return Files.files[name]  
     
-    def files():
-        return queue.get() if queue.queue.clear() == None else None
+    def get_files():
+        Files.files = {file['a']['n'] : (key, file) for key, file in mega.get_files().items()}
+        return Files.files 
     
-    @update_files_reference
-    def upload_file(file_path, filename=None):
+    def download(filename, rename_to=None, temp=True):
+        file = Files.get_file(filename)
+        Thread(target=lambda: mega.download_url(mega.get_link(file), dest_filename=rename_to)).start()
+    
+    def upload(file_path, filename=None, temp=True):
         if not filename: filename = path.basename(file_path)
-        Thread(target=lambda: Connector.MEGA.upload(Files.temp(file_path))).start()
+        Thread(target=lambda: mega.upload(Files.temp(file_path) if temp else file_path)).start()
     
     def temp(name):
         return path.join('temp', name)

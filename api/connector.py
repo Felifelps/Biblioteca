@@ -6,6 +6,7 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
 from os.path import join
 from threading import Thread
+from time import time
 
 initialize_app(
     credentials.Certificate(join('.credentials', 'credentials.json'))
