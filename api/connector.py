@@ -1,4 +1,4 @@
-from asyncio import ensure_future
+from asyncio import ensure_future, sleep
 from bcrypt import checkpw, gensalt, hashpw
 from datetime import datetime
 from firebase_admin import credentials, firestore_async, initialize_app
@@ -65,6 +65,7 @@ class Connector:
             except Exception as e:
                 return Connector.message('Um erro ocorreu.', str(e))
         return wrapper
+
     
 '''
 cdds = {

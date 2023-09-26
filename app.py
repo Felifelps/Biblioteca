@@ -14,8 +14,18 @@ def dump(*dicts):
             print(json.dumps(i, indent=4))
 
 async def main():
-    #print(Files.upload('modelo_dados.png', temp=False))
-    print(Files.download('modelo_dados.png', 'model.png'))
+    #print(Files.upload('a.png', 'b.png'))
+    #print(await Files.download('a.png', 'testando.png'))
+    import time
+    file = await Files.get_file('a.png')
+    s = time.time()
+    try:
+        #print(Files.mega.download(file, dest_path='temp'))
+        print(await Files.download('a.png', 'teste.png'))
+    except:
+        pass
+    
+    
 
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
