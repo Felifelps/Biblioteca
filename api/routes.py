@@ -69,13 +69,11 @@ def delete_bookcase(id):
 #Sign up
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    if request.method == 'POST':
-        asyncio.ensure_future(DataHandler().new_user(**request.form))
     return render_template('user.html')
 
 #Main page
 @app.route('/', methods=["GET", "POST"])
 def main():
-    if request.method == 'POST':
-        DataHandler().upload_user_images('2018125194-3', request.files['file'])
-    return render_template('index.html')
+    print(list(request.args.keys()))
+    msg = request.args.get('msg', 'Não encontrado')
+    return f'<h1> Você me disse "{msg}", não foi?</h1>'

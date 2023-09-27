@@ -1,38 +1,49 @@
+"""
+# api.email
+
+This module contains the Email class, that have a function to send emails asynchronously.
+"""
+
+from asyncio import to_thread
 from api.connector import Connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
-from threading import Thread
 
 class Email:
-    smtp_server = 'smtp.gmail.com'
-    smtp_port = 587
-    sender = 'mestount@gmail.com'
-    password = 'iquduhyskpuadboe'
-    server = SMTP(smtp_server, smtp_port)
-    server.starttls()
-    server.login(sender, password)
-        
-    @Connector.sync_catch_error
-    def send_mail(to, message):
-        pass
+    """
+    # api.email.Email
     
-    @Connector.sync_catch_error
-    def message(to, subject, body):
+    This class contains constants and associated to the method used for sendind
+    """
+    
+    SMTP_SERVER = 'smtp.gmail.com'
+    SMTP_PORT = 587
+    SENDER = 'mestount@gmail.com'
+    PASSWORD = 'iquduhyskpuadboe'
+    SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
+    SERVER.starttls()
+    SERVER.login(SENDER, PASSWORD)
+    
+    
+    @Connector.catch_error
+    async def message(to: str, body: str, subject: str="Bibilioteca") -> None:
+        """
+        Sends an email
+        
+        :param to: Email address to send the message
+        :param body: Body of the email. Can be an html code
+        :param subject (default=biblioteca): Subject of the email
+        """
         message = MIMEMultipart()
-        message['From'] = Email.sender
+        message['From'] = Email.SENDER
         message['To'] = to
         message['Subject'] = subject
         message.attach(MIMEText(body, 'html'))
-        
-        if not Email.server:
-            print('loading server')
-            if isinstance(Email.load_server(), dict):
-                raise Exception('Erro de conexão')
             
-        Email.server.sendmail(
-            Email.sender,
+        await to_thread(lambda: Email.SERVER.sendmail(
+            Email.SENDER,
             to,
             message.as_string()
-        )
+        ))
         

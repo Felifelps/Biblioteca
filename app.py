@@ -1,6 +1,8 @@
-from api import User, Files, Book, Lending
+from api import app, User, Email, Files, Book, Lending
 from api.connector import Connector
 import asyncio, json
+
+#TODO: Fazer a documentação geral usando sphinx
 
 def dump(*dicts):
     for i in dicts:
@@ -14,27 +16,17 @@ def dump(*dicts):
             print(json.dumps(i, indent=4))
 
 async def main():
-    #print(await Files.upload('Procfile', temp=False))
-    #print(await Files.download('a.png', 'b.png'))
-    pass
+    html = """
+    <form method='GET' action="http://192.168.0.197:5000" style="text-align: center">
+        <label for="name">Mande uma mensagem</label>
+        <input type="text" name="msg" id="msg" placeholder="Mensagem aqui">
+        <br>
+        <br>
+        <input type="submit">
+    </form>
+    """
+    await Email.message('adryancaetano871@gmail.com', 'POkemon', html)
     
-
-loop = asyncio.new_event_loop()
-loop.run_until_complete(main())
-#app.run(debug=True, host='0.0.0.0')
-
-'''
-    print(await User.new(
-        '2018125194-6',
-        'cavalo',
-        '18/08/2006',
-        'Brejo Santo',
-        '63250000',
-        '88 994426429',
-        'Vila Fronteiro'
-    ))
-    '''
-    #print(await User.all())
-    #print(await User.delete('2018125194-6'))
-    #print(await User.update('2018125194-6', tel_pessoal='55 88 994426429'))
-    #print(await User.validate('2018125194-5'))
+#loop = asyncio.new_event_loop()
+#loop.run_until_complete(main())
+app.run(debug=True, host='0.0.0.0')
