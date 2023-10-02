@@ -46,6 +46,7 @@ class BookReference:
         Saves the changes on the database
         """
         await Connector.BOOKS.document(self.id).update(self.to_dict())
+        Book.books[self.id] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -53,6 +54,7 @@ class BookReference:
         Deletes BookReference instance and the corresponding firestore document
         """
         await Connector.BOOKS.document(self.id).delete()
+        Book.books.pop(self.id)
         del self
 
 class Book:
@@ -65,23 +67,42 @@ class Book:
     """
     
     quantity = None
+    books = None
     @Connector.catch_error
-    async def query(field_path: str="", op_string: str="", value: str="", only_ids: bool=False) -> dict:
+    async def __load_books() -> None:
+        """
+        This function is for intern using. It loads all books data and save it into the Book.books variable.
+        """
+        if Book.books == None:
+            Book.books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
+        Book.quantity = len(Book.books)
+    
+    @Connector.catch_error
+    async def all() -> list[BookReference]:
+        """
+        Returns all books of database
+        """
+        await Book.__load_books()
+        return [BookReference(**book) for RG, book in Book.books.items()]
+    
+    @Connector.catch_error
+    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> BookReference | dict:
         """
         Makes queries to "livros" collection.
-        \n
-        If field_path, op_string and value equals to "" then returns all the documents
-        on collection.
         """
+        
+        await Book.__load_books()
         result = []
-        #if all the str args are not ""
-        if all([field_path, op_string, value]):
-            async for book in Connector.BOOKS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
-                result.append(book.id if only_ids else book.to_dict())
-        else:
-            async for book in Connector.BOOKS.stream():
-                result.append(book.id if only_ids else book.to_dict())
-        return None if result == [] else result    
+        try:
+            exec(f'''
+for id, book in Book.books.items():
+    if not (str(book['{field}']) {op_string} '{value}'):
+        continue
+    result.append(book if to_dict else BookReference(**book))
+''')
+        except KeyError as e:
+            return Connector.message('Field not found')
+        return result if len(result) != 1 else result[0]       
     
     @Connector.catch_error
     async def new( 
@@ -99,7 +120,8 @@ class Book:
         This function creates a new document on the 'livros' collection and returns a 
         BookReference object pointing to.
         """
-        if Book.quantity == None: Book.quantity = len(await Book.query(only_ids=True))
+        await Book.__load_books()
+        
         id = Book.quantity + 1
         book_data = {
             'id': str(id),
@@ -114,5 +136,6 @@ class Book:
             'leitor': False   
         }
         await Connector.BOOKS.document(str(id)).set(book_data)
-        Book.quantity = id
+        Book.quantity += 1
+        Book.books[str(id)] = book_data
         return BookReference(**book_data)

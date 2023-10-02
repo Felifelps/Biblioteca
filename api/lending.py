@@ -46,6 +46,7 @@ class LendingReference:
         Saves the changes on the database
         """
         await Connector.LENDINGS.document(self.id).update(self.to_dict())
+        Lending.lendings[self.id] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -53,6 +54,7 @@ class LendingReference:
         Deletes LendingReference instance and the corresponding firestore document
         """
         await Connector.LENDINGS.document(self.id).delete()
+        Lending.lendings.pop(self.id)
         del self
 
 class Lending:
@@ -65,34 +67,53 @@ class Lending:
     """
     
     quantity = None
+    lendings = None
     @Connector.catch_error
-    async def query(field_path: str="", op_string: str="", value: str="", only_ids: bool=False) -> dict:
+    async def __load_lendings() -> None:
+        """
+        This function is for intern using. It loads all lendings data and save it into the Lending.lendings variable.
+        """
+        if Lending.lendings == None:
+            Lending.lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
+            Lending.quantity = len(Lending.lendings)
+    
+    @Connector.catch_error
+    async def all() -> list[LendingReference]:
+        """
+        Returns all lendings of database
+        """
+        await Lending.__load_lendings()
+        return [LendingReference(**lending) for RG, lending in Lending.lendings.items()]
+    
+    @Connector.catch_error
+    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> LendingReference | dict:
         """
         Makes queries to "emprestimos" collection.
-        \n
-        If field_path, op_string and value equals to "" then returns all the documents
-        on collection.
         """
+
+        await Lending.__load_lendings()
         result = []
-        #if all the str args are not ""
-        if all([field_path, op_string, value]):
-            async for lending in Connector.LENDINGS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
-                result.append(lending.id if only_ids else lending.to_dict())
-        else:
-            async for lending in Connector.LENDINGS.stream():
-                result.append(lending.id if only_ids else lending.to_dict())
-        return None if result == [] else result    
+        try:
+            exec(f'''
+for id, lending in Lending.lendings.items():
+    if not (str(lending['{field}']) {op_string} '{value}'):
+        continue
+    result.append(lending if to_dict else LendingReference(**lending))
+''')
+        except KeyError as e:
+            return Connector.message('Field not found')
+        return result if len(result) != 1 else result[0]    
     
     async def new(RG: str, lending_id: str) -> LendingReference:
         """
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
         """
-        if Lending.quantity == None: 
-            Lending.quantity = len(await Lending.query(only_ids=True))
+        if Lending.lendings == None:
+            await Lending.__load_lendings()
             
         id = Lending.quantity + 1
-        lend_data = {
+        lending_data = {
             'id': str(id),
             'leitor': RG,
             'livro': lending_id,
@@ -101,8 +122,7 @@ class Lending:
             'renovado': False,
             'data_finalizacao': False
         }
-        await Connector.LENDINGS.document(str(id)).set(lend_data)
+        await Connector.LENDINGS.document(str(id)).set(lending_data)
         Lending.quantity += 1
-        return LendingReference(**lend_data)
-
-        
+        Lending.lendings[str(id)] = lending_data
+        return LendingReference(**lending_data)

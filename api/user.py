@@ -6,6 +6,7 @@ the users data stored on the database
 """
 
 from api.connector import Connector
+from asyncio import ensure_future
 
 class UserReference:
     """
@@ -46,6 +47,7 @@ class UserReference:
         Saves the changes on the database
         """
         await Connector.USERS.document(self.RG).update(self.to_dict())
+        User.users[self.RG] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -53,6 +55,7 @@ class UserReference:
         Deletes UserReference instance and the corresponding firestore document
         """
         await Connector.USERS.document(self.RG).delete()
+        User.users.pop(self.RG)
         del self
 
 class User:
@@ -63,24 +66,41 @@ class User:
     \n
     Creates documents and make querys to the collection.
     """
+    users = None
+    @Connector.catch_error
+    async def __load_users() -> dict:
+        """
+        This function is for intern using. It loads all users data and save it into the User.users variable.
+        """
+        if User.users == None:
+            User.users = {user.id: user.to_dict() async for user in Connector.USERS.stream()}
+        return User.users
     
     @Connector.catch_error
-    async def query(field_path: str="", op_string: str="", value: str="", only_ids: bool=False) -> dict:
+    async def all() -> list[UserReference]:
+        """
+        Returns all users of database
+        """
+        await User.__load_users()
+        return [UserReference(**user) for RG, user in User.users.items()]
+    
+    @Connector.catch_error
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> UserReference | dict:
         """
         Makes queries to "leitores" collection.
-        \n
-        If field_path, op_string and value equals to "" then returns all the documents
-        on collection.
         """
+        await User.__load_users()
         result = []
-        #if all the str args are not ""
-        if all([field_path, op_string, value]):
-            async for user in Connector.USERS.where(filter=Connector.field_filter(field_path, op_string, value)).stream():
-                result.append(user.id if only_ids else user.to_dict())
-        else:
-            async for user in Connector.USERS.stream():
-                result.append(user.id if only_ids else user.to_dict())
-        return None if result == [] else result     
+        try:    
+            exec(f'''
+for RG, user in User.users.items():
+    if not (str(user['{field}']) {op_string} '{value}'):
+        continue
+    result.append(user if to_dict else UserReference(**user))
+''')
+        except KeyError as e:
+            return Connector.message('Field not found')
+        return result if len(result) != 1 else result[0]   
     
     @Connector.catch_error
     async def new( 
@@ -104,9 +124,8 @@ class User:
         \n
         If the user already exists, then returns a dict with a message about this
         """
-        
         #If user already exists
-        if RG in await User.query(only_ids=True): 
+        if RG in await User.__load_users(): 
             return Connector.message('Usuário já existente')
         user_data = {
             'RG': RG,
@@ -127,4 +146,5 @@ class User:
             'livro': False     
         }
         await Connector.USERS.document(RG).set(user_data)
+        User.users[RG] = user_data
         return UserReference(**user_data)

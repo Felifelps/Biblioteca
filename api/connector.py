@@ -31,6 +31,7 @@ class Connector:
     - BOOKS: DB.collection('livros') -> References the books collection
     - LENDINGS: DB.collection('emprestimos') -> References the lendings collection
     - ADM: DB.document('adm/data')  -> References the adm document
+    - API_KEYS = DB.collection('keys') -> References the keys collection
     - field_filter: FieldFilter -> Used for querys
     - admin_data: {} -> Stores admin data
     
@@ -39,6 +40,7 @@ class Connector:
     USERS = DB.collection('leitores')
     BOOKS = DB.collection('livros')
     LENDINGS = DB.collection('emprestimos')
+    API_KEYS = DB.collection('keys')
     ADM = DB.document('adm/data')
     field_filter = FieldFilter
     admin_data = {}
@@ -93,10 +95,10 @@ class Connector:
         Decorator to handle exceptions on async functions
         """
         async def wrapper(*args, **kwargs):
-            try:
-                return await func(*args, **kwargs)
-            except Exception as e:
-                return Connector.message('Um erro ocorreu.', str(e))
+            #try:
+            return await func(*args, **kwargs)
+            #except Exception as e:
+            #    return Connector.message('Um erro ocorreu.', str(e))
         return wrapper
     
     def sync_catch_error(func):

@@ -1,5 +1,9 @@
-from api import app, User, Email, Files, Book, Lending
+from api import app
+from api.keys import Keys
+from api.book import Book
 from api.connector import Connector
+from api.lending import Lending
+from api.user import User
 import asyncio, json
 
 #TODO: Fazer a documentação geral usando sphinx
@@ -12,21 +16,17 @@ def dump(*dicts):
             try: 
                 i = i.to_dict()
             except Exception as e:
-                print(e)
+                pass
             print(json.dumps(i, indent=4))
 
 async def main():
-    html = """
-    <form method='GET' action="http://192.168.0.197:5000" style="text-align: center">
-        <label for="name">Mande uma mensagem</label>
-        <input type="text" name="msg" id="msg" placeholder="Mensagem aqui">
-        <br>
-        <br>
-        <input type="submit">
-    </form>
-    """
-    await Email.message('adryancaetano871@gmail.com', 'POkemon', html)
+    await Keys.delete('felipefelipe23456@gmail.com')
+    #print(await Keys.register_new_key('felipefelipe23456@gmail.com'))
+    #await Keys.validate('felipefelipe23456@gmail.com')
+    #print(await Keys.get('felipefelipe23456@gmail.com'))
     
-#loop = asyncio.new_event_loop()
-#loop.run_until_complete(main())
-app.run(debug=True, host='0.0.0.0')
+    return 
+    
+    
+loop = asyncio.new_event_loop()
+loop.run_until_complete(main())   #app.run(debug=True, host='0.0.0.0r'))
