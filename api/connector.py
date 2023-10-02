@@ -18,7 +18,14 @@ initialize_app(
 )
 
 MEGA = Mega()
-MEGA.login('felipefelipe23456@gmail.com', 'mgalomniaco')
+
+while True:
+    try:
+        MEGA.login('felipefelipe23456@gmail.com', 'mgalomniaco')
+    except Exception as e:
+        print(e)
+        continue
+    break
 
 class Connector:
     """
