@@ -1,12 +1,6 @@
 from api import app
-from api.keys import Keys
-from api.book import Book
-from api.connector import Connector
-from api.lending import Lending
-from api.user import User
-import asyncio, json
-
-#TODO: Fazer a documentação geral usando sphinx
+from asyncio import new_event_loop
+import json, os
 
 def dump(*dicts):
     for i in dicts:
@@ -19,10 +13,6 @@ def dump(*dicts):
                 pass
             print(json.dumps(i, indent=4))
 
-async def main():
-    pass
-    
-import os 
-os.environ['QUART_ENV'] = 'development'
-loop = asyncio.new_event_loop()
-app.run(debug=True, host='0.0.0.0', loop=loop, use_reloader=True)
+if __name__ == '__main__':
+    loop = new_event_loop()
+    loop.run_until_complete(app.run(debug=True, host='0.0.0.0'))

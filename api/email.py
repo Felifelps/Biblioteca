@@ -14,7 +14,7 @@ class Email:
     """
     # api.email.Email
     
-    This class contains constants and associated to the method used for sendind
+    This class contains constants associated to the method used for sendind
     """
     
     SMTP_SERVER = 'smtp.gmail.com'

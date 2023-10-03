@@ -46,7 +46,7 @@ class LendingReference:
         Saves the changes on the database
         """
         await Connector.LENDINGS.document(self.id).update(self.to_dict())
-        Lending.lendings[self.id] = self.to_dict()
+        Lending.__lendings[self.id] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -54,7 +54,7 @@ class LendingReference:
         Deletes LendingReference instance and the corresponding firestore document
         """
         await Connector.LENDINGS.document(self.id).delete()
-        Lending.lendings.pop(self.id, '')
+        Lending.__lendings.pop(self.id, '')
         del self
 
 class Lending:
@@ -67,23 +67,23 @@ class Lending:
     """
     
     quantity = None
-    lendings = None
+    __lendings = None
     @Connector.catch_error
-    async def __load_lendings() -> None:
+    async def get_lendings() -> None:
         """
-        This function is for intern using. It loads all lendings data and save it into the Lending.lendings variable.
+        This function is for intern using. It loads all lendings data and save it into the Lending.__lendings variable.
         """
-        if Lending.lendings == None:
-            Lending.lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
-            Lending.quantity = len(Lending.lendings)
+        if Lending.__lendings == None:
+            Lending.__lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
+            Lending.quantity = len(Lending.__lendings)
     
     @Connector.catch_error
     async def all() -> list[LendingReference]:
         """
         Returns all lendings of database
         """
-        await Lending.__load_lendings()
-        return [LendingReference(**lending) for RG, lending in Lending.lendings.items()]
+        await Lending.get_lendings()
+        return [LendingReference(**lending) for RG, lending in Lending.__lendings.items()]
     
     @Connector.catch_error
     async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> LendingReference | dict:
@@ -91,11 +91,11 @@ class Lending:
         Makes queries to "emprestimos" collection.
         """
 
-        await Lending.__load_lendings()
+        await Lending.get_lendings()
         result = []
         try:
             exec(f'''
-for id, lending in Lending.lendings.items():
+for id, lending in Lending.__lendings.items():
     if not (str(lending['{field}']) {op_string} '{value}'):
         continue
     result.append(lending if to_dict else LendingReference(**lending))
@@ -109,8 +109,8 @@ for id, lending in Lending.lendings.items():
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
         """
-        if Lending.lendings == None:
-            await Lending.__load_lendings()
+        if Lending.__lendings == None:
+            await Lending.get_lendings()
             
         id = Lending.quantity + 1
         lending_data = {
@@ -124,5 +124,5 @@ for id, lending in Lending.lendings.items():
         }
         await Connector.LENDINGS.document(str(id)).set(lending_data)
         Lending.quantity += 1
-        Lending.lendings[str(id)] = lending_data
+        Lending.__lendings[str(id)] = lending_data
         return LendingReference(**lending_data)

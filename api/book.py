@@ -46,7 +46,7 @@ class BookReference:
         Saves the changes on the database
         """
         await Connector.BOOKS.document(self.id).update(self.to_dict())
-        Book.books[self.id] = self.to_dict()
+        Book.__books[self.id] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -54,7 +54,7 @@ class BookReference:
         Deletes BookReference instance and the corresponding firestore document
         """
         await Connector.BOOKS.document(self.id).delete()
-        Book.books.pop(self.id, '')
+        Book.__books.pop(self.id, '')
         del self
 
 class Book:
@@ -67,23 +67,23 @@ class Book:
     """
     
     quantity = None
-    books = None
+    __books = None
     @Connector.catch_error
-    async def __load_books() -> None:
+    async def get_books() -> None:
         """
-        This function is for intern using. It loads all books data and save it into the Book.books variable.
+        This function is for intern using. It loads all books data and save it into the Book.__books variable.
         """
-        if Book.books == None:
-            Book.books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
-        Book.quantity = len(Book.books)
+        if Book.__books == None:
+            Book.__books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
+        Book.quantity = len(Book.__books)
     
     @Connector.catch_error
     async def all() -> list[BookReference]:
         """
         Returns all books of database
         """
-        await Book.__load_books()
-        return [BookReference(**book) for RG, book in Book.books.items()]
+        await Book.get_books()
+        return [BookReference(**book) for RG, book in Book.__books.items()]
     
     @Connector.catch_error
     async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> BookReference | dict:
@@ -91,11 +91,11 @@ class Book:
         Makes queries to "livros" collection.
         """
         
-        await Book.__load_books()
+        await Book.get_books()
         result = []
         try:
             exec(f'''
-for id, book in Book.books.items():
+for id, book in Book.__books.items():
     if not (str(book['{field}']) {op_string} '{value}'):
         continue
     result.append(book if to_dict else BookReference(**book))
@@ -120,7 +120,7 @@ for id, book in Book.books.items():
         This function creates a new document on the 'livros' collection and returns a 
         BookReference object pointing to.
         """
-        await Book.__load_books()
+        await Book.get_books()
         
         id = Book.quantity + 1
         book_data = {
@@ -137,5 +137,5 @@ for id, book in Book.books.items():
         }
         await Connector.BOOKS.document(str(id)).set(book_data)
         Book.quantity += 1
-        Book.books[str(id)] = book_data
+        Book.__books[str(id)] = book_data
         return BookReference(**book_data)

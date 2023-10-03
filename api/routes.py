@@ -8,16 +8,23 @@ from quart import Quart, redirect, render_template, request, session, url_for
 from random import randint
 
 app = Quart('Biblioteca')
+app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
 
+@app.route('/users', methods=['POST'])
+async def users():
+    json = await request.get_json()
+    if not json:
+        return await User.get_users()
+    return 'Opa'
+
+#---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/', methods=['GET', 'POST'])
 async def register():
     message = None
     if request.method == 'POST':
-        email = (await request.form)['email']
-        if email in await Keys.get_keys():
-            message = 'Email já registrado'
-        else:
+        email = (await request.form).get('email', None)
+        if email not in await Keys.get_keys() and email:
             code = randint(100000, 999999)
             await Email.message(
                 email, 
@@ -27,6 +34,7 @@ async def register():
             session['email'] = email
             session['code'] = code
             return redirect(url_for('code'))
+        message = 'Email já registrado' if email else 'Email inválido'
     return await render_template('register_email.html', message=message)
 
 @app.route('/code', methods=['GET', 'POST'])

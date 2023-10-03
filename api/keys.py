@@ -15,15 +15,15 @@ class Keys:
     This class abstracts the "keys" collection of the database.
     """
     
-    keys = None
+    __keys = None
     @Connector.catch_error
     async def get_keys() -> dict:
         """
         This function is for intern using. It loads all keys data and save it into the Keys.keys variable.
         """
-        if Keys.keys == None:
-            Keys.keys = {key.id: key.to_dict() async for key in Connector.API_KEYS.stream()}
-        return Keys.keys
+        if Keys.__keys == None:
+            Keys.__keys = {key.id: key.to_dict() async for key in Connector.API_KEYS.stream()}
+        return Keys.__keys
     
     def encrypt_key(key: str) -> list[bytes]:
         """
@@ -38,7 +38,7 @@ class Keys:
         Checks if the given key corresponds to the given email api key.
         """
         await Keys.get_keys()
-        return checkpw(bytes(key, encoding='utf-8'), Keys.keys[email]['encrypted_key'])
+        return checkpw(bytes(key, encoding='utf-8'), Keys.__keys[email]['encrypted_key'])
     
     @Connector.catch_error
     async def register_new_key(email: str, length: int=32) -> str | dict:
@@ -57,7 +57,7 @@ class Keys:
             "salt": str(data[1])
         }
         await Connector.API_KEYS.document(email).set(key_data)
-        Keys.keys[email] = key_data
+        Keys.__keys[email] = key_data
         return key
     
     @Connector.catch_error
@@ -74,4 +74,4 @@ class Keys:
         """
         await Keys.get_keys()
         await Connector.API_KEYS.document(email).delete()
-        Keys.keys.pop(email, '')
+        Keys.__keys.pop(email, '')

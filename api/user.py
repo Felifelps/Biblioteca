@@ -47,7 +47,7 @@ class UserReference:
         Saves the changes on the database
         """
         await Connector.USERS.document(self.RG).update(self.to_dict())
-        User.users[self.RG] = self.to_dict()
+        User.__users[self.RG] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -55,7 +55,7 @@ class UserReference:
         Deletes UserReference instance and the corresponding firestore document
         """
         await Connector.USERS.document(self.RG).delete()
-        User.users.pop(self.RG, '')
+        User.__users.pop(self.RG, '')
         del self
 
 class User:
@@ -66,34 +66,34 @@ class User:
     \n
     Creates documents and make querys to the collection.
     """
-    users = None
+    __users = None
     @Connector.catch_error
-    async def __load_users() -> dict:
+    async def get_users() -> dict:
         """
-        This function is for intern using. It loads all users data and save it into the User.users variable.
+        This function is for intern using. It loads all users data and save it into the User.__users variable.
         """
-        if User.users == None:
-            User.users = {user.id: user.to_dict() async for user in Connector.USERS.stream()}
-        return User.users
+        if User.__users == None:
+            User.__users = {user.id: user.to_dict() async for user in Connector.USERS.stream()}
+        return User.__users
     
     @Connector.catch_error
     async def all() -> list[UserReference]:
         """
         Returns all users of database
         """
-        await User.__load_users()
-        return [UserReference(**user) for RG, user in User.users.items()]
+        await User.get_users()
+        return [UserReference(**user) for RG, user in User.__users.items()]
     
     @Connector.catch_error
     async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> UserReference | dict:
         """
         Makes queries to "leitores" collection.
         """
-        await User.__load_users()
+        await User.get_users()
         result = []
         try:    
             exec(f'''
-for RG, user in User.users.items():
+for RG, user in User.__users.items():
     if not (str(user['{field}']) {op_string} '{value}'):
         continue
     result.append(user if to_dict else UserReference(**user))
@@ -125,7 +125,7 @@ for RG, user in User.users.items():
         If the user already exists, then returns a dict with a message about this
         """
         #If user already exists
-        if RG in await User.__load_users(): 
+        if RG in await User.get_users(): 
             return Connector.message('Usuário já existente')
         user_data = {
             'RG': RG,
@@ -146,5 +146,5 @@ for RG, user in User.users.items():
             'livro': False     
         }
         await Connector.USERS.document(RG).set(user_data)
-        User.users[RG] = user_data
+        User.__users[RG] = user_data
         return UserReference(**user_data)
