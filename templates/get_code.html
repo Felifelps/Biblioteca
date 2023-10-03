@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} Confirmando o código {% endblock %}
+{% block content %}
+    <h1>Biblioteca Api - Confirmando o código</h1>
+    <h3>Digite o código que enviamos para {{ email }}</h3>
+    {% if message %}
+        <h4 style='color: red;'> {{ message }} </h4>
+    {% endif %}
+    <form method="POST">
+        <input name="code" type="number" placeholder="Digite o código" maxlength="6" required>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock %}

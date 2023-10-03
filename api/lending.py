@@ -54,7 +54,7 @@ class LendingReference:
         Deletes LendingReference instance and the corresponding firestore document
         """
         await Connector.LENDINGS.document(self.id).delete()
-        Lending.lendings.pop(self.id)
+        Lending.lendings.pop(self.id, '')
         del self
 
 class Lending:

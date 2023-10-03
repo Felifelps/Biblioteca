@@ -8,7 +8,7 @@ from asyncio import to_thread
 from api.connector import Connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from smtplib import SMTP
+from smtplib import SMTP, SMTPServerDisconnected
 
 class Email:
     """
@@ -25,8 +25,17 @@ class Email:
     SERVER.starttls()
     SERVER.login(SENDER, PASSWORD)
     
+    def load_server(func):
+        async def wrapper(*args, **kwargs):
+            if Email.SERVER == None:
+                Email.SERVER = await to_thread(SMTP(Email.SMTP_SERVER, Email.SMTP_PORT))
+                await to_thread(Email.SERVER.starttls())
+                await to_thread(Email.SERVER.login(Email.SENDER, Email.PASSWORD))
+            return await func(*args, **kwargs)
+        return wrapper
     
     @Connector.catch_error
+    @load_server
     async def message(to: str, body: str, subject: str="Bibilioteca") -> None:
         """
         Sends an email
@@ -46,4 +55,4 @@ class Email:
             to,
             message.as_string()
         ))
-        
+    

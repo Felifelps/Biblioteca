@@ -20,13 +20,9 @@ def dump(*dicts):
             print(json.dumps(i, indent=4))
 
 async def main():
-    #await Keys.delete('felipefelipe23456@gmail.com')
-    #print(await Keys.register_new_key('felipefelipe23456@gmail.com'))
-    #await Keys.validate('felipefelipe23456@gmail.com')
-    #print(await Keys.get('felipefelipe23456@gmail.com'))
-    print(await Keys.check_key('felipefelipe23456@gmail.com', "7ad39792b2868af121b230296a99d693"))
-    return 
+    pass
     
-    
+import os 
+os.environ['QUART_ENV'] = 'development'
 loop = asyncio.new_event_loop()
-loop.run_until_complete(app.run(debug=True, host='0.0.0.0', use_reloader=True, loop=loop))
+app.run(debug=True, host='0.0.0.0', loop=loop, use_reloader=True)

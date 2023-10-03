@@ -55,7 +55,7 @@ class UserReference:
         Deletes UserReference instance and the corresponding firestore document
         """
         await Connector.USERS.document(self.RG).delete()
-        User.users.pop(self.RG)
+        User.users.pop(self.RG, '')
         del self
 
 class User:

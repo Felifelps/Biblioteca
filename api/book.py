@@ -54,7 +54,7 @@ class BookReference:
         Deletes BookReference instance and the corresponding firestore document
         """
         await Connector.BOOKS.document(self.id).delete()
-        Book.books.pop(self.id)
+        Book.books.pop(self.id, '')
         del self
 
 class Book:
