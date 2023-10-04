@@ -1,4 +1,5 @@
 from api.book import Book
+from api.connector import Connector
 from api.email import Email
 from api.files import Files
 from api.keys import Keys
@@ -11,12 +12,85 @@ app = Quart('Biblioteca')
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
 
-@app.route('/users', methods=['POST'])
-async def users():
+async def key_in_json(json):
+    return json and await Keys.get_email_from_key(json.pop('key', False))
+
+@app.route('/users/', methods=['POST'])
+async def all_users():
+    if not await key_in_json(await request.get_json()):
+        return await render_template('key_required.html')
+    return await User.get_users()
+
+@app.route('/user/', methods=['POST'])
+async def get_user():
     json = await request.get_json()
-    if not json:
-        return await User.get_users()
-    return 'Opa'
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    RG = json.get('RG', False)
+    if RG: 
+        return (await User.get_users()).get(RG, 'User not found')
+    return 'Missing RG'
+
+@app.route('/user/new/', methods=['POST'])
+async def new_user():
+    json = await request.get_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    try:
+        await User.new(**json)
+        return 'User created'
+    except TypeError as e:
+        return f'Invalid json. Missing required parameters:{str(e).split(":")[1]}'
+    
+@app.route('/user/update/', methods=['POST'])
+async def update_user():
+    json = await request.get_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    RG = json.pop('RG', False)
+    if RG: 
+        for field in json:
+            if field not in User.fields:
+                return 'There is an invalid field: ' + field
+        await User.update(RG, **json)
+        return 'User updated'
+    return 'Missing RG'
+
+@app.route('/user/validate/', methods=['POST'])
+async def validate_user():
+    json = await request.get_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    RG = json.pop('RG', False)
+    if RG: 
+        await User.update(RG, valido=True)
+        return 'User validated'
+    return 'Missing RG'
+
+@app.route('/user/favorite_book/', methods=['POST'])
+async def favorite_book_user():
+    json = await request.get_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    RG = json.pop('RG', False)
+    if RG: 
+        add = json.pop('add', False)
+        if add:
+            await User.update(RG, valido=True)
+        return 'User validated'
+    return 'Missing RG'
+
+@app.route('/user/delete/', methods=['POST'])
+async def delete_user():
+    json = await request.get_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    RG = json.pop('RG', False)
+    if RG:
+        await User.delete(RG)
+        return 'User deleted'
+    return 'Missing RG'
+    
 
 #---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/', methods=['GET', 'POST'])

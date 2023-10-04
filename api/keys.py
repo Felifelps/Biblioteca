@@ -35,10 +35,20 @@ class Keys:
     @Connector.catch_error
     async def check_key(email: str, key: str) -> bool:
         """
-        Checks if the given key corresponds to the given email api key.
+        Checks if the given key corresponds to a given email api key.
         """
         await Keys.get_keys()
         return checkpw(bytes(key, encoding='utf-8'), Keys.__keys[email]['encrypted_key'])
+    
+    @Connector.catch_error
+    async def get_email_from_key(key: str) -> str | None:
+        """
+        Gets an email by its associated key. If not found, returns None.
+        """
+        for value in (await Keys.get_keys()).values():
+            if checkpw(bytes(key, encoding='utf-8'), bytes(value['encrypted_key'][2:-1], encoding='utf-8')):
+                return value['email']
+        return None
     
     @Connector.catch_error
     async def register_new_key(email: str, length: int=32) -> str | dict:

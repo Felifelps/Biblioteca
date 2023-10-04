@@ -1,62 +1,11 @@
 """
 # api.user
 
-This module contains an ORM implementation for the firestore_async module for manipulate
+This module contains the class User, used for manipulate
 the users data stored on the database
 """
 
-from api.connector import Connector
-from asyncio import ensure_future
-
-class UserReference:
-    """
-    # api.user.UserReference
-    
-    This class abstracts a firestore document set on the "leitores" collection. 
-    \n 
-    When instantiated, it gets the values from the database and stores it in attributes 
-    with the same name of the fields. 
-    \n
-    After changes, the save method sends the values to 
-    the database.
-    """
-    
-    def __init__(self, **kwargs):
-        """
-        Converts kwargs argument into attrs and saves kwargs keys in the fields attribute
-        """
-        self.fields = list(kwargs.keys())
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        
-    def __str__(self) -> str:
-        return f'<UserReference(RG="{self.RG}", nome="{self.nome}")>'
-    
-    def __repr__(self) -> str:
-        return self.__str__()
-    
-    def to_dict(self) -> dict:
-        """
-        Returns dict version of the database data
-        """
-        return {attr: getattr(self, attr) for attr in self.fields}
-    
-    @Connector.catch_error   
-    async def save(self) -> None:
-        """
-        Saves the changes on the database
-        """
-        await Connector.USERS.document(self.RG).update(self.to_dict())
-        User.__users[self.RG] = self.to_dict()
-    
-    @Connector.catch_error
-    async def delete(self) -> None:
-        """
-        Deletes UserReference instance and the corresponding firestore document
-        """
-        await Connector.USERS.document(self.RG).delete()
-        User.__users.pop(self.RG, '')
-        del self
+from api.connector import Connector, firestore_async
 
 class User:
     """
@@ -66,6 +15,7 @@ class User:
     \n
     Creates documents and make querys to the collection.
     """
+    fields = ['data_nascimento', 'CEP', 'tel_pessoal', 'tel_profissional', 'escola', 'curso_serie', 'profissao', 'local_nascimento', 'nome', 'RG', 'residencia', 'email']
     __users = None
     @Connector.catch_error
     async def get_users() -> dict:
@@ -77,15 +27,7 @@ class User:
         return User.__users
     
     @Connector.catch_error
-    async def all() -> list[UserReference]:
-        """
-        Returns all users of database
-        """
-        await User.get_users()
-        return [UserReference(**user) for RG, user in User.__users.items()]
-    
-    @Connector.catch_error
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> UserReference | dict:
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) ->  dict:
         """
         Makes queries to "leitores" collection.
         """
@@ -117,7 +59,7 @@ for RG, user in User.__users.items():
         escola: str="",
         curso_serie: str="",
         **kwargs
-    ) -> UserReference | dict:
+    ) -> dict:
         """
         This function creates a new document on the 'leitores' collection and returns a 
         UserReference object pointing to.
@@ -145,6 +87,43 @@ for RG, user in User.__users.items():
             'favoritos': [],
             'livro': False     
         }
+        
         await Connector.USERS.document(RG).set(user_data)
         User.__users[RG] = user_data
-        return UserReference(**user_data)
+        return user_data
+    
+    @Connector.catch_error   
+    async def update(RG, **kwargs) -> None:
+        """
+        Updates an user in the database
+        """
+        await Connector.USERS.document(RG).update(kwargs)
+        await User.get_users()
+        User.__users[RG].update(kwargs)
+        
+    @Connector.catch_error   
+    async def favorite(RG, book_id) -> None:
+        """
+        Favorites a book
+        """
+        await User.get_users()
+        favorite = User.__users[RG]['favoritos']
+        if book_id in favorite:
+            await Connector.USERS.document(RG).update({
+                'favoritos': firestore_async.firestore.ArrayRemove([book_id])
+            })
+            User.__users[RG]['favoritos'].pop(favorite.index(book_id))
+        else:
+            await Connector.USERS.document(RG).update({
+                'favoritos': firestore_async.firestore.ArrayUnion([book_id])
+            })
+            User.__users[RG]['favoritos'].append(book_id)
+    
+    @Connector.catch_error
+    async def delete(RG) -> None:
+        """
+        Deletes a user firestore document
+        """
+        await Connector.USERS.document(RG).delete()
+        await User.get_users()
+        User.__users.pop(RG, '')

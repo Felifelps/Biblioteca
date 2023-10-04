@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %} Chave necessária {% endblock %}
+{% block content %}
+    <h1>Biblioteca Api </h1>
+    <p> Uma chave de api é necessária para acessar esse recurso. </p>
+    <p> Você pode gerar uma gratuitamente <a href="{{ url_for('register') }}">nesse link</a>.</p>
+{% endblock %}
