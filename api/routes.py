@@ -23,13 +23,13 @@ async def get_form_or_json():
 async def key_in_json(json):
     return json and json.get('key', False) and await Keys.get_email_from_key(json.pop('key'))
 
-@app.route('/users/', methods=['POST'])
+@app.route('/users', methods=['POST'])
 async def all_users():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return await User.get_users()
 
-@app.route('/user/', methods=['POST'])
+@app.route('/user', methods=['POST'])
 async def get_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -39,7 +39,7 @@ async def get_user():
         return (await User.get_users()).get(RG, 'User not found')
     return 'Missing RG'
 
-@app.route('/user/new/', methods=['POST'])
+@app.route('/user/new', methods=['POST'])
 async def new_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -55,7 +55,7 @@ async def new_user():
             return f'Missing required parameters:{str(e).split(":")[1]}'
     return 'Missing RG'
     
-@app.route('/user/update/', methods=['POST'])
+@app.route('/user/update', methods=['POST'])
 async def update_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -71,7 +71,7 @@ async def update_user():
         return 'User not found'
     return 'Missing RG'
 
-@app.route('/user/validate/', methods=['POST'])
+@app.route('/user/validate', methods=['POST'])
 async def validate_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -84,7 +84,7 @@ async def validate_user():
         return 'User not found'
     return 'Missing RG'
 
-@app.route('/user/favorite_book/', methods=['POST'])
+@app.route('/user/favorite_book', methods=['POST'])
 async def favorite_book_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -100,7 +100,7 @@ async def favorite_book_user():
         return 'User not found'
     return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
 
-@app.route('/user/delete/', methods=['POST'])
+@app.route('/user/delete', methods=['POST'])
 async def delete_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -113,13 +113,13 @@ async def delete_user():
         return 'User not found'
     return 'Missing RG'
 
-@app.route('/books/', methods=['POST'])
+@app.route('/books', methods=['POST'])
 async def all_books():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return await Book.get_books()
 
-@app.route('/book/', methods=['POST'])
+@app.route('/book', methods=['POST'])
 async def get_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -129,7 +129,7 @@ async def get_book():
         return (await Book.get_books()).get(book_id, 'Book not found')
     return 'Missing book_id'
 
-@app.route('/book/new/', methods=['POST'])
+@app.route('/book/new', methods=['POST'])
 async def new_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -143,7 +143,7 @@ async def new_book():
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
     
-@app.route('/book/update/', methods=['POST'])
+@app.route('/book/update', methods=['POST'])
 async def update_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -159,7 +159,7 @@ async def update_book():
         return 'Book not found'
     return 'Missing book_id'
 
-@app.route('/book/delete/', methods=['POST'])
+@app.route('/book/delete', methods=['POST'])
 async def delete_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -193,7 +193,7 @@ async def register():
         await flash('Email já registrado' if email else 'Email inválido')
     return await render_template('register_email.html')
 
-@app.route('/text/', methods=['GET', 'POST'])
+@app.route('/text', methods=['GET', 'POST'])
 async def text():
     if request.method == "POST": 
         print((await request.form)['text'])
