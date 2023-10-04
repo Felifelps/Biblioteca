@@ -68,11 +68,12 @@ class Connector:
         Connector.admin_data['salt'] = salt
         Connector.admin_data['password'] = hashpw(bytes(password, encoding='utf-8'), salt)
         
-    def check_admin_password(password: str) -> bool:
+    async def check_admin_password(password: str) -> bool:
         """
         This function checks if the password parameter corresponds to the hashed
         password stored in Connector.admin_data
         """
+        await Connector.load_admin_data()
         return checkpw(bytes(password, encoding='utf-8'), Connector.admin_data['password'])
     
     def message(message: str, log: str=None) -> dict:

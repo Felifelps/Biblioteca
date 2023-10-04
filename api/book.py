@@ -1,61 +1,11 @@
 """
 # api.book
 
-This module contains an ORM implementation for the firestore_async module for manipulate
+This module contains a class used for manipulate
 the books data stored on the database
 """
 
 from api.connector import Connector
-
-class BookReference:
-    """
-    # api.book.BookReference
-    
-    This class abstracts a firestore document set on the "livros" collection. 
-    \n 
-    When instantiated, it gets the values from the database and stores it in attributes 
-    with the same name of the fields. 
-    \n
-    After changes, the save method sends the values to 
-    the database.
-    """
-    
-    def __init__(self, **kwargs):
-        """
-        Converts kwargs argument into attrs and saves kwargs keys in the fields attribute
-        """
-        self.fields = list(kwargs.keys())
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        
-    def __str__(self) -> str:
-        return f'<BookReference(id={self.id}, titulo="{self.titulo}")>'
-    
-    def __repr__(self) -> str:
-        return self.__str__()
-    
-    def to_dict(self) -> dict:
-        """
-        Returns dict version of the database data
-        """
-        return {attr: getattr(self, attr) for attr in self.fields}
-    
-    @Connector.catch_error   
-    async def save(self) -> None:
-        """
-        Saves the changes on the database
-        """
-        await Connector.BOOKS.document(self.id).update(self.to_dict())
-        Book.__books[self.id] = self.to_dict()
-    
-    @Connector.catch_error
-    async def delete(self) -> None:
-        """
-        Deletes BookReference instance and the corresponding firestore document
-        """
-        await Connector.BOOKS.document(self.id).delete()
-        Book.__books.pop(self.id, '')
-        del self
 
 class Book:
     """
@@ -65,7 +15,7 @@ class Book:
     \n
     Creates documents and make querys to the collection.
     """
-    
+    fields = ['titulo', 'autor', 'editora', 'edicao', 'CDD', 'assuntos', 'estante', 'prateleira', 'leitor']
     quantity = None
     __books = None
     @Connector.catch_error
@@ -76,17 +26,18 @@ class Book:
         if Book.__books == None:
             Book.__books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
         Book.quantity = len(Book.__books)
+        return Book.__books
     
     @Connector.catch_error
-    async def all() -> list[BookReference]:
+    async def all() -> list[dict]:
         """
         Returns all books of database
         """
         await Book.get_books()
-        return [BookReference(**book) for RG, book in Book.__books.items()]
+        return [book for RG, book in Book.__books.items()]
     
     @Connector.catch_error
-    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> BookReference | dict:
+    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
         """
         Makes queries to "livros" collection.
         """
@@ -115,7 +66,7 @@ for id, book in Book.__books.items():
         estante: str,
         prateleira: str,
         **kwargs
-    ) -> BookReference | dict:
+    ) -> dict:
         """
         This function creates a new document on the 'livros' collection and returns a 
         BookReference object pointing to.
@@ -135,7 +86,26 @@ for id, book in Book.__books.items():
             'prateleira': prateleira,
             'leitor': False   
         }
+        print(list(book_data.keys()))
         await Connector.BOOKS.document(str(id)).set(book_data)
         Book.quantity += 1
         Book.__books[str(id)] = book_data
-        return BookReference(**book_data)
+        return book_data
+    
+    @Connector.catch_error   
+    async def update(book_id, **kwargs) -> None:
+        """
+        Updates a book in the database
+        """
+        await Connector.BOOKS.document(book_id).update(kwargs)
+        await Book.get_books()
+        Book.__books[book_id].update(kwargs)
+    
+    @Connector.catch_error
+    async def delete(book_id) -> None:
+        """
+        Deletes a book in the database
+        """
+        await Connector.BOOKS.document(book_id).delete()
+        await Book.get_books()
+        Book.__books.pop(book_id, '')
