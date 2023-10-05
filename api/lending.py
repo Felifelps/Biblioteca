@@ -27,7 +27,21 @@ class LendingReference:
         self.fields = list(kwargs.keys())
         for key, value in kwargs.items():
             setattr(self, key, value)
+    
+    def __setitem__(self, name, value) -> None:
+        '''
+        This function transforms lending[name] = value in lending.name = value
+        '''
+        setattr(self, name, value)
         
+    def __getitem__(self, name):
+        '''
+        This function returns lending.name
+        '''
+        if hasattr(self, name):
+            return getattr(self, name)
+        return None
+    
     def __str__(self) -> str:
         return f'<LendingReference(id={self.id}, livro="{self.livro}", leitor="{self.leitor}")>'
     
@@ -46,7 +60,7 @@ class LendingReference:
         Saves the changes on the database
         """
         await Connector.LENDINGS.document(self.id).update(self.to_dict())
-        Lending.__lendings[self.id] = self.to_dict()
+        Lending._lendings[self.id] = self.to_dict()
     
     @Connector.catch_error
     async def delete(self) -> None:
@@ -54,7 +68,7 @@ class LendingReference:
         Deletes LendingReference instance and the corresponding firestore document
         """
         await Connector.LENDINGS.document(self.id).delete()
-        Lending.__lendings.pop(self.id, '')
+        Lending._lendings.pop(self.id, '')
         del self
 
 class Lending:
@@ -67,15 +81,16 @@ class Lending:
     """
     
     quantity = None
-    __lendings = None
+    _lendings = None
     @Connector.catch_error
     async def get_lendings() -> None:
         """
-        This function is for intern using. It loads all lendings data and save it into the Lending.__lendings variable.
+        This function is for intern using. It loads all lendings data and save it into the Lending._lendings variable.
         """
-        if Lending.__lendings == None:
-            Lending.__lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
-            Lending.quantity = len(Lending.__lendings)
+        if Lending._lendings == None:
+            Lending._lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
+            Lending.quantity = len(Lending._lendings)
+        return Lending._lendings
     
     @Connector.catch_error
     async def all() -> list[LendingReference]:
@@ -83,7 +98,16 @@ class Lending:
         Returns all lendings of database
         """
         await Lending.get_lendings()
-        return [LendingReference(**lending) for RG, lending in Lending.__lendings.items()]
+        return [LendingReference(**lending) for RG, lending in Lending._lendings.items()]
+    
+    @Connector.catch_error
+    async def get(id: str, default=None, to_dict: bool=True) -> LendingReference | dict:
+        '''
+        Returns book data from the database in the shape of a dict if to_dict == True, else LendingReference. If not found, returns default.
+        '''
+        if id in (await Lending.get_lendings()).keys():
+            return Lending._lendings[id] if to_dict else LendingReference(**Lending._lendings[id])
+        return default 
     
     @Connector.catch_error
     async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> LendingReference | dict:
@@ -95,7 +119,7 @@ class Lending:
         result = []
         try:
             exec(f'''
-for id, lending in Lending.__lendings.items():
+for id, lending in Lending._lendings.items():
     if not (str(lending['{field}']) {op_string} '{value}'):
         continue
     result.append(lending if to_dict else LendingReference(**lending))
@@ -109,7 +133,7 @@ for id, lending in Lending.__lendings.items():
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
         """
-        if Lending.__lendings == None:
+        if Lending._lendings == None:
             await Lending.get_lendings()
             
         id = Lending.quantity + 1
@@ -124,5 +148,5 @@ for id, lending in Lending.__lendings.items():
         }
         await Connector.LENDINGS.document(str(id)).set(lending_data)
         Lending.quantity += 1
-        Lending.__lendings[str(id)] = lending_data
+        Lending._lendings[str(id)] = lending_data
         return LendingReference(**lending_data)
