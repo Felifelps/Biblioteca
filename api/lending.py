@@ -128,7 +128,7 @@ for id, lending in Lending._lendings.items():
             return Connector.message('Field not found')
         return result if len(result) != 1 else result[0]    
     
-    async def new(RG: str, lending_id: str) -> LendingReference:
+    async def new(RG: str, book_id: str) -> LendingReference:
         """
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
@@ -140,7 +140,7 @@ for id, lending in Lending._lendings.items():
         lending_data = {
             'id': str(id),
             'leitor': RG,
-            'livro': lending_id,
+            'livro': book_id,
             'multa': 0,
             'data_emprestimo': Connector.today(),
             'renovado': False,

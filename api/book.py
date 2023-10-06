@@ -90,6 +90,7 @@ class Book:
         if Book._books == None:
             Book._books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
         Book.quantity = len(Book._books)
+        return Book._books
     
     @Connector.catch_error
     async def all() -> list[BookReference]:

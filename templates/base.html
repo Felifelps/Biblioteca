@@ -14,6 +14,8 @@
         }
         .container {
             text-align: center;
+            border: solid 2px #222222;
+            padding: 20px;
         }
         h1 {
             font-size: 24px;
@@ -39,11 +41,19 @@
         button:hover {
             background-color: #0056b3;
         }
+        .especial-link {
+            text-decoration: none; 
+            margin: 40px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         {% block content %} {% endblock %}
+        <br>
+        <a class="especial-link" href="mailto:felipefelipe23456@gmail.com">Suporte</a>
+        <a class="especial-link" href="https://github.com/Felifelps">GitHub</a>
     </div>
 </body>
 </html>

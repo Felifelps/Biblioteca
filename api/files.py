@@ -6,7 +6,7 @@ api.
 """
 
 from api.connector import Connector, MEGA
-from asyncio import to_thread
+from asyncio import sleep, to_thread
 from os import path, remove
 
 class Files:
@@ -73,7 +73,15 @@ class Files:
             ))
         except PermissionError as e:
             pass
-        Files.remove(file_path, temp=temp)
+        remove(file_path)
+    
+    async def future_remove(name: str, time=5) -> None:
+        """
+        Sleeps a time then deletes the given file
+        """
+        await sleep(time)
+        print('Deleting', name)
+        remove(name)
     
     def temp(name: str) -> str:
         """
@@ -81,11 +89,5 @@ class Files:
         """
         return path.join('temp', name)
     
-    def remove(name: str, temp: bool=True) -> None:
-        """
-        Deletes the given file
+    
         
-        :param temp: Looks in temporary directory if True, else looks for the file_path
-        itself
-        """
-        remove(Files.temp(name) if temp else name)
