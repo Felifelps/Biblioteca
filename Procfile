@@ -1,1 +1,1 @@
-web: gunicorn -w 4 app:app
+web: hypercorn --workers 4 app:app
