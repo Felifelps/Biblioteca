@@ -2,6 +2,8 @@ from api import app
 from asyncio import new_event_loop
 import json, os
 
+port = os.getenv('PORT')
+
 def dump(*dicts):
     for i in dicts:
         if isinstance(i, list):
@@ -14,5 +16,4 @@ def dump(*dicts):
             print(json.dumps(i, indent=4))
 
 if __name__ == '__main__':
-    loop = new_event_loop()
-    loop.run_until_complete(app.run(debug=True, host='0.0.0.0'))
+    app.run(port=port)
