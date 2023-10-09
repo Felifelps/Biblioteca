@@ -1,5 +1,5 @@
 @echo off
-pip freeze > requirements.txt
+echo pip freeze > requirements.txt
 for /f %%a in ('git branch --show-current') do (
     set "branch=%%a"
 )
