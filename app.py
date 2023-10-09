@@ -16,4 +16,4 @@ def dump(*dicts):
             print(json.dumps(i, indent=4))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=port)
