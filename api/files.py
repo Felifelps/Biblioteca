@@ -7,7 +7,8 @@ api.
 
 from api.connector import Connector, MEGA
 from asyncio import sleep, to_thread
-from os import path, remove
+from os import listdir, remove, walk
+from os.path import exists, getsize, join 
 
 class Files:
     """
@@ -34,6 +35,9 @@ class Files:
         """
         Files.files = {file['a']['n'] : (key, file) for key, file in (await to_thread(MEGA.get_files)).items()}
         return Files.files
+    
+    async def get_link(file):
+        return MEGA.get_link(file)
 
     @Connector.catch_error
     async def download(filename: str, rename_to: str=None) -> tuple:
@@ -44,6 +48,15 @@ class Files:
         """
         
         file = await Files.get_file(filename)
+        total_size = 0
+        for dirpath, _, filenames in walk('temp'):
+            for filename in filenames:
+                total_size += getsize(join('temp', filename))
+                print(filename, ':', (getsize(join('temp', filename))/1024)/1024, 'MB')
+        mega_bytes_size = (total_size/1024)/1024
+        if mega_bytes_size > 50:
+            for file in listdir('temp'):
+                await Files.future_remove(join('temp', file), 5)
         try:
             await to_thread(lambda: MEGA.download(
                 file, 
@@ -64,7 +77,7 @@ class Files:
         itself
         """
         file_path = Files.temp(file_path) if temp else file_path
-        if not path.exists(file_path):
+        if not exists(file_path):
             raise FileNotFoundError('File not found')
         try:
             await to_thread(lambda: MEGA.upload(
@@ -75,19 +88,23 @@ class Files:
             pass
         remove(file_path)
     
-    async def future_remove(name: str, time=5) -> None:
+    async def future_remove(name: str, time=150) -> None:
         """
         Sleeps a time then deletes the given file
         """
+        print('Removing', name, 'in', time, 'seconds')
         await sleep(time)
-        print('Deleting', name)
-        remove(name)
+        try:
+            remove(name)
+        except FileNotFoundError as e:
+            pass
+        print(name, 'removed')
     
     def temp(name: str) -> str:
         """
         Returns 'temp' joined with name
         """
-        return path.join('temp', name)
+        return join('temp', name)
     
     
         

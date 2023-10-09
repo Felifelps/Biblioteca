@@ -8,8 +8,8 @@ from api.user import User
 from asyncio import ensure_future
 from datetime import datetime
 from firebase_admin.firestore_async import firestore
-from os.path import exists
-from quart import flash, Quart, redirect, render_template, request, send_from_directory, session, url_for
+from os.path import exists, join
+from quart import flash, Quart, redirect, render_template, request, send_file, send_from_directory, session, url_for
 from random import randint
 
 # TODO: DOCUMENTAR TODAS AS VIEWS
@@ -48,7 +48,7 @@ async def new_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
-    RG = json.pop('RG', False)
+    RG = json.get('RG', False)
     if not RG: 
         return 'Missing RG'
     if await User.get(RG):
@@ -270,16 +270,17 @@ async def update_lending():
     await lending.save()
     return 'Lending updated' 
 
-
 @app.route('/user/files/send', methods=['POST'])
 async def send_user_files():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
+    print(json)
     RG = json.get('RG', False)
-    if not RG: 
-        return 'Missing RG'
+    if not (RG and await User.get(RG)): 
+        return 'Missing RG' if  not RG else 'User not found'
     files = await request.files
+    print(files)
     RG_frente = files.get('RG_frente', False)
     if not RG_frente: 
         return 'Missing RG_frente'
@@ -295,6 +296,7 @@ async def send_user_files():
                 for i in file:
                     local_file.write(i)
             await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
+        print('Files sended')
     ensure_future(paralel())
     return 'Enviando arquivos'
 
@@ -304,18 +306,19 @@ async def get_user_file():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     RG = json.get('RG', False)
-    if not RG: 
-        return 'Missing RG'
+    if not (RG and await User.get(RG)): 
+        return 'Missing RG' if  not RG else 'User not found'
     file_type = json.get('file_type', False)
     if file_type not in ['RG_frente', 'RG_verso', 'comprovante']: 
-        return 'file_type must be one of this: RG_frente, RG_verso or comprovante' if file_type else 'Missing fyle_type'
+        return 'file_type must be one of this: RG_frente, RG_verso or comprovante' if file_type else 'Missing file_type'
     try:
         for filename in Files.files:
             if RG in filename and file_type in filename:
+                
                 if not exists(Files.temp(filename)):
                     await Files.download(filename)
                 ensure_future(Files.future_remove(Files.temp(filename)))
-                return await send_from_directory('temp', filename)
+                return await send_file(join('temp', filename))
         return 'File not found'
     except PermissionError as e:
         return 'An error ocurred'
@@ -345,3 +348,62 @@ async def text():
     if request.method == "POST": 
         print((await request.form)['text'])
     return """<form method="POST"><textarea name="text" style="width: 30em; height: 30em;"></textarea><br><input type="submit"></form> """
+
+@app.route('/', methods=['GET', 'POST'])
+async def test():
+    if request.method == "POST":
+        pass
+    return """
+<style>
+    input {
+        font-size: 16px;
+    }
+</style>
+<form method="POST" action="/user/files/send" enctype="multipart/form-data">
+    <input type="hidden" value="548e0783ca4b16a090b1c5dc38973557" name="key">
+    <br>
+    <br>
+    <input type="text" value="2018125194-4" name="RG">
+    <br>
+    <br>
+    <label for="RG_frente">RG_Frente</label>
+    <input type="file" id="RG_frente" name="RG_frente">
+    <br>
+    <br>
+    <label for="RG_verso">RG_verso</label>
+    <input type="file" id="RG_verso" name="RG_verso">
+    <br>
+    <br>
+    <label for="comprovante">comprovante</label>
+    <input type="file" id="comprovante" name="comprovante">
+    <br>
+    <br>
+    <input type="submit">
+</form> 
+    """
+    
+@app.route('/get', methods=['GET', 'POST'])
+async def test2():
+    if request.method == "POST":
+        pass
+    return """
+<style>
+    input {
+        font-size: 16px;
+    }
+</style>
+<form method="POST" action="/user/files/get" enctype="multipart/form-data">
+    <input type="hidden" value="548e0783ca4b16a090b1c5dc38973557" name="key">
+    <input type="text" value="2018125194-4" name="RG">
+    <br>
+    <br>
+    <select name="file_type">
+        <option value="RG_frente">RG_frente</option>
+        <option value="RG_verso">RG_verso</option>
+        <option value="comprovante">comprovante</option>
+    </select>
+    <br>
+    <br>
+    <input type="submit">
+</form> 
+    """
