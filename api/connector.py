@@ -11,10 +11,13 @@ from datetime import datetime
 from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
+from os import environ
 from os.path import join
 
+cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
+
 initialize_app(
-    credentials.Certificate(join('.credentials', 'credentials.json'))
+    credentials.Certificate(cred,)
 )
 
 MEGA = Mega()
