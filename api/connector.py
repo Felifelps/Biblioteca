@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
-from os import environ
+from os import environ, getenv
 from os.path import join
 
 load_dotenv()
@@ -20,6 +20,12 @@ load_dotenv()
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
 
 print(cred)
+
+cred['private_key'] = ''
+for key, value in cred.copy().items():
+    if 'private_key_n' in key:
+        cred['private_key'] += '\n' + value
+        cred.pop(key)
 
 initialize_app(
     credentials.Certificate(cred)
