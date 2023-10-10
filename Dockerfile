@@ -11,8 +11,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the project files
 COPY . .
 
-# Expose the server port
-EXPOSE 8080
-
 # Command to start the server
 CMD ["hypercorn", "app:app"]
