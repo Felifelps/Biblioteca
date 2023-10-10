@@ -17,7 +17,7 @@ def dump(*dicts):
 
 if __name__ == '__main__':
     try:
-        app.run(port=port, host='0.0.0.0')
+        app.run(port=port, host='0.0.0.0', port=8080)
     except Exception as e:
         print(e)
         quit()
