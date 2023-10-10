@@ -1,8 +1,6 @@
 from api import app
 from asyncio import new_event_loop
-import json, os
-
-port = os.getenv('PORT', 8080)
+import json
 
 def dump(*dicts):
     for i in dicts:
@@ -17,7 +15,7 @@ def dump(*dicts):
 
 if __name__ == '__main__':
     try:
-        app.run(port=port, host='0.0.0.0')
+        app.run(port=8080, host='0.0.0.0')
     except Exception as e:
         input(e)
         
