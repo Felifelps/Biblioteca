@@ -8,13 +8,18 @@ This module aims to:
 
 from bcrypt import checkpw, gensalt, hashpw
 from datetime import datetime
+from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
 from os import environ
 from os.path import join
 
+load_dotenv()
+
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
+
+print(cred)
 
 initialize_app(
     credentials.Certificate(cred)
