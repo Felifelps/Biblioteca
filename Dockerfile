@@ -3,6 +3,8 @@ FROM python:3.9-slim
 
 # Copy requirements file and install dependencies
 COPY requirements.txt requirements.txt
+RUN python -m venv .venv
+RUN .venv/Scripts/Activate.ps1
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
