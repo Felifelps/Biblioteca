@@ -17,7 +17,7 @@ from os.path import join
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
 
 initialize_app(
-    credentials.Certificate(cred,)
+    credentials.Certificate(cred)
 )
 
 MEGA = Mega()

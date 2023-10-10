@@ -1,21 +1,5 @@
 from api import app
-from asyncio import new_event_loop
-import json
-
-def dump(*dicts):
-    for i in dicts:
-        if isinstance(i, list):
-            dump(*i)
-        else:
-            try: 
-                i = i.to_dict()
-            except Exception as e:
-                pass
-            print(json.dumps(i, indent=4))
 
 if __name__ == '__main__':
-    try:
-        app.run(port=8080, host='0.0.0.0')
-    except Exception as e:
-        input(e)
+    app.run(port=8080, host='0.0.0.0')
         

@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 8080
 
 # Command to start the server
-CMD ["hypercorn", "--bind", "0.0.0.0:8080", "app:app"]
+CMD ["hypercorn", "app:app"]
