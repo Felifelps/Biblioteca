@@ -2,6 +2,6 @@
 
 .vscode
 
-.credentials
+.confidential
 
 __pycache__
