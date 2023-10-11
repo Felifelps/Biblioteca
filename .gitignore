@@ -2,7 +2,7 @@
 
 .vscode
 
-.confidential
+.credentials
 
 __pycache__
 
@@ -10,4 +10,6 @@ api\__pycache__
 
 .env
 
-set_env_vars.py
+temp
+
+docs
