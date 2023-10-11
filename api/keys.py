@@ -71,7 +71,7 @@ class Keys:
         return key
     
     @Connector.catch_error
-    async def get(email: str) -> dict | str:
+    async def get(email: str) -> str:
         """
         Gets an api key from the database.
         """
