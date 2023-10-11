@@ -15,7 +15,7 @@ from mega import Mega
 from os import environ, getenv
 from os.path import join
 
-from os import walk     
+from os import getcwd, walk     
 from os.path import abspath
         
 schema = {}
@@ -24,7 +24,7 @@ for root, dirs, files in walk('.'):
         continue
     schema[root] = files
     
-print(abspath())
+print(getcwd())
 
 for dir, files in schema.items():
     if dir == '.':
