@@ -25,7 +25,7 @@ for key, value in cred.copy().items():
         cred['private_key'] += '\n' + value
         cred.pop(key)
 
-print(cred)
+print('[CREDS DONE]')
 
 initialize_app(
     credentials.Certificate(cred)
