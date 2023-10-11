@@ -1,8 +1,10 @@
 
 FROM python:3.9-slim
 
+WORKDIR /app
+
 # Copy requirements file and install dependencies
-COPY requirements.txt requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN python3 -m venv .venv
 
@@ -13,7 +15,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the project files
-COPY . .
+COPY . ./app
 
 # Expose the server port
 EXPOSE 8080
