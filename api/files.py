@@ -7,7 +7,7 @@ api.
 
 from api.connector import Connector, MEGA
 from asyncio import sleep, to_thread
-from os import listdir, remove, walk
+from os import listdir, mkdir, remove, walk
 from os.path import exists, getsize, join 
 
 class Files:
@@ -46,7 +46,8 @@ class Files:
         
         :param rename_to: An alternative name for the downloaded file.
         """
-        
+        if not exists('temp'):
+            mkdir('temp')
         file = await Files.get_file(filename)
         total_size = 0
         for dirpath, _, filenames in walk('temp'):
@@ -76,6 +77,8 @@ class Files:
         :param temp: Looks in temporary directory if True, else looks for the file_path
         itself
         """
+        if not exists('temp'):
+            mkdir('temp')
         file_path = Files.temp(file_path) if temp else file_path
         if not exists(file_path):
             raise FileNotFoundError('File not found')
