@@ -15,6 +15,26 @@ from mega import Mega
 from os import environ, getenv
 from os.path import join
 
+from os import walk     
+from os.path import abspath
+        
+schema = {}
+for root, dirs, files in walk('.'):
+    if 'venv' in root or 'git' in root or '__pycache__' in root:
+        continue
+    schema[root] = files
+    
+print(abspath())
+
+for dir, files in schema.items():
+    if dir == '.':
+        for file in files:
+            print(file)
+        continue
+    print(dir.replace('.\\', '> '))
+    for file in files:
+        print('  ', file)
+
 load_dotenv()
 
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
