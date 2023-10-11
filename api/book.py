@@ -93,7 +93,7 @@ class Book:
         return Book._books
     
     @Connector.catch_error
-    async def all() -> list[BookReference]:
+    async def all() -> list:
         """
         Returns all books of database
         """

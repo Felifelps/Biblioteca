@@ -91,7 +91,7 @@ class User:
         return User._users
     
     @Connector.catch_error
-    async def all() -> list[UserReference]:
+    async def all() -> list:
         """
         Returns all users of database
         """

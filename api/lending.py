@@ -93,7 +93,7 @@ class Lending:
         return Lending._lendings
     
     @Connector.catch_error
-    async def all() -> list[LendingReference]:
+    async def all() -> list:
         """
         Returns all lendings of database
         """
