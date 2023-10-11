@@ -21,4 +21,4 @@ for dir, files in schema.items():
     
 
 if __name__ == '__main__':
-    app.run(port=getenv('PORT'))
+    app.run(port=8080)
