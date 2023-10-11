@@ -99,7 +99,7 @@ class User:
         return [UserReference(**user) for RG, user in User._users.items()]
     
     @Connector.catch_error
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> UserReference | dict:
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> dict:
         """
         Makes queries to "leitores" collection.
         """
@@ -117,7 +117,7 @@ for RG, user in users.items():
         return result if len(result) != 1 else result[0]   
     
     @Connector.catch_error
-    async def get(RG: str, default=None, to_dict: bool=True) -> UserReference | dict:
+    async def get(RG: str, default=None, to_dict: bool=True) -> dict:
         '''
         Returns user data from the database in the shape of a dict if to_dict == True, else UserReference. If not found, returns default.
         '''
@@ -140,7 +140,7 @@ for RG, user in users.items():
         escola: str="",
         curso_serie: str="",
         **kwargs
-    ) -> UserReference | dict:
+    ) -> dict:
         """
         This function creates a new document on the 'leitores' collection and returns a 
         UserReference object pointing to.

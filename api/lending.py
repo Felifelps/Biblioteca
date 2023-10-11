@@ -101,7 +101,7 @@ class Lending:
         return [LendingReference(**lending) for RG, lending in Lending._lendings.items()]
     
     @Connector.catch_error
-    async def get(id: str, default=None, to_dict: bool=True) -> LendingReference | dict:
+    async def get(id: str, default=None, to_dict: bool=True) -> dict:
         '''
         Returns book data from the database in the shape of a dict if to_dict == True, else LendingReference. If not found, returns default.
         '''
@@ -110,7 +110,7 @@ class Lending:
         return default 
     
     @Connector.catch_error
-    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> LendingReference | dict:
+    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
         """
         Makes queries to "emprestimos" collection.
         """

@@ -19,13 +19,13 @@ load_dotenv()
 
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
 
-print(cred)
-
 cred['private_key'] = ''
 for key, value in cred.copy().items():
     if 'private_key_n' in key:
         cred['private_key'] += '\n' + value
         cred.pop(key)
+
+print(cred)
 
 initialize_app(
     credentials.Certificate(cred)
