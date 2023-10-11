@@ -24,7 +24,9 @@ for root, dirs, files in walk('.'):
         continue
     schema[root] = files
     
-print(getcwd())
+print('[', getcwd(), ']')
+
+"""
 
 data = ''
 
@@ -38,6 +40,8 @@ for dir, files in schema.items():
         data += '   ' + file + '\n'
 
 print(data)
+
+"""
 
 load_dotenv()
 
