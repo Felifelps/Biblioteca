@@ -15,7 +15,7 @@ from mega import Mega
 from os import environ, getenv
 from os.path import join
 
-from os import getcwd, walk     
+from os import getcwd, system, walk     
 from os.path import abspath
         
 schema = {}
@@ -23,8 +23,10 @@ for root, dirs, files in walk('.'):
     if 'venv' in root or 'git' in root or '__pycache__' in root:
         continue
     schema[root] = files
-    
-print('[', getcwd(), ']')
+
+print('==================================')    
+system('dir')
+print('==================================')   
 
 """
 
