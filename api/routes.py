@@ -7,14 +7,16 @@ from api.lending import Lending
 from api.user import User
 from asyncio import ensure_future
 from datetime import datetime
-from firebase_admin.firestore_async import firestore
 from os.path import exists, join
-from quart import flash, Quart, redirect, render_template, request, send_file, send_from_directory, session, url_for
-from random import randint
+from quart import flash, Quart, render_template, request, send_file
+from quart_cors import cors
 
-# TODO: DOCUMENTAR TODAS AS VIEWS
+# TODO: DOCUMENTAR TODAS AS VIEWS E REVER A DOCUMENTAÇÃO GERAL
+# TODO: TESTES COM ASYNC PYTEST
 #548e0783ca4b16a090b1c5dc38973557
 app = Quart('Biblioteca')
+app = cors(app, allow_origin='*')
+
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
 
@@ -27,13 +29,13 @@ async def get_form_or_json():
 async def key_in_json(json):
     return json and json.get('key', False) and await Keys.get_email_from_key(json.pop('key'))
 
-@app.route('/users', methods=['POST'])
+@app.post('/users')
 async def all_users():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return await User.get_users()
 
-@app.route('/user', methods=['POST'])
+@app.post('/user')
 async def get_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -43,7 +45,7 @@ async def get_user():
         return await User.get(RG, 'User not found')
     return 'Missing RG'
 
-@app.route('/user/new', methods=['POST'])
+@app.post('/user/new')
 async def new_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -59,7 +61,7 @@ async def new_user():
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
 
-@app.route('/user/update', methods=['POST'])
+@app.post('/user/update')
 async def update_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -77,7 +79,7 @@ async def update_user():
     await user.save()
     return 'User updated'
 
-@app.route('/user/validate', methods=['POST'])
+@app.post('/user/validate')
 async def validate_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -92,7 +94,7 @@ async def validate_user():
     await user.save()
     return 'User validated'
 
-@app.route('/user/favorite_book', methods=['POST'])
+@app.post('/user/favorite_book')
 async def favorite_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -111,7 +113,7 @@ async def favorite_book():
     await user.save()
     return 'Favorite updated'
 
-@app.route('/user/delete', methods=['POST'])
+@app.post('/user/delete')
 async def delete_user():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -125,13 +127,13 @@ async def delete_user():
     await user.delete()
     return 'User deleted'
 
-@app.route('/books', methods=['POST'])
+@app.post('/books')
 async def all_books():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return await Book.get_books()
 
-@app.route('/book', methods=['POST'])
+@app.post('/book')
 async def get_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -141,7 +143,7 @@ async def get_book():
         return 'Missing book_id'
     return await Book.get(book_id, 'Book not found')   
 
-@app.route('/book/new', methods=['POST'])
+@app.post('/book/new')
 async def new_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -155,7 +157,7 @@ async def new_book():
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
     
-@app.route('/book/update', methods=['POST'])
+@app.post('/book/update')
 async def update_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -173,7 +175,7 @@ async def update_book():
     await book.save()
     return 'Book updated'
 
-@app.route('/book/delete', methods=['POST'])
+@app.post('/book/delete')
 async def delete_book():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -187,13 +189,13 @@ async def delete_book():
     await book.delete()
     return 'Book deleted'
     
-@app.route('/lendings', methods=['POST'])
+@app.post('/lendings')
 async def all_lendings():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return await Lending.get_lendings()
 
-@app.route('/lending', methods=['POST'])
+@app.post('/lending')
 async def get_lending():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -224,7 +226,7 @@ async def get_lending():
         await lending.save()
     return lending.to_dict()
 
-@app.route('/lending/new', methods=['POST'])
+@app.post('/lending/new')
 async def new_lending():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -248,7 +250,7 @@ async def new_lending():
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
     
-@app.route('/lending/update', methods=['POST'])
+@app.post('/lending/update')
 async def update_lending():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -270,17 +272,15 @@ async def update_lending():
     await lending.save()
     return 'Lending updated' 
 
-@app.route('/user/files/send', methods=['POST'])
+@app.post('/user/files/send')
 async def send_user_files():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
-    print(json)
     RG = json.get('RG', False)
     if not (RG and await User.get(RG)): 
         return 'Missing RG' if  not RG else 'User not found'
     files = await request.files
-    print(files)
     RG_frente = files.get('RG_frente', False)
     if not RG_frente: 
         return 'Missing RG_frente'
@@ -296,11 +296,10 @@ async def send_user_files():
                 for i in file:
                     local_file.write(i)
             await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
-        print('Files sended')
     ensure_future(paralel())
     return 'Enviando arquivos'
 
-@app.route('/user/files/get', methods=['POST'])
+@app.post('/user/files/get')
 async def get_user_file():
     json = await get_form_or_json()
     if not await key_in_json(json):
@@ -352,7 +351,7 @@ async def text():
 @app.route('/', methods=['GET', 'POST'])
 async def test():
     if request.method == "POST":
-        pass
+        print('Hi')
     return """
 <style>
     input {

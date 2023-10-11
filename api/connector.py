@@ -12,11 +12,7 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
-from os import environ, getenv
-from os.path import join
-
-from os import getcwd, system, walk     
-from os.path import abspath
+from os import environ, walk
         
 schema = {}
 for root, dirs, files in walk('.'):
@@ -33,8 +29,6 @@ for key, value in cred.copy().items():
     if 'private_key_n' in key:
         cred['private_key'] += '\n' + value
         cred.pop(key)
-
-print('[CREDS DONE]')
 
 initialize_app(
     credentials.Certificate(cred)
