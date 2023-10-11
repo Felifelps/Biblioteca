@@ -25,7 +25,7 @@ class Keys:
             Keys.__keys = {key.id: key.to_dict() async for key in Connector.API_KEYS.stream()}
         return Keys.__keys
     
-    def encrypt_key(key: str) -> list[bytes]:
+    def encrypt_key(key: str) -> list:
         """
         Generate a salt and encrypt the given key, returning a list [encrypted_key, salt].
         """
@@ -41,7 +41,7 @@ class Keys:
         return checkpw(bytes(key, encoding='utf-8'), Keys.__keys[email]['encrypted_key'])
     
     @Connector.catch_error
-    async def get_email_from_key(key: str) -> str | None:
+    async def get_email_from_key(key: str) -> str:
         """
         Gets an email by its associated key. If not found, returns None.
         """
@@ -51,7 +51,7 @@ class Keys:
         return None
     
     @Connector.catch_error
-    async def register_new_key(email: str, length: int=32) -> str | dict:
+    async def register_new_key(email: str, length: int=32) -> dict:
         """
         Registers and creates a new not validated api key in the database.
         """
