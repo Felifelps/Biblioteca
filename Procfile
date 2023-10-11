@@ -1,1 +1,1 @@
-web: hypercorn app:app --bind 0.0.0.0:${PORT} --proxy-headers 
+web: hypercorn app:app --bind 0.0.0.0:$PORT --proxy-headers 

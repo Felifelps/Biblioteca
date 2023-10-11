@@ -1,5 +1,5 @@
 from api import app
-import os              
+from os import getenv              
 
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(port=getenv('PORT'))
