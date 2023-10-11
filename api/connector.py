@@ -26,14 +26,18 @@ for root, dirs, files in walk('.'):
     
 print(getcwd())
 
+data = ''
+
 for dir, files in schema.items():
     if dir == '.':
         for file in files:
-            print(file)
+            data += file + '\n'
         continue
-    print(dir.replace('.\\', '> '))
+    data += dir.replace('.\\', '> ') + '\n'
     for file in files:
-        print('  ', file)
+        data += '   ' + file + '\n'
+
+print(data)
 
 load_dotenv()
 
