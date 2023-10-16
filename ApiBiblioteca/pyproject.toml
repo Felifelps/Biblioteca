@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "apibiblioteca"
+version = "0.1.0"
+description = ""
+authors = ["Felifelps <felipefelipe23456@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+quart = "^0.19.3"
+firebase-admin = "^6.2.0"
+bcrypt = "^4.0.1"
+mega = "^0.2.11"
+python-dotenv = "^1.0.0"
+mega-py = "^1.0.8"
+quart-cors = "^0.7.0"
+
+[tool.poetry.scripts]
+app = "apibiblioteca.app:run"
+
+[tool.poetry.group.dev.dependencies]
+pycodestyle = "^2.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

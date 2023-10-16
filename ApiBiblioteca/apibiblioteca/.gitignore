@@ -1,0 +1,17 @@
+.venv
+
+.vscode
+
+.credentials
+
+__pycache__
+
+api\__pycache__
+
+.env
+
+temp
+
+docs
+
+teste.html

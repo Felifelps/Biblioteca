@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            border: solid 2px #222222;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        input[type="email"] {
+            padding: 10px;
+            width: 300px;
+        }
+        input[type="password"] {
+            width: 300px;
+            margin: 3px;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .especial-link {
+            text-decoration: none; 
+            margin: 40px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %} {% endblock %}
+        <br>
+        <a class="especial-link" href="mailto:felipefelipe23456@gmail.com">Suporte</a>
+        <a class="especial-link" href="https://github.com/Felifelps">GitHub</a>
+    </div>
+</body>
+</html>
