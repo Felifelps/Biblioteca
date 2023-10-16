@@ -19,8 +19,8 @@ class Email:
     
     SMTP_SERVER = 'smtp.gmail.com'
     SMTP_PORT = 587
-    SENDER = 'mestount@gmail.com'
-    PASSWORD = 'iquduhyskpuadboe'
+    SENDER = Connector.EMAIL_SENDER
+    PASSWORD = Connector.EMAIL_PASSWORD
     SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
     SERVER.starttls()
     SERVER.login(SENDER, PASSWORD)

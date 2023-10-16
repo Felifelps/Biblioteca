@@ -13,12 +13,6 @@ from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
 from os import environ, walk
-        
-schema = {}
-for root, dirs, files in walk('.'):
-    if 'venv' in root or 'git' in root or '__pycache__' in root:
-        continue
-    schema[root] = files
     
 load_dotenv()
 
@@ -60,6 +54,8 @@ class Connector:
     API_KEYS = DB.collection('keys')
     ADM = DB.document('adm/data')
     field_filter = FieldFilter
+    EMAIL_SENDER = environ['EMAIL_SENDER']
+    EMAIL_PASSWORD = environ['EMAIL_PASSWORD']
     admin_data = {}
     
     async def load_admin_data() -> dict:
