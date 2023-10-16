@@ -1,11 +1,10 @@
-from api.book import Book
-from api.email import Email
-from api.files import Files
-from api.keys import Keys
-from api.lending import Lending
-
-from api.routes import app
-from api.user import User
+from .book import Book
+from .email import Email
+from .files import Files
+from .keys import Keys
+from .lending import Lending
+from .routes import app
+from .user import User
 
 '''{
   "key": "548e0783ca4b16a090b1c5dc38973557",

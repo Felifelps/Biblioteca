@@ -5,7 +5,7 @@ This module contains a class that is responsible to download and upload files to
 api. 
 """
 
-from api.connector import Connector, MEGA
+from .connector import Connector, MEGA
 from asyncio import sleep, to_thread
 from os import listdir, mkdir, remove, walk
 from os.path import exists, getsize, join 
@@ -18,7 +18,6 @@ class Files:
     """
     files = {file['a']['n'] : (key, file) for key, file in MEGA.get_files().items()}
 
-    @Connector.catch_error
     async def get_file(name: str) -> tuple:
         """
         Gets a file from its name. 
@@ -27,7 +26,6 @@ class Files:
             Files.files[name] = await to_thread(lambda: MEGA.find(name))
         return Files.files[name]  
         
-    @Connector.catch_error
     async def get_files() -> dict:
         """
         Gets all the files stored on Mega and saves it in the Files.files attribute,
@@ -39,7 +37,6 @@ class Files:
     async def get_link(file):
         return MEGA.get_link(file)
 
-    @Connector.catch_error
     async def download(filename: str, rename_to: str=None) -> tuple:
         """
         Downloads a file from Mega by its name to the temp directory.
@@ -68,7 +65,6 @@ class Files:
             pass
         return file
     
-    @Connector.catch_error
     async def upload(file_path: str, rename_to: str=None, temp: bool=True) -> None:
         """
         Uploads a file from some path to Mega, then deletes it.

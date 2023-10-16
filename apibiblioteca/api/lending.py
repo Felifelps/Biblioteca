@@ -5,7 +5,7 @@ This module contains an ORM implementation for the firestore_async module for ma
 the lendings data stored on the database
 """
 
-from api.connector import Connector
+from .connector import Connector
     
 class LendingReference:
     """
@@ -53,8 +53,7 @@ class LendingReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-    
-    @Connector.catch_error   
+       
     async def save(self) -> None:
         """
         Saves the changes on the database
@@ -62,7 +61,6 @@ class LendingReference:
         await Connector.LENDINGS.document(self.id).update(self.to_dict())
         Lending._lendings[self.id] = self.to_dict()
     
-    @Connector.catch_error
     async def delete(self) -> None:
         """
         Deletes LendingReference instance and the corresponding firestore document
@@ -82,7 +80,6 @@ class Lending:
     
     quantity = None
     _lendings = None
-    @Connector.catch_error
     async def get_lendings() -> None:
         """
         This function is for intern using. It loads all lendings data and save it into the Lending._lendings variable.
@@ -92,7 +89,6 @@ class Lending:
             Lending.quantity = len(Lending._lendings)
         return Lending._lendings
     
-    @Connector.catch_error
     async def all() -> list:
         """
         Returns all lendings of database
@@ -100,7 +96,6 @@ class Lending:
         await Lending.get_lendings()
         return [LendingReference(**lending) for RG, lending in Lending._lendings.items()]
     
-    @Connector.catch_error
     async def get(id: str, default=None, to_dict: bool=True) -> dict:
         '''
         Returns book data from the database in the shape of a dict if to_dict == True, else LendingReference. If not found, returns default.
@@ -109,7 +104,6 @@ class Lending:
             return Lending._lendings[id] if to_dict else LendingReference(**Lending._lendings[id])
         return default 
     
-    @Connector.catch_error
     async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
         """
         Makes queries to "emprestimos" collection.

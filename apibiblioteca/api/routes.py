@@ -1,10 +1,10 @@
-from api.book import Book
-from api.connector import Connector
-from api.email import Email
-from api.files import Files
-from api.keys import Keys
-from api.lending import Lending
-from api.user import User
+from .book import Book
+from .connector import Connector
+from .email import Email
+from .files import Files
+from .keys import Keys
+from .lending import Lending
+from .user import User
 from asyncio import ensure_future
 from datetime import datetime
 from os.path import exists, join
@@ -349,60 +349,5 @@ async def text():
     return """<form method="POST"><textarea name="text" style="width: 30em; height: 30em;"></textarea><br><input type="submit"></form> """
 
 @app.route('/', methods=['GET', 'POST'])
-async def test():
-    if request.method == "POST":
-        print('Hi')
-    return """
-<style>
-    input {
-        font-size: 16px;
-    }
-</style>
-<form method="POST" action="/user/files/send" enctype="multipart/form-data">
-    <input type="hidden" value="548e0783ca4b16a090b1c5dc38973557" name="key">
-    <br>
-    <br>
-    <input type="text" value="2018125194-4" name="RG">
-    <br>
-    <br>
-    <label for="RG_frente">RG_Frente</label>
-    <input type="file" id="RG_frente" name="RG_frente">
-    <br>
-    <br>
-    <label for="RG_verso">RG_verso</label>
-    <input type="file" id="RG_verso" name="RG_verso">
-    <br>
-    <br>
-    <label for="comprovante">comprovante</label>
-    <input type="file" id="comprovante" name="comprovante">
-    <br>
-    <br>
-    <input type="submit">
-</form> 
-    """
-    
-@app.route('/get', methods=['GET', 'POST'])
-async def test2():
-    if request.method == "POST":
-        pass
-    return """
-<style>
-    input {
-        font-size: 16px;
-    }
-</style>
-<form method="POST" action="/user/files/get" enctype="multipart/form-data">
-    <input type="hidden" value="548e0783ca4b16a090b1c5dc38973557" name="key">
-    <input type="text" value="2018125194-4" name="RG">
-    <br>
-    <br>
-    <select name="file_type">
-        <option value="RG_frente">RG_frente</option>
-        <option value="RG_verso">RG_verso</option>
-        <option value="comprovante">comprovante</option>
-    </select>
-    <br>
-    <br>
-    <input type="submit">
-</form> 
-    """
+async def testes():
+    return await render_template('teste.html')

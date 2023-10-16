@@ -4,7 +4,7 @@
 This module contains the methods and a class to handle the api keys.
 """
 
-from api.connector import Connector
+from .connector import Connector
 from bcrypt import checkpw, gensalt, hashpw
 from secrets import token_hex
 
@@ -16,7 +16,6 @@ class Keys:
     """
     
     __keys = None
-    @Connector.catch_error
     async def get_keys() -> dict:
         """
         This function is for intern using. It loads all keys data and save it into the Keys.keys variable.
@@ -32,7 +31,6 @@ class Keys:
         salt = gensalt()
         return [hashpw(bytes(key, encoding='utf-8'), salt), salt]
     
-    @Connector.catch_error
     async def check_key(email: str, key: str) -> bool:
         """
         Checks if the given key corresponds to a given email api key.
@@ -40,7 +38,6 @@ class Keys:
         await Keys.get_keys()
         return checkpw(bytes(key, encoding='utf-8'), Keys.__keys[email]['encrypted_key'])
     
-    @Connector.catch_error
     async def get_email_from_key(key: str) -> str:
         """
         Gets an email by its associated key. If not found, returns None.
@@ -50,7 +47,6 @@ class Keys:
                 return value['email']
         return None
     
-    @Connector.catch_error
     async def register_new_key(email: str, length: int=32) -> dict:
         """
         Registers and creates a new not validated api key in the database.
@@ -70,14 +66,12 @@ class Keys:
         Keys.__keys[email] = key_data
         return key
     
-    @Connector.catch_error
     async def get(email: str) -> str:
         """
         Gets an api key from the database.
         """
         return (await Keys.get_keys()).get(email, Connector.message('Email not found'))
         
-    @Connector.catch_error
     async def delete(email: str) -> None:
         """
         Deletes an api key.

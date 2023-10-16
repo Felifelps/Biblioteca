@@ -5,7 +5,7 @@ This module contains the Email class, that have a function to send emails asynch
 """
 
 from asyncio import to_thread
-from api.connector import Connector
+from .connector import Connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP, SMTPServerDisconnected
@@ -34,7 +34,6 @@ class Email:
             return await func(*args, **kwargs)
         return wrapper
     
-    @Connector.catch_error
     @load_server
     async def message(to: str, body: str, subject: str="Bibilioteca") -> None:
         """

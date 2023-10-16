@@ -107,28 +107,6 @@ class Connector:
         Returns the current date using the pattern '%d/%m/%y às %H:%M:%S'
         """
         return datetime.today().strftime('%d/%m/%y às %H:%M:%S')
-    
-    def catch_error(func):
-        """
-        Decorator to handle exceptions on async functions
-        """
-        async def wrapper(*args, **kwargs):
-            #try:
-            return await func(*args, **kwargs)
-            #except Exception as e:
-            #    return Connector.message('Um erro ocorreu.', str(e))
-        return wrapper
-    
-    def sync_catch_error(func):
-        """
-        Decorator to handle exceptions on sync functions
-        """
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                return Connector.message('Um erro ocorreu.', str(e))
-        return wrapper
 
     
 '''

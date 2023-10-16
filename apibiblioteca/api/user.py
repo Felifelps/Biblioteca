@@ -5,7 +5,7 @@ This module contains an ORM implementation for the firestore_async module for ma
 the users data stored on the database
 """
 
-from api.connector import Connector
+from .connector import Connector
 
 class UserReference:
     """
@@ -53,8 +53,7 @@ class UserReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-    
-    @Connector.catch_error   
+       
     async def save(self) -> None:
         """
         Saves the changes on the database
@@ -62,7 +61,6 @@ class UserReference:
         await Connector.USERS.document(self.RG).update(self.to_dict())
         User._users[self.RG] = self.to_dict()
     
-    @Connector.catch_error
     async def delete(self) -> None:
         """
         Deletes UserReference instance and the corresponding firestore document
@@ -81,7 +79,6 @@ class User:
     """
     _users = None
     
-    @Connector.catch_error
     async def get_users() -> dict:
         """
         It loads all users data and save it into the User._users variable, if it is None.
@@ -90,7 +87,6 @@ class User:
             User._users = {user.id: user.to_dict() async for user in Connector.USERS.stream()}
         return User._users
     
-    @Connector.catch_error
     async def all() -> list:
         """
         Returns all users of database
@@ -98,7 +94,6 @@ class User:
         await User.get_users()
         return [UserReference(**user) for RG, user in User._users.items()]
     
-    @Connector.catch_error
     async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> dict:
         """
         Makes queries to "leitores" collection.
@@ -116,7 +111,6 @@ for RG, user in users.items():
             return Connector.message('Field not found')
         return result if len(result) != 1 else result[0]   
     
-    @Connector.catch_error
     async def get(RG: str, default=None, to_dict: bool=True) -> dict:
         '''
         Returns user data from the database in the shape of a dict if to_dict == True, else UserReference. If not found, returns default.
@@ -125,7 +119,6 @@ for RG, user in users.items():
             return User._users[RG] if to_dict else UserReference(**User._users[RG])
         return default 
     
-    @Connector.catch_error
     async def new( 
         RG: str,
         nome: str,

@@ -5,7 +5,7 @@ This module contains an ORM implementation for the firestore_async module for ma
 the books data stored on the database
 """
 
-from api.connector import Connector
+from .connector import Connector
 
 class BookReference:
     """
@@ -53,8 +53,7 @@ class BookReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-    
-    @Connector.catch_error   
+       
     async def save(self) -> None:
         """
         Saves the changes on the database
@@ -62,7 +61,6 @@ class BookReference:
         await Connector.BOOKS.document(self.id).update(self.to_dict())
         Book._books[self.id] = self.to_dict()
     
-    @Connector.catch_error
     async def delete(self) -> None:
         """
         Deletes BookReference instance and the corresponding firestore document
@@ -82,7 +80,6 @@ class Book:
     
     quantity = None
     _books = None
-    @Connector.catch_error
     async def get_books() -> None:
         """
         This function is for intern using. It loads all books data and save it into the Book._books variable.
@@ -92,7 +89,6 @@ class Book:
         Book.quantity = len(Book._books)
         return Book._books
     
-    @Connector.catch_error
     async def all() -> list:
         """
         Returns all books of database
@@ -100,7 +96,6 @@ class Book:
         await Book.get_books()
         return [BookReference(**book) for RG, book in Book._books.items()]
     
-    @Connector.catch_error
     async def get(id: str, default=None, to_dict: bool=True) -> dict:
         '''
         Returns book data from the database in the shape of a dict if to_dict == True, else BookReference. If not found, returns default.
@@ -109,7 +104,6 @@ class Book:
             return Book._books[id] if to_dict else BookReference(**Book._books[id])
         return default 
     
-    @Connector.catch_error
     async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
         """
         Makes queries to "livros" collection.
@@ -128,7 +122,6 @@ for id, book in Book._books.items():
             return Connector.message('Field not found')
         return result if len(result) != 1 else result[0]       
     
-    @Connector.catch_error
     async def new( 
         titulo: str,
         autor: str,

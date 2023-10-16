@@ -10,17 +10,23 @@ RUN python3 -m venv .venv
 #Activates the venv
 ENV PATH=".venv/bin:$PATH"
 
-#Copy requirements file
-COPY requirements.txt requirements.txt
-
 #Updates pip
 RUN pip install --upgrade pip
 
-#Install dependences
-RUN pip install --no-cache-dir -r requirements.txt
+#Install poetry
+RUN pip install --no-cache-dir poetry
 
 #Copy the rest of the project files
 COPY . .
+
+#Install poetry project
+RUN poetry install
+
+#Opens poetry shell
+RUN poetry shell
+
+#Goes to apibiblioteca directory
+RUN cd apibiblioteca
 
 #Expose the server port
 EXPOSE 8080
