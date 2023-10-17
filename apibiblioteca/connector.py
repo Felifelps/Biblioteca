@@ -28,11 +28,10 @@ initialize_app(
     credentials.Certificate(cred)
 )
 
-MEGA = Mega()
-
 while True:
     try:
         print('LOGGING TO MEGA')
+        MEGA = Mega()
         MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
         print('LOGIN DONE')
         break
