@@ -1,5 +1,5 @@
 """
-# api.email
+# apibiblioteca.email
 
 This module contains the Email class, that have a function to send emails asynchronously.
 """
@@ -12,7 +12,7 @@ from smtplib import SMTP, SMTPServerDisconnected
 
 class Email:
     """
-    # api.email.Email
+    # apibiblioteca.email.Email
     
     This class contains constants associated to the method used for sendind
     """

@@ -1,5 +1,5 @@
 """
-# api.book
+# apibiblioteca.book
 
 This module contains an ORM implementation for the firestore_async module for manipulate
 the books data stored on the database
@@ -9,7 +9,7 @@ from .connector import Connector
 
 class BookReference:
     """
-    # api.book.BookReference
+    # apibiblioteca.book.BookReference
     
     This class abstracts a firestore document set on the "livros" collection. 
     \n 
@@ -71,7 +71,7 @@ class BookReference:
 
 class Book:
     """
-    # api.book.Book
+    # apibiblioteca.book.Book
     
     This class abstracts the "livros" collection.
     \n

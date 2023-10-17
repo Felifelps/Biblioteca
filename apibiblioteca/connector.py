@@ -1,5 +1,5 @@
 """
-# api.connector
+# apibiblioteca.connector
 This module aims to: 
     \n-> initialize the Firebase application 
     \n-> log in to the Mega Api
@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
-from os import environ, walk
-    
+from os import environ
+
 load_dotenv()
 
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
@@ -33,7 +33,7 @@ MEGA.login('felipefelipe23456@gmail.com', 'mgalomniaco')
 
 class Connector:
     """
-    #   api.connector.Connector
+    #   apibiblioteca.connector.Connector
     This class stores some recurrent constants of the database and some methods
     used for manipulate the adm data and catch errors.
     
@@ -54,8 +54,8 @@ class Connector:
     API_KEYS = DB.collection('keys')
     ADM = DB.document('adm/data')
     field_filter = FieldFilter
-    EMAIL_SENDER = environ['EMAIL_SENDER']
-    EMAIL_PASSWORD = environ['EMAIL_PASSWORD']
+    EMAIL_SENDER = environ.get('EMAIL_SENDER')
+    EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
     admin_data = {}
     
     async def load_admin_data() -> dict:

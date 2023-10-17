@@ -1,5 +1,5 @@
 """
-# api.files
+# apibiblioteca.files
 
 This module contains a class that is responsible to download and upload files to the mega
 api. 
@@ -12,7 +12,7 @@ from os.path import exists, getsize, join
 
 class Files:
     """
-    # api.files.Files
+    # apibiblioteca.files.Files
     
     This class contains methods used for manipulate files by the mega api asynchronously
     """
