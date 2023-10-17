@@ -29,7 +29,7 @@ RUN poetry env use 3.9
 RUN poetry shell
 
 #Goes to apibiblioteca directory
-RUN cd apibiblioteca
+WORKDIR /apibiblioteca
 
 #Expose the server port
 EXPOSE 8080
