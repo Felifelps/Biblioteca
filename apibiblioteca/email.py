@@ -5,10 +5,10 @@ This module contains the Email class, that have a function to send emails asynch
 """
 
 from asyncio import to_thread
-from .connector import Connector
+from .connector import EMAIL_PASSWORD, EMAIL_SENDER
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from smtplib import SMTP, SMTPServerDisconnected
+from smtplib import SMTP
 
 class Email:
     """
@@ -19,8 +19,8 @@ class Email:
     
     SMTP_SERVER = 'smtp.gmail.com'
     SMTP_PORT = 587
-    SENDER = Connector.EMAIL_SENDER
-    PASSWORD = Connector.EMAIL_PASSWORD
+    SENDER = EMAIL_SENDER
+    PASSWORD = EMAIL_PASSWORD
     SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
     SERVER.starttls()
     SERVER.login(SENDER, PASSWORD)

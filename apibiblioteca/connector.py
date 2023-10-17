@@ -1,16 +1,7 @@
-"""
-# apibiblioteca.connector
-This module aims to: 
-    \n-> initialize the Firebase application 
-    \n-> log in to the Mega Api
-    \n-> gather essential constants and methods for other files in the Connector class
-"""
 
-from bcrypt import checkpw, gensalt, hashpw
 from datetime import datetime
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
-from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
 from os import environ
 import time
@@ -29,6 +20,11 @@ initialize_app(
     credentials.Certificate(cred)
 )
 
+DB = firestore_async.client()
+
+EMAIL_SENDER = environ.get('EMAIL_SENDER')
+EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
+
 MEGA = Mega()
 login, password = environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD')
 print('LOGGING TO MEGA')
@@ -38,83 +34,9 @@ while True:
         print('LOGIN DONE')
         break
     except Exception as e:
+        time.sleep(5)
         print(e)
-        time.sleep(10)
         print('MEGA LOGIN FAILED. TRYING AGAIN')
-
-class Connector:
-    """
-    #   apibiblioteca.connector.Connector
-    This class stores some recurrent constants of the database and some methods
-    used for manipulate the adm data and catch errors.
-    
-    - DB: firestore_async.client() -> References the database
-    - USERS: DB.collection('leitores') -> References the user collection
-    - BOOKS: DB.collection('livros') -> References the books collection
-    - LENDINGS: DB.collection('emprestimos') -> References the lendings collection
-    - ADM: DB.document('adm/data')  -> References the adm document
-    - API_KEYS = DB.collection('keys') -> References the keys collection
-    - field_filter: FieldFilter -> Used for querys
-    - admin_data: {} -> Stores admin data
-    
-    """
-    DB = firestore_async.client()
-    USERS = DB.collection('leitores')
-    BOOKS = DB.collection('livros')
-    LENDINGS = DB.collection('emprestimos')
-    API_KEYS = DB.collection('keys')
-    ADM = DB.document('adm/data')
-    field_filter = FieldFilter
-    EMAIL_SENDER = environ.get('EMAIL_SENDER')
-    EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
-    admin_data = {}
-    
-    async def load_admin_data() -> dict:
-        """
-        This function returns the admin data stored on the
-        firestore database.
-        """
-        Connector.admin_data = (await Connector.ADM.get()).to_dict()
-        return Connector.admin_data
-    
-    async def save_admin_data() -> None:
-        """
-        This function saves on firestore the data stored on Connector.admin_data
-        """
-        await Connector.ADM.update(Connector.admin_data)
-        
-    def change_admin_password(password: str) -> None:
-        """
-        This function changes password on Connector.admin_data to a new hashed 
-        string using a new salt 
-        """
-        salt = gensalt()
-        Connector.admin_data['salt'] = salt
-        Connector.admin_data['password'] = hashpw(bytes(password, encoding='utf-8'), salt)
-        
-    async def check_admin_password(password: str) -> bool:
-        """
-        This function checks if the password parameter corresponds to the hashed
-        password stored in Connector.admin_data
-        """
-        await Connector.load_admin_data()
-        return checkpw(bytes(password, encoding='utf-8'), Connector.admin_data['password'])
-    
-    def message(message: str, log: str=None) -> dict:
-        """
-        This function return a json like dict for general api responses
-        """
-        message = {'message': message}
-        if log: 
-            message['log'] = log
-        return message
-    
-    def today() -> str:
-        """
-        Returns the current date using the pattern '%d/%m/%y às %H:%M:%S'
-        """
-        return datetime.today().strftime('%d/%m/%y às %H:%M:%S')
-
     
 '''
 cdds = {

@@ -5,7 +5,7 @@ This module contains a class that is responsible to download and upload files to
 api. 
 """
 
-from .connector import Connector, MEGA
+from .connector import MEGA
 from asyncio import sleep, to_thread
 from os import listdir, mkdir, remove, walk
 from os.path import exists, getsize, join 

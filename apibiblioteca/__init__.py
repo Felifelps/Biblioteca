@@ -1,10 +1,7 @@
-from .book import Book
-from .email import Email
-from .files import Files
-from .keys import Keys
-from .lending import Lending
+
+from .data import *
 from .routes import app
-from .user import User
+from .watcher import watcher
 
 '''{
   "key": "548e0783ca4b16a090b1c5dc38973557",
