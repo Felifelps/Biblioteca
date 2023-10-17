@@ -35,4 +35,4 @@ WORKDIR apibiblioteca
 EXPOSE 8080
 
 #Starts the server
-CMD ["hypercorn", "app:app", "--bind", "0.0.0.0:8080"]
+CMD ["poetry", "run", "hypercorn", "app:app", "--bind", "0.0.0.0:8080"]
