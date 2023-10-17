@@ -4,12 +4,6 @@ FROM python:3.9-slim
 #Sets workdir to the app folder
 WORKDIR /app
 
-#Creates a new virtual environment
-RUN python3 -m venv .venv
-
-#Activates the venv
-ENV PATH=".venv/bin:$PATH"
-
 #Updates pip
 RUN pip install --upgrade pip
 
@@ -28,8 +22,12 @@ RUN poetry env use 3.9
 #Opens poetry shell
 RUN poetry shell
 
+RUN dir
+
 #Goes to apibiblioteca directory
 RUN cd apibiblioteca
+
+RUN dir
 
 #Expose the server port
 EXPOSE 8080
