@@ -5,16 +5,9 @@ FROM python:3.9-slim
 WORKDIR /app
 
 #Creates a new virtual environment
-RUN python3 -m venv .venv
+RUN apt-get update && apt-get install -y curl python3-dev
 
-#Activates the venv
-ENV PATH=".venv/bin:$PATH"
-
-#Updates pip
-RUN pip install --upgrade pip
-
-#Install poetry
-RUN pip install --no-cache-dir poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 #Copy the rest of the project files
 COPY . .
@@ -28,7 +21,6 @@ RUN poetry env use 3.9
 #Opens poetry shell
 RUN poetry run pip install hypercorn
 
-#Goes to apibiblioteca directory
 WORKDIR apibiblioteca
 
 #Expose the server port
