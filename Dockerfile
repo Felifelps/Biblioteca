@@ -26,7 +26,7 @@ RUN poetry install
 RUN poetry env use 3.9
 
 #Goes to apibiblioteca directory
-WORKDIR /app/apibiblioteca
+WORKDIR apibiblioteca
 
 #Opens poetry shell
 RUN poetry shell
