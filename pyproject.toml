@@ -13,7 +13,6 @@ bcrypt = "^4.0.1"
 python-dotenv = "^1.0.0"
 quart-cors = "^0.7.0"
 hypercorn = "^0.14.4"
-mega-py = "^1.0.8"
 
 [tool.poetry.group.dev.dependencies]
 pycodestyle = "^2.11.1"

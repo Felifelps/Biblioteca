@@ -6,7 +6,7 @@ WORKDIR /app
 
 RUN python -m pip install --upgrade pip
 
-RUN python -m pip install poetry hypercorn
+RUN python -m pip install poetry hypercorn mega.py
 
 COPY pyproject.toml poetry.lock ./
 
