@@ -13,6 +13,7 @@ from firebase_admin import credentials, firestore_async, initialize_app
 from google.cloud.firestore_v1.base_query import FieldFilter
 from mega import Mega
 from os import environ
+import time
 
 load_dotenv()
 
@@ -27,7 +28,7 @@ for key, value in cred.copy().items():
 initialize_app(
     credentials.Certificate(cred)
 )
-import time
+
 MEGA = Mega()
 login, password = environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD')
 print('LOGGING TO MEGA')
