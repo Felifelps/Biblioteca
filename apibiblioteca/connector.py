@@ -29,7 +29,15 @@ initialize_app(
 )
 
 MEGA = Mega()
-MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
+
+while True:
+    try:
+        print('LOGGING TO MEGA')
+        MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
+        print('LOGIN DONE')
+        break
+    except Exception as e:
+        print('MEGA LOGIN FAILED. TRYING AGAIN')
 
 class Connector:
     """
