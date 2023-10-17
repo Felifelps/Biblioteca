@@ -25,11 +25,11 @@ RUN poetry install
 #Sets python version to 3.9
 RUN poetry env use 3.9
 
-#Opens poetry shell
-RUN poetry shell
-
 #Goes to apibiblioteca directory
 WORKDIR /app/apibiblioteca
+
+#Opens poetry shell
+RUN poetry shell
 
 #Expose the server port
 EXPOSE 8080
