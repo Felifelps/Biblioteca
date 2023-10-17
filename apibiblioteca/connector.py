@@ -29,7 +29,7 @@ initialize_app(
 )
 
 MEGA = Mega()
-MEGA.login('felipefelipe23456@gmail.com', 'mgalomniaco')
+MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
 
 class Connector:
     """
