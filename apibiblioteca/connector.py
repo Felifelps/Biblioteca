@@ -27,15 +27,18 @@ for key, value in cred.copy().items():
 initialize_app(
     credentials.Certificate(cred)
 )
-
+import time
+MEGA = Mega()
+login, password = environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD')
+print('LOGGING TO MEGA')
 while True:
     try:
-        print('LOGGING TO MEGA')
-        MEGA = Mega()
-        MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
+        MEGA.login(login, password)
         print('LOGIN DONE')
         break
     except Exception as e:
+        print(e)
+        time.sleep(10)
         print('MEGA LOGIN FAILED. TRYING AGAIN')
 
 class Connector:
