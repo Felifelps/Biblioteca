@@ -16,11 +16,11 @@ COPY . .
 #Install poetry project
 RUN poetry install
 
-#Sets python version to 3.9
-RUN poetry env use 3.9
-
 #Opens poetry shell
 RUN poetry shell
+
+#Sets python version to 3.9
+RUN poetry env use 3.9
 
 RUN dir
 
