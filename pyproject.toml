@@ -6,7 +6,7 @@ authors = ["Felifelps <felipefelipe23456@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 quart = "^0.19.3"
 firebase-admin = "^6.2.0"
 bcrypt = "^4.0.1"
