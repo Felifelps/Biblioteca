@@ -26,7 +26,7 @@ RUN poetry install
 RUN poetry env use 3.9
 
 #Opens poetry shell
-RUN poetry shell
+RUN poetry run pip install hypercorn
 
 #Goes to apibiblioteca directory
 WORKDIR apibiblioteca
