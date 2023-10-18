@@ -1,10 +1,12 @@
+from asyncio import to_thread
 from .book import Book
-from .connector import Connector
+from .data import DATA
 from .email import Email
 from .files import Files
 from .keys import Keys
 from .lending import Lending
 from .user import User
+from .utils import check_admin_password
 from asyncio import ensure_future
 from datetime import datetime
 from os.path import exists, join
@@ -323,15 +325,16 @@ async def get_user_file():
         return 'An error ocurred'
 
 #---------------------- GENERATING API KEY ROUTES ----------------------#
-@app.route('/register/key', methods=['GET', 'POST'])
+@app.route('/register_key', methods=['GET', 'POST'])
 async def register():
     if request.method == 'POST':
         form = await request.form
         email = form.get('email', None)
         password = form.get('password', None)
-        if email and email not in await Keys.get_keys():
-            if password and await Connector.check_admin_password(password):
+        if email and email not in (await Keys.get_keys()).keys():
+            if password and check_admin_password(password):
                 key = await Keys.register_new_key(email)
+                print(key)
                 await Email.message(
                     email, 
                     f'<p>Essa é sua chave de api, não a compartilhe publicamente!</p><h1>{key}</h1>', 

@@ -1,11 +1,11 @@
 """
 # apibiblioteca.book
 
-This module contains an ORM implementation for the firestore_async module for manipulate
+This module contains an ORM implementation for the firestore_module for manipulate
 the books data stored on the database
 """
-
-from .connector import Connector
+from asyncio import to_thread
+from .data import DATA
 
 class BookReference:
     """
@@ -53,20 +53,20 @@ class BookReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-       
+    
     async def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await Connector.BOOKS.document(self.id).update(self.to_dict())
-        Book._books[self.id] = self.to_dict()
+        await to_thread(DATA.update('books', {self.id: self.to_dict()}))
     
     async def delete(self) -> None:
         """
         Deletes BookReference instance and the corresponding firestore document
         """
-        await Connector.BOOKS.document(self.id).delete()
-        Book._books.pop(self.id, '')
+        data = await to_thread(DATA.data)
+        data['books'].pop(self.id)
+        await to_thread(DATA.change(data))
         del self
 
 class Book:
@@ -77,50 +77,32 @@ class Book:
     \n
     Creates documents and make querys to the collection.
     """
+
+    async def get_books(to_dict=True) -> dict:
+        return (await to_thread(DATA.data))['books'] if to_dict else [BookReference(book) for book in (await to_thread(DATA.data))['books'].values()]
     
-    quantity = None
-    _books = None
-    async def get_books() -> None:
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
-        This function is for intern using. It loads all books data and save it into the Book._books variable.
+        Makes queries to "leitores" collection.
         """
-        if Book._books == None:
-            Book._books = {book.id: book.to_dict() async for book in Connector.BOOKS.stream()}
-        Book.quantity = len(Book._books)
-        return Book._books
-    
-    async def all() -> list:
-        """
-        Returns all books of database
-        """
-        await Book.get_books()
-        return [BookReference(**book) for RG, book in Book._books.items()]
-    
-    async def get(id: str, default=None, to_dict: bool=True) -> dict:
-        '''
-        Returns book data from the database in the shape of a dict if to_dict == True, else BookReference. If not found, returns default.
-        '''
-        if id in (await Book.get_books()).keys():
-            return Book._books[id] if to_dict else BookReference(**Book._books[id])
-        return default 
-    
-    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
-        """
-        Makes queries to "livros" collection.
-        """
-        
-        await Book.get_books()
         result = []
-        try:
+        books = (await to_thread(DATA.data))['books']
+        try:    
             exec(f'''
-for id, book in Book._books.items():
+for id, book in books.items():
     if not (str(book['{field}']) {op_string} '{value}'):
         continue
     result.append(book if to_dict else BookReference(**book))
 ''')
         except KeyError as e:
-            return Connector.message('Field not found')
-        return result if len(result) != 1 else result[0]       
+            raise 'Field not found'
+        return result if len(result) != 1 else result[0]   
+    
+    async def get(id, to_dict=True):
+        book = (await to_thread(DATA.data))['books'].get(id, None)
+        if not book or to_dict:
+            return book
+        return BookReference(**book)    
     
     async def new( 
         titulo: str,
@@ -131,15 +113,14 @@ for id, book in Book._books.items():
         assuntos: str,
         estante: str,
         prateleira: str,
-        **kwargs
+        to_dict=True
     ) -> dict:
         """
         This function creates a new document on the 'livros' collection and returns a 
         BookReference object pointing to.
         """
-        await Book.get_books()
         
-        id = Book.quantity + 1
+        id = len((await to_thread(DATA.data))['books'])
         book_data = {
             'id': str(id),
             'titulo': titulo,
@@ -152,7 +133,5 @@ for id, book in Book._books.items():
             'prateleira': prateleira,
             'leitor': False   
         }
-        await Connector.BOOKS.document(str(id)).set(book_data)
-        Book.quantity += 1
-        Book._books[str(id)] = book_data
-        return BookReference(**book_data)
+        await to_thread(DATA.update('books', {id, book_data}))
+        return book_data if to_dict else BookReference(**book_data)

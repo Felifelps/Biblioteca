@@ -1,5 +1,6 @@
 
-from datetime import datetime
+from bcrypt import checkpw, gensalt, hashpw
+import datetime
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore_async, initialize_app
 from mega import Mega
@@ -27,17 +28,24 @@ EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
 
 MEGA = Mega()
 login, password = environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD')
-print('LOGGING TO MEGA')
+print('[LOGGING TO MEGA]')
 while True:
     try:
         MEGA.login(login, password)
-        print('LOGIN DONE')
+        print('[LOGIN DONE]')
         break
     except Exception as e:
         time.sleep(5)
         print(e)
-        print('MEGA LOGIN FAILED. TRYING AGAIN')
-    
+        print('[MEGA LOGIN FAILED. TRYING AGAIN]')
+        
+def today():
+    return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
+
+#bibliotecapfasocorrolimA
+def check_admin_password(password: str) -> bool:
+    return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
+
 '''
 cdds = {
     28: 'Literatura Infantil/Infanto-Juvenil/Juvenil',

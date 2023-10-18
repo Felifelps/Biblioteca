@@ -5,7 +5,7 @@ This module contains the Email class, that have a function to send emails asynch
 """
 
 from asyncio import to_thread
-from .connector import EMAIL_PASSWORD, EMAIL_SENDER
+from .utils import EMAIL_PASSWORD, EMAIL_SENDER
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP

@@ -1,11 +1,12 @@
 """
 # api.user
 
-This module contains an ORM implementation for the firestore_async module for manipulate
+This module contains an ORM implementation for the firestore_module for manipulate
 the users data stored on the database
 """
-
-from .connector import Connector
+from asyncio import to_thread
+from .data import DATA
+from .utils import today
 
 class UserReference:
     """
@@ -53,20 +54,20 @@ class UserReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-       
+    
     async def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await Connector.USERS.document(self.RG).update(self.to_dict())
-        User._users[self.RG] = self.to_dict()
+        await to_thread(DATA.update('users', {self.RG: self.to_dict()}))
     
     async def delete(self) -> None:
         """
         Deletes UserReference instance and the corresponding firestore document
         """
-        await Connector.USERS.document(self.RG).delete()
-        User._users.pop(self.RG, '')
+        data = await to_thread(DATA.data)
+        data['users'].pop(self.RG)
+        await to_thread(DATA.change(data))
         del self
 
 class User:
@@ -77,29 +78,16 @@ class User:
     \n
     Creates documents and make querys to the collection.
     """
-    _users = None
     
-    async def get_users() -> dict:
-        """
-        It loads all users data and save it into the User._users variable, if it is None.
-        """
-        if User._users == None:
-            User._users = {user.id: user.to_dict() async for user in Connector.USERS.stream()}
-        return User._users
+    async def get_users(to_dict=True) -> dict:
+        return (await to_thread(DATA.data))['users'] if to_dict else [UserReference(user) for user in (await to_thread(DATA.data))['users'].values()]
     
-    async def all() -> list:
-        """
-        Returns all users of database
-        """
-        await User.get_users()
-        return [UserReference(**user) for RG, user in User._users.items()]
-    
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=False) -> dict:
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
         Makes queries to "leitores" collection.
         """
         result = []
-        users = await User.get_users()
+        users = (await to_thread(DATA.data))['users']
         try:    
             exec(f'''
 for RG, user in users.items():
@@ -108,16 +96,14 @@ for RG, user in users.items():
     result.append(user if to_dict else UserReference(**user))
 ''')
         except KeyError as e:
-            return Connector.message('Field not found')
+            raise 'Field not found'
         return result if len(result) != 1 else result[0]   
     
-    async def get(RG: str, default=None, to_dict: bool=True) -> dict:
-        '''
-        Returns user data from the database in the shape of a dict if to_dict == True, else UserReference. If not found, returns default.
-        '''
-        if RG in (await User.get_users()).keys():
-            return User._users[RG] if to_dict else UserReference(**User._users[RG])
-        return default 
+    async def get(RG, to_dict=True):
+        user = (await to_thread(DATA.data))['users'].get(RG, None)
+        if not user or to_dict:
+            return user
+        return UserReference(**user)
     
     async def new( 
         RG: str,
@@ -132,7 +118,7 @@ for RG, user in users.items():
         tel_profissional: str="",
         escola: str="",
         curso_serie: str="",
-        **kwargs
+        to_dict=True
     ) -> dict:
         """
         This function creates a new document on the 'leitores' collection and returns a 
@@ -141,8 +127,8 @@ for RG, user in users.items():
         If the user already exists, then returns a dict with a message about this
         """
         #If user already exists
-        if RG in await User.get_users(): 
-            return Connector.message('Usuário já existente')
+        if RG in (await to_thread(DATA.data))['users']: 
+            return False
         user_data = {
             'RG': RG,
             'nome': nome,
@@ -156,11 +142,10 @@ for RG, user in users.items():
             'tel_profissional': tel_profissional,
             'escola': escola,
             'curso_serie': curso_serie,
-            'data_cadastro': Connector.today(),
+            'data_cadastro': today(),
             'valido': False,
             'favoritos': [],
             'livro': False     
         }
-        await Connector.USERS.document(RG).set(user_data)
-        User._users[RG] = user_data
-        return user_data
+        await to_thread(DATA.update('users', {RG: user_data}))
+        return user_data if to_dict else UserReference(**user_data)

@@ -1,11 +1,12 @@
 """
 # api.lending
 
-This module contains an ORM implementation for the firestore_async module for manipulate
+This module contains an ORM implementation for the firestore_module for manipulate
 the lendings data stored on the database
 """
-
-from .connector import Connector
+from asyncio import to_thread
+from .data import DATA
+from .utils import today
     
 class LendingReference:
     """
@@ -53,20 +54,20 @@ class LendingReference:
         Returns dict version of the database data
         """
         return {attr: getattr(self, attr) for attr in self.fields}
-       
+    
     async def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await Connector.LENDINGS.document(self.id).update(self.to_dict())
-        Lending._lendings[self.id] = self.to_dict()
+        await to_thread(DATA.update('lendings', {self.id: self.to_dict()}))
     
     async def delete(self) -> None:
         """
         Deletes LendingReference instance and the corresponding firestore document
         """
-        await Connector.LENDINGS.document(self.id).delete()
-        Lending._lendings.pop(self.id, '')
+        data = await to_thread(DATA.data)
+        data['lendings'].pop(self.id)
+        await to_thread(DATA.change(data))
         del self
 
 class Lending:
@@ -78,69 +79,47 @@ class Lending:
     Creates documents and make querys to the collection.
     """
     
-    quantity = None
-    _lendings = None
-    async def get_lendings() -> None:
-        """
-        This function is for intern using. It loads all lendings data and save it into the Lending._lendings variable.
-        """
-        if Lending._lendings == None:
-            Lending._lendings = {lending.id: lending.to_dict() async for lending in Connector.LENDINGS.stream()}
-            Lending.quantity = len(Lending._lendings)
-        return Lending._lendings
+    async def get_lendings(to_dict=True) -> dict:
+        return (await to_thread(DATA.data))['lendings'] if to_dict else [LendingReference(lending) for lending in (await to_thread(DATA.data))['lendings'].values()]
     
-    async def all() -> list:
+    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
-        Returns all lendings of database
+        Makes queries to "leitores" collection.
         """
-        await Lending.get_lendings()
-        return [LendingReference(**lending) for RG, lending in Lending._lendings.items()]
-    
-    async def get(id: str, default=None, to_dict: bool=True) -> dict:
-        '''
-        Returns book data from the database in the shape of a dict if to_dict == True, else LendingReference. If not found, returns default.
-        '''
-        if id in (await Lending.get_lendings()).keys():
-            return Lending._lendings[id] if to_dict else LendingReference(**Lending._lendings[id])
-        return default 
-    
-    async def query(field: str, op_string: str, value: str, to_dict: bool=False) -> dict:
-        """
-        Makes queries to "emprestimos" collection.
-        """
-
-        await Lending.get_lendings()
         result = []
-        try:
+        lendings = (await to_thread(DATA.data))['lendings']
+        try:    
             exec(f'''
-for id, lending in Lending._lendings.items():
+for id, lending in lendings.items():
     if not (str(lending['{field}']) {op_string} '{value}'):
         continue
     result.append(lending if to_dict else LendingReference(**lending))
 ''')
         except KeyError as e:
-            return Connector.message('Field not found')
-        return result if len(result) != 1 else result[0]    
+            raise 'Field not found'
+        return result if len(result) != 1 else result[0]   
     
-    async def new(RG: str, book_id: str) -> LendingReference:
+    async def get(id, to_dict=True):
+        lending = (await to_thread(DATA.data))['lendings'].get(id, None)
+        if not lending or to_dict:
+            return lending
+        return LendingReference(**lending)  
+    
+    async def new(RG: str, lending_id: str, to_dict=True) -> LendingReference:
         """
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
         """
-        if Lending._lendings == None:
-            await Lending.get_lendings()
             
-        id = Lending.quantity + 1
+        id = len((await to_thread(DATA.data))['lendings'])
         lending_data = {
             'id': str(id),
             'leitor': RG,
-            'livro': book_id,
+            'livro': lending_id,
             'multa': 0,
-            'data_emprestimo': Connector.today(),
+            'data_emprestimo': today(),
             'renovado': False,
             'data_finalizacao': False
         }
-        await Connector.LENDINGS.document(str(id)).set(lending_data)
-        Lending.quantity += 1
-        Lending._lendings[str(id)] = lending_data
-        return LendingReference(**lending_data)
+        await to_thread(DATA.update('lendings', {id, lending_data}))
+        return lending_data if to_dict else LendingReference(**lending_data)

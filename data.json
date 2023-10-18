@@ -1,1 +1,31 @@
-{"users": {}, "books": {}, "lendings": {}, "keys": {}}
+{
+    "users": {
+        "2018125194-4": {
+            "RG": "2018125194-4",
+            "nome": "Felipe",
+            "data_nascimento": "18/08/2006",
+            "local_nascimento": "Brejo Santo",
+            "email": "felipefelipe23456@gmail.com",
+            "CEP": "63250000",
+            "tel_pessoal": "88994426429",
+            "residencia": "Vila Fronteiro",
+            "profissao": "",
+            "tel_profissional": "",
+            "escola": "",
+            "curso_serie": "",
+            "data_cadastro": "18/10/23 \u00e0s 08:08:33",
+            "valido": false,
+            "favoritos": [],
+            "livro": false
+        }
+    },
+    "keys": {
+        "felipefelipe23456@gmail.com": {
+            "email": "felipefelipe23456@gmail.com",
+            "encrypted_key": "b'$2b$12$BgUnZhvM9V3Srqc0u7fnQu6lXoDKc8yOCghq0yOawO7b8ykWrqAG.'",
+            "salt": "b'$2b$12$BgUnZhvM9V3Srqc0u7fnQu'"
+        }
+    },
+    "books": {},
+    "lendings": {}
+}
