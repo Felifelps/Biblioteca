@@ -36,7 +36,25 @@ while True:
     except Exception as e:
         time.sleep(5)
         print('[MEGA LOGIN FAILED. TRYING AGAIN]')
-        
+
+DATA_REQUIRED_FIELDS = {
+    'user': [
+        "RG",
+        "nome",
+        "data_nascimento",
+        "local_nascimento",
+        "email",
+        "CEP",
+        "tel_pessoal",
+        "residencia",
+        "profissao",
+        "tel_profissional",
+        "escola",
+        "curso_serie"
+    ],
+    
+}
+
 def today():
     return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
 

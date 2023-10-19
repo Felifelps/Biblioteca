@@ -15,7 +15,7 @@ class Keys:
     This class abstracts the "keys" collection of the database.
     """
     def get_keys():
-        return DATA.data['keys']
+        return DATA['keys']
     
     def encrypt_key(key: str) -> list:
         """
@@ -28,13 +28,13 @@ class Keys:
         """
         Checks if the given key corresponds to a given email api key.
         """
-        return checkpw(bytes(key, encoding='utf-8'), DATA.data.get('keys')[email]['encrypted_key'])
+        return checkpw(bytes(key, encoding='utf-8'), DATA['keys'][email]['encrypted_key'])
     
     def get_email_from_key(key: str, default=None) -> str:
         """
         Gets an email by its associated key. If not found, returns None.
         """
-        for value in DATA.data.get('keys').values():
+        for value in DATA['keys'].values():
             if checkpw(bytes(key, encoding='utf-8'), bytes(value['encrypted_key'][2:-1], encoding='utf-8')):
                 return value['email']
         return default
@@ -45,7 +45,7 @@ class Keys:
         """
         
         #if email already registered
-        if email in DATA.data['keys']:
+        if email in DATA['keys']:
             return None
         key = token_hex(length//2)
         data = Keys.encrypt_key(key)
@@ -54,19 +54,17 @@ class Keys:
             "encrypted_key": str(data[0]),
             "salt": str(data[1])
         }
-        DATA.update('keys', {email: key_data})
+        DATA['keys'].update({email: key_data})
         return key
     
     def get(email: str, default=None) -> str:
         """
         Gets an api key from the database.
         """
-        return DATA.data.get('keys').get(email, default)
-        
+        return DATA['keys'].get(email, default)
+    
     def delete(email: str) -> None:
         """
         Deletes an api key.
         """
-        data = DATA.data
-        data['keys'].pop(email)
-        DATA.change(data)
+        DATA['keys'].pop(email)

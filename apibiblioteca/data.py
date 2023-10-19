@@ -3,31 +3,38 @@ import json
 
 class Data:
     DATABASE = 'data.json'
-    __data = {}
+    FILELOCK = FileLock(DATABASE + '.lock')
     def __init__(self):
-        self.__data = self.__read()
+        self.__data = None
+        
+    def save_after_updates(self, func):
+        def wrapper(*args, **kwargs):
+            self.connect()
+            result = func(*args, **kwargs)
+            self.commit_and_close()
+            return result
+        return wrapper
+        
+    def connect(self):
+        try:
+            self.FILELOCK.acquire()
+            with open(self.DATABASE, 'r') as file:
+                self.__data = json.load(file)
+        except:
+            pass
     
-    def __lock_database(self):
-        return FileLock(self.DATABASE + '.lock')
-
-    def __read(self):
-        with open(self.DATABASE, 'r') as data:
-            return json.load(data)
-            
-    def update(self, field, updated_data):
-        with self.__lock_database():
-            with open(self.DATABASE, 'w') as data:
-                self.__data[field].update(updated_data)
-                data.write(json.dumps(self.__data, indent=4))
-                
-    def change(self, new_data):
-        with self.__lock_database():
-            with open(self.DATABASE, 'w') as data:
-                data.write(json.dumps(new_data, indent=4))
-            
-    @property
-    def data(self):
-        self.__data = self.__read()
+    def commit_and_close(self):
+        with open(self.DATABASE, 'w') as file:
+            file.write(json.dumps(self.__data, indent=4))
+        self.FILELOCK.release()
+        
+    def __getter__(self):
         return self.__data
+    
+    def __getitem__(self, key):
+        return self.__data.get(key, None)
+    
+    def __setitem__(self, key, value):
+        self.__data[key] = value
 
 DATA = Data()

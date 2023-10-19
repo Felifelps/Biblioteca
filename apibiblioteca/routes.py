@@ -5,8 +5,8 @@ from .email import Email
 from .files import Files
 from .keys import Keys
 from .lending import Lending
-from .user import User
-from .utils import check_admin_password, today
+from .user import User, UserReference
+from .utils import check_admin_password, DATA_REQUIRED_FIELDS, today
 from asyncio import ensure_future
 from datetime import datetime
 from os.path import exists, join
@@ -31,11 +31,20 @@ async def get_form_or_json():
 async def key_in_json(json):
     return json and json.get('key', False) and Keys.get_email_from_key(json.pop('key'))
 
+@app.before_request
+async def connect_data():
+    DATA.connect()
+    
+@app.after_request
+async def commit_and_close_data(response):
+    DATA.commit_and_close()
+    return response
+
 @app.post('/users')
 async def all_users():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
-    return User.get_users()
+    return DATA['users']
 
 @app.post('/user')
 async def get_user():
@@ -44,7 +53,7 @@ async def get_user():
         return await render_template('key_required.html')
     RG = json.get('RG', False)
     if RG:
-        return User.get(RG, 'User not found')
+        return DATA['users'].get(RG, 'User not found')
     return 'Missing RG'
 
 @app.post('/user/new')
@@ -55,13 +64,19 @@ async def new_user():
     RG = json.get('RG', False)
     if not RG: 
         return 'Missing RG'
-    if User.get(RG):
+    if DATA['users'].get(RG):
         return "An user with this RG already exists"
-    try:
-        User.new(**json)
+    missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['user']))
+    if missing_fields == []:
+        json.update({
+            "data_cadastro": today(),
+            "valido": False,
+            "favoritos": [],
+            "livro": False
+        })
+        DATA['users'].update({RG: json})
         return 'User created'
-    except TypeError as e:
-        return f'Missing required parameters:{str(e).split(":")[1]}'
+    return f'Missing required parameters: {str(missing_fields)}'
 
 @app.post('/user/update')
 async def update_user():
@@ -71,14 +86,14 @@ async def update_user():
     RG = json.pop('RG', False)
     if not RG:
         return 'Missing RG'
-    user = User.get(RG, to_dict=False)
+    user = DATA['users'].get(RG, False)
     if not user:
         return 'User not found'
     for key, value in json.items():
-        if key not in user.fields:
+        if key not in DATA_REQUIRED_FIELDS['user']:
             return 'There is an invalid field: ' + key
-        user[key] = value
-    user.save()
+        user.update({key: value})
+    DATA['users'].update({RG: json})
     return 'User updated'
 
 @app.post('/user/validate')
@@ -89,11 +104,11 @@ async def validate_user():
     RG = json.pop('RG', False)
     if not RG: 
         return 'Missing RG'
-    user = User.get(RG, to_dict=False)
+    user = DATA['users'].get(RG, False)
     if not user:
         return 'User not found'
-    user.valido = True
-    user.save()
+    user.update({'valido': True})
+    DATA['users'].update({RG: json})
     return 'User validated'
 
 @app.post('/user/favorite_book')
@@ -105,14 +120,14 @@ async def favorite_book():
     book_id = json.pop('book_id', False)
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
-    user = User.get(RG, to_dict=False)
-    if not (user and Book.query('id', '==', book_id)):
+    user = DATA['users'].get(RG, False)
+    if not (user and DATA['books'].get(str(book_id), False)):
         return f'{"User" if not user else "Book"} not found'
-    if book_id in user.favoritos:
-        user.favoritos.pop(user.favoritos.index(book_id))
+    if book_id in user['favoritos']:
+        user['favoritos'].pop(user['favoritos'].index(book_id))
     else:
-        user.favoritos.append(book_id)
-    user.save()
+        user['favoritos'].append(book_id)
+    DATA['users'].update({RG: json})
     return 'Favorite updated'
 
 @app.post('/user/delete')
@@ -123,10 +138,10 @@ async def delete_user():
     RG = json.pop('RG', False)
     if not RG:
         return 'Missing RG'
-    user = User.get(RG, to_dict=False)
+    user = DATA['users'].get(RG, False)
     if not user:
         return 'User not found'
-    user.delete()
+    DATA['users'].pop(RG)
     return 'User deleted'
 
 @app.post('/books')
@@ -219,7 +234,7 @@ async def get_lending():
             if not user: 
                 return "User not found"
             user.livro = False
-            user.save()
+            DATA.update('users', {RG: user})
             book = Book.get(lending.livro, to_dict=False)
             if not user: 
                 return "Book not found"
@@ -240,7 +255,7 @@ async def new_lending():
     book_id = json.pop('book_id', False)
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
-    user = User.get(RG, to_dict=False)
+    user = DATA.data['users'].get(RG, False)
     if not (user and not user['livro']):
         return 'User already has a book' if user else 'User not found'
     book = Book.get(book_id, to_dict=False)
@@ -250,7 +265,7 @@ async def new_lending():
         Lending.new(RG, book_id)
         user.livro = book_id
         book.leitor = RG
-        user.save(), book.save()
+        DATA.update('users', {RG: user}), book.save()
         return 'Book lended'
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'

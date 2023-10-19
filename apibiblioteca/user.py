@@ -20,7 +20,21 @@ class UserReference:
     the database.
     """
     
-    def __init__(self, **kwargs):
+    def __init__(self, 
+            RG,
+            nome,
+            data_nascimento,
+            local_nascimento,
+            email,
+            CEP,
+            tel_pessoal,
+            residencia,
+            profissao="",
+            tel_profissional="",
+            escola="",
+            curso_serie="",
+            **kwargs
+        ):
         """
         Converts kwargs argument into attrs and saves kwargs keys in the fields attribute
         """
@@ -97,12 +111,6 @@ for RG, user in users.items():
         except KeyError as e:
             raise 'Field not found'
         return result if len(result) != 1 else result[0]   
-    
-    def get(RG, default=None, to_dict=True):
-        user = DATA.data.get('users').get(RG, default)
-        if user == default or to_dict:
-            return user
-        return UserReference(**user)
     
     def new( 
         RG: str,

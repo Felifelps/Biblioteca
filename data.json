@@ -17,6 +17,25 @@
             "valido": false,
             "favoritos": [],
             "livro": false
+        },
+        "2018125194-5": {
+            "RG": "2018125194-5",
+            "nome": "Felipe",
+            "book_id": "4",
+            "data_nascimento": "18/08/2006",
+            "local_nascimento": "Brejo Santo",
+            "email": "felipefelipe23456@gmail.com",
+            "CEP": "63250000",
+            "tel_pessoal": "88994426429",
+            "residencia": "Vila Fronteiro",
+            "profissao": "",
+            "tel_profissional": "",
+            "escola": "",
+            "curso_serie": "",
+            "data_cadastro": "19/10/23 \u00e0s 10:51:57",
+            "valido": false,
+            "favoritos": [],
+            "livro": false
         }
     },
     "keys": {
@@ -27,30 +46,6 @@
         }
     },
     "books": {
-        "0": {
-            "id": "0",
-            "titulo": "Teste",
-            "autor": "Felipe",
-            "editora": "teste",
-            "edicao": "teste",
-            "CDD": "800",
-            "assuntos": "1.Teste, prototipos",
-            "estante": "2",
-            "prateleira": "1",
-            "leitor": false
-        },
-        "1": {
-            "id": "1",
-            "titulo": "Teste",
-            "autor": "Felipe",
-            "editora": "teste",
-            "edicao": "teste",
-            "CDD": "800",
-            "assuntos": "1.Teste, prototipos",
-            "estante": "2",
-            "prateleira": "1",
-            "leitor": false
-        },
         "2": {
             "id": "2",
             "titulo": "Teste",
@@ -988,5 +983,6 @@
             "leitor": false
         }
     },
-    "lendings": {}
+    "lendings": {},
+    "banana": "caf\u00e9"
 }
