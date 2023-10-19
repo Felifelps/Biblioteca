@@ -11,9 +11,8 @@ class Data:
         return FileLock(self.DATABASE + '.lock')
 
     def __read(self):
-        with self.__lock_database():
-            with open(self.DATABASE, 'r') as data:
-                return json.load(data)
+        with open(self.DATABASE, 'r') as data:
+            return json.load(data)
             
     def update(self, field, updated_data):
         with self.__lock_database():
