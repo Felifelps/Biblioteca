@@ -4,7 +4,6 @@
 This module contains an ORM implementation for the firestore_module for manipulate
 the books data stored on the database
 """
-from asyncio import to_thread
 from .data import DATA
 
 class BookReference:
@@ -54,19 +53,19 @@ class BookReference:
         """
         return {attr: getattr(self, attr) for attr in self.fields}
     
-    async def save(self) -> None:
+    def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await to_thread(DATA.update('books', {self.id: self.to_dict()}))
+        DATA.update('books', {self.id: self.to_dict()})
     
-    async def delete(self) -> None:
+    def delete(self) -> None:
         """
         Deletes BookReference instance and the corresponding firestore document
         """
-        data = await to_thread(DATA.data)
+        data = DATA.data
         data['books'].pop(self.id)
-        await to_thread(DATA.change(data))
+        DATA.change(data)
         del self
 
 class Book:
@@ -78,15 +77,15 @@ class Book:
     Creates documents and make querys to the collection.
     """
 
-    async def get_books(to_dict=True) -> dict:
-        return (await to_thread(DATA.data))['books'] if to_dict else [BookReference(book) for book in (await to_thread(DATA.data))['books'].values()]
+    def get_books(to_dict=True) -> dict:
+        return DATA.data.get('books') if to_dict else [BookReference(book) for book in DATA.data.get('books').values()]
     
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
+    def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
         Makes queries to "leitores" collection.
         """
         result = []
-        books = (await to_thread(DATA.data))['books']
+        books = DATA.data.get('books')
         try:    
             exec(f'''
 for id, book in books.items():
@@ -98,13 +97,13 @@ for id, book in books.items():
             raise 'Field not found'
         return result if len(result) != 1 else result[0]   
     
-    async def get(id, to_dict=True):
-        book = (await to_thread(DATA.data))['books'].get(id, None)
-        if not book or to_dict:
+    def get(id, default=None, to_dict=True):
+        book = DATA.data.get('books').get(id, default)
+        if book == default or to_dict:
             return book
         return BookReference(**book)    
     
-    async def new( 
+    def new( 
         titulo: str,
         autor: str,
         editora: str,
@@ -114,13 +113,13 @@ for id, book in books.items():
         estante: str,
         prateleira: str,
         to_dict=True
-    ) -> dict:
+    ):
         """
         This function creates a new document on the 'livros' collection and returns a 
         BookReference object pointing to.
         """
         
-        id = len((await to_thread(DATA.data))['books'])
+        id = len(DATA.data.get('books'))
         book_data = {
             'id': str(id),
             'titulo': titulo,
@@ -133,5 +132,5 @@ for id, book in books.items():
             'prateleira': prateleira,
             'leitor': False   
         }
-        await to_thread(DATA.update('books', {id, book_data}))
+        DATA.update('books', {id: book_data})
         return book_data if to_dict else BookReference(**book_data)

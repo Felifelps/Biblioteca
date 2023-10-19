@@ -2,7 +2,7 @@
 from bcrypt import checkpw, gensalt, hashpw
 import datetime
 from dotenv import load_dotenv
-from firebase_admin import credentials, firestore_async, initialize_app
+from firebase_admin import credentials, firestore, initialize_app
 from mega import Mega
 from os import environ
 import time
@@ -21,22 +21,20 @@ initialize_app(
     credentials.Certificate(cred)
 )
 
-DB = firestore_async.client()
+DB = firestore.client()
 
 EMAIL_SENDER = environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
 
 MEGA = Mega()
-login, password = environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD')
 print('[LOGGING TO MEGA]')
 while True:
     try:
-        MEGA.login(login, password)
+        MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
         print('[LOGIN DONE]')
         break
     except Exception as e:
         time.sleep(5)
-        print(e)
         print('[MEGA LOGIN FAILED. TRYING AGAIN]')
         
 def today():

@@ -4,7 +4,6 @@
 This module contains an ORM implementation for the firestore_module for manipulate
 the users data stored on the database
 """
-from asyncio import to_thread
 from .data import DATA
 from .utils import today
 
@@ -55,19 +54,19 @@ class UserReference:
         """
         return {attr: getattr(self, attr) for attr in self.fields}
     
-    async def save(self) -> None:
+    def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await to_thread(DATA.update('users', {self.RG: self.to_dict()}))
+        DATA.update('users', {self.RG: self.to_dict()})
     
-    async def delete(self) -> None:
+    def delete(self) -> None:
         """
         Deletes UserReference instance and the corresponding firestore document
         """
-        data = await to_thread(DATA.data)
+        data = DATA.data
         data['users'].pop(self.RG)
-        await to_thread(DATA.change(data))
+        DATA.change(data)
         del self
 
 class User:
@@ -79,15 +78,15 @@ class User:
     Creates documents and make querys to the collection.
     """
     
-    async def get_users(to_dict=True) -> dict:
-        return (await to_thread(DATA.data))['users'] if to_dict else [UserReference(user) for user in (await to_thread(DATA.data))['users'].values()]
+    def get_users(to_dict=True) -> dict:
+        return DATA.data.get('users') if to_dict else [UserReference(user) for user in DATA.data.get('users').values()]
     
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
+    def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
         Makes queries to "leitores" collection.
         """
         result = []
-        users = (await to_thread(DATA.data))['users']
+        users = DATA.data.get('users')
         try:    
             exec(f'''
 for RG, user in users.items():
@@ -99,13 +98,13 @@ for RG, user in users.items():
             raise 'Field not found'
         return result if len(result) != 1 else result[0]   
     
-    async def get(RG, to_dict=True):
-        user = (await to_thread(DATA.data))['users'].get(RG, None)
-        if not user or to_dict:
+    def get(RG, default=None, to_dict=True):
+        user = DATA.data.get('users').get(RG, default)
+        if user == default or to_dict:
             return user
         return UserReference(**user)
     
-    async def new( 
+    def new( 
         RG: str,
         nome: str,
         data_nascimento: str,
@@ -127,7 +126,7 @@ for RG, user in users.items():
         If the user already exists, then returns a dict with a message about this
         """
         #If user already exists
-        if RG in (await to_thread(DATA.data))['users']: 
+        if RG in DATA.data.get('users'): 
             return False
         user_data = {
             'RG': RG,
@@ -147,5 +146,5 @@ for RG, user in users.items():
             'favoritos': [],
             'livro': False     
         }
-        await to_thread(DATA.update('users', {RG: user_data}))
+        DATA.update('users', {RG: user_data})
         return user_data if to_dict else UserReference(**user_data)

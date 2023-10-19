@@ -4,7 +4,7 @@
 This module contains an ORM implementation for the firestore_module for manipulate
 the lendings data stored on the database
 """
-from asyncio import to_thread
+
 from .data import DATA
 from .utils import today
     
@@ -55,19 +55,19 @@ class LendingReference:
         """
         return {attr: getattr(self, attr) for attr in self.fields}
     
-    async def save(self) -> None:
+    def save(self) -> None:
         """
         Saves the changes on the database
         """
-        await to_thread(DATA.update('lendings', {self.id: self.to_dict()}))
+        DATA.update('lendings', {self.id: self.to_dict()})
     
-    async def delete(self) -> None:
+    def delete(self) -> None:
         """
         Deletes LendingReference instance and the corresponding firestore document
         """
-        data = await to_thread(DATA.data)
+        data = DATA.data
         data['lendings'].pop(self.id)
-        await to_thread(DATA.change(data))
+        DATA.change(data)
         del self
 
 class Lending:
@@ -79,15 +79,15 @@ class Lending:
     Creates documents and make querys to the collection.
     """
     
-    async def get_lendings(to_dict=True) -> dict:
-        return (await to_thread(DATA.data))['lendings'] if to_dict else [LendingReference(lending) for lending in (await to_thread(DATA.data))['lendings'].values()]
+    def get_lendings(to_dict=True) -> dict:
+        return DATA.data.get('lendings') if to_dict else [LendingReference(lending) for lending in DATA.data.get('lendings').values()]
     
-    async def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
+    def query(field: str="", op_string: str="", value: str="", to_dict: bool=True) -> dict:
         """
         Makes queries to "leitores" collection.
         """
         result = []
-        lendings = (await to_thread(DATA.data))['lendings']
+        lendings = DATA.data.get('lendings')
         try:    
             exec(f'''
 for id, lending in lendings.items():
@@ -99,19 +99,19 @@ for id, lending in lendings.items():
             raise 'Field not found'
         return result if len(result) != 1 else result[0]   
     
-    async def get(id, to_dict=True):
-        lending = (await to_thread(DATA.data))['lendings'].get(id, None)
-        if not lending or to_dict:
+    def get(id, default=None, to_dict=True):
+        lending = DATA.data.get('lendings').get(id, default)
+        if lending == default or to_dict:
             return lending
         return LendingReference(**lending)  
     
-    async def new(RG: str, lending_id: str, to_dict=True) -> LendingReference:
+    def new(RG: str, lending_id: str, to_dict=True) -> LendingReference:
         """
         This function creates a new document on the 'emprestimos' collection and returns a 
         LendingReference object pointing to.
         """
             
-        id = len((await to_thread(DATA.data))['lendings'])
+        id = len(DATA.data.get('lendings'))
         lending_data = {
             'id': str(id),
             'leitor': RG,
@@ -121,5 +121,5 @@ for id, lending in lendings.items():
             'renovado': False,
             'data_finalizacao': False
         }
-        await to_thread(DATA.update('lendings', {id, lending_data}))
+        DATA.update('lendings', {id, lending_data})
         return lending_data if to_dict else LendingReference(**lending_data)

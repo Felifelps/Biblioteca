@@ -14,7 +14,7 @@ class Keys:
     
     This class abstracts the "keys" collection of the database.
     """
-    async def get_keys():
+    def get_keys():
         return DATA.data['keys']
     
     def encrypt_key(key: str) -> list:
@@ -24,22 +24,22 @@ class Keys:
         salt = gensalt()
         return [hashpw(bytes(key, encoding='utf-8'), salt), salt]
     
-    async def check_key(email: str, key: str) -> bool:
+    def check_key(email: str, key: str) -> bool:
         """
         Checks if the given key corresponds to a given email api key.
         """
-        return checkpw(bytes(key, encoding='utf-8'), (await to_thread(DATA.data))['keys'][email]['encrypted_key'])
+        return checkpw(bytes(key, encoding='utf-8'), DATA.data.get('keys')[email]['encrypted_key'])
     
-    async def get_email_from_key(key: str) -> str:
+    def get_email_from_key(key: str, default=None) -> str:
         """
         Gets an email by its associated key. If not found, returns None.
         """
-        for value in (await to_thread(DATA.data))['keys'].values():
+        for value in DATA.data.get('keys').values():
             if checkpw(bytes(key, encoding='utf-8'), bytes(value['encrypted_key'][2:-1], encoding='utf-8')):
                 return value['email']
-        return None
+        return default
     
-    async def register_new_key(email: str, length: int=32):
+    def register_new_key(email: str, length: int=32):
         """
         Registers and creates a new not validated api key in the database.
         """
@@ -57,16 +57,16 @@ class Keys:
         DATA.update('keys', {email: key_data})
         return key
     
-    async def get(email: str) -> str:
+    def get(email: str, default=None) -> str:
         """
         Gets an api key from the database.
         """
-        return (await to_thread(DATA.data))['keys'].get(email, None)
+        return DATA.data.get('keys').get(email, default)
         
-    async def delete(email: str) -> None:
+    def delete(email: str) -> None:
         """
         Deletes an api key.
         """
-        data = await to_thread(DATA.data)
+        data = DATA.data
         data['keys'].pop(email)
-        await to_thread(DATA.change(data))
+        DATA.change(data)

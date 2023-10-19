@@ -6,7 +6,7 @@ from .files import Files
 from .keys import Keys
 from .lending import Lending
 from .user import User
-from .utils import check_admin_password
+from .utils import check_admin_password, today
 from asyncio import ensure_future
 from datetime import datetime
 from os.path import exists, join
@@ -29,13 +29,13 @@ async def get_form_or_json():
     return json
 
 async def key_in_json(json):
-    return json and json.get('key', False) and await Keys.get_email_from_key(json.pop('key'))
+    return json and json.get('key', False) and Keys.get_email_from_key(json.pop('key'))
 
 @app.post('/users')
 async def all_users():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
-    return await User.get_users()
+    return User.get_users()
 
 @app.post('/user')
 async def get_user():
@@ -44,7 +44,7 @@ async def get_user():
         return await render_template('key_required.html')
     RG = json.get('RG', False)
     if RG:
-        return await User.get(RG, 'User not found')
+        return User.get(RG, 'User not found')
     return 'Missing RG'
 
 @app.post('/user/new')
@@ -55,10 +55,10 @@ async def new_user():
     RG = json.get('RG', False)
     if not RG: 
         return 'Missing RG'
-    if await User.get(RG):
+    if User.get(RG):
         return "An user with this RG already exists"
     try:
-        await User.new(**json)
+        User.new(**json)
         return 'User created'
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
@@ -71,14 +71,14 @@ async def update_user():
     RG = json.pop('RG', False)
     if not RG:
         return 'Missing RG'
-    user = await User.get(RG, to_dict=False)
+    user = User.get(RG, to_dict=False)
     if not user:
         return 'User not found'
     for key, value in json.items():
         if key not in user.fields:
             return 'There is an invalid field: ' + key
         user[key] = value
-    await user.save()
+    user.save()
     return 'User updated'
 
 @app.post('/user/validate')
@@ -89,11 +89,11 @@ async def validate_user():
     RG = json.pop('RG', False)
     if not RG: 
         return 'Missing RG'
-    user = await User.get(RG, to_dict=False)
+    user = User.get(RG, to_dict=False)
     if not user:
         return 'User not found'
     user.valido = True
-    await user.save()
+    user.save()
     return 'User validated'
 
 @app.post('/user/favorite_book')
@@ -105,14 +105,14 @@ async def favorite_book():
     book_id = json.pop('book_id', False)
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
-    user = await User.get(RG, to_dict=False)
-    if not (user and await Book.query('id', '==', book_id)):
+    user = User.get(RG, to_dict=False)
+    if not (user and Book.query('id', '==', book_id)):
         return f'{"User" if not user else "Book"} not found'
     if book_id in user.favoritos:
         user.favoritos.pop(user.favoritos.index(book_id))
     else:
         user.favoritos.append(book_id)
-    await user.save()
+    user.save()
     return 'Favorite updated'
 
 @app.post('/user/delete')
@@ -123,17 +123,17 @@ async def delete_user():
     RG = json.pop('RG', False)
     if not RG:
         return 'Missing RG'
-    user = await User.get(RG, to_dict=False)
+    user = User.get(RG, to_dict=False)
     if not user:
         return 'User not found'
-    await user.delete()
+    user.delete()
     return 'User deleted'
 
 @app.post('/books')
 async def all_books():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
-    return await Book.get_books()
+    return Book.get_books()
 
 @app.post('/book')
 async def get_book():
@@ -143,7 +143,7 @@ async def get_book():
     book_id = json.get('book_id', False)
     if not book_id: 
         return 'Missing book_id'
-    return await Book.get(book_id, 'Book not found')   
+    return Book.get(book_id, 'Book not found')   
 
 @app.post('/book/new')
 async def new_book():
@@ -152,11 +152,14 @@ async def new_book():
         return await render_template('key_required.html')
     #number of copies
     n = json.pop('n', 1)
+    print(json)
     try:
-        for i in range(int(n)):
-            await Book.new(**json)
+        for i in range(1, int(n) + 1):
+            Book.new(**json)
         return f'Book{"" if n == 1 else "s"} created'
     except TypeError as e:
+        if 'unexpected' in str(e):
+            return f'G{str(e).split(" g")[-1]}'
         return f'Missing required parameters:{str(e).split(":")[1]}'
     
 @app.post('/book/update')
@@ -167,14 +170,14 @@ async def update_book():
     book_id = json.pop('book_id', False)
     if not book_id: 
         return 'Missing book_id'
-    book = await Book.get(book_id, to_dict=False)
+    book = Book.get(book_id, to_dict=False)
     if not book:
         return 'Book not found'
     for key, value in json.items():
         if key not in book.fields:
             return 'There is an invalid field: ' + key
         book[key] = value
-    await book.save()
+    book.save()
     return 'Book updated'
 
 @app.post('/book/delete')
@@ -185,17 +188,17 @@ async def delete_book():
     book_id = json.pop('book_id', False)
     if not book_id:
         return 'Missing book_id'
-    book = await Book.get(book_id, to_dict=False)
+    book = Book.get(book_id, to_dict=False)
     if not book:
         return 'Book not found'
-    await book.delete()
+    book.delete()
     return 'Book deleted'
     
 @app.post('/lendings')
 async def all_lendings():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
-    return await Lending.get_lendings()
+    return Lending.get_lendings()
 
 @app.post('/lending')
 async def get_lending():
@@ -205,27 +208,27 @@ async def get_lending():
     lending_id = json.get('lending_id', False)
     if not lending_id: 
         return 'Missing lending_id'
-    lending = await Lending.get(lending_id, to_dict=False)
+    lending = Lending.get(lending_id, to_dict=False)
     if not lending:
         return 'Lending not found'
     if not lending.data_finalizacao:
         lending_limit = 20 if lending.renovado else 10
         lending_time = (datetime.today() - datetime.strptime(lending.data_emprestimo, '%d/%m/%y às %H:%M:%S')).days
         if not lending.pego and lending_time > 2:
-            user = await User.get(lending.leitor, to_dict=False)
+            user = User.get(lending.leitor, to_dict=False)
             if not user: 
                 return "User not found"
             user.livro = False
-            await user.save()
-            book = await Book.get(lending.livro, to_dict=False)
+            user.save()
+            book = Book.get(lending.livro, to_dict=False)
             if not user: 
                 return "Book not found"
             book.leitor = False
-            await book.save()
-            lending.data_finalizacao = Connector.today()
+            book.save()
+            lending.data_finalizacao = today()
         elif lending_time > lending_limit:
             lending.multa = 0.10 * (lending_time - lending_limit)
-        await lending.save()
+        lending.save()
     return lending.to_dict()
 
 @app.post('/lending/new')
@@ -237,17 +240,17 @@ async def new_lending():
     book_id = json.pop('book_id', False)
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
-    user = await User.get(RG, to_dict=False)
+    user = User.get(RG, to_dict=False)
     if not (user and not user['livro']):
         return 'User already has a book' if user else 'User not found'
-    book = await Book.get(book_id, to_dict=False)
+    book = Book.get(book_id, to_dict=False)
     if not (book and not book['leitor']):
         return 'Book was already taken' if book else 'Book not found'
     try:
-        await Lending.new(RG, book_id)
+        Lending.new(RG, book_id)
         user.livro = book_id
         book.leitor = RG
-        await user.save(), await book.save()
+        user.save(), book.save()
         return 'Book lended'
     except TypeError as e:
         return f'Missing required parameters:{str(e).split(":")[1]}'
@@ -260,7 +263,7 @@ async def update_lending():
     lending_id = json.pop('lending_id', False)
     if not lending_id:
         return 'Missing lending_id'
-    lending = await Lending.get(lending_id, to_dict=False)
+    lending = Lending.get(lending_id, to_dict=False)
     if not lending:
         return 'Lending not found'
     if not lending.data_finalizacao:
@@ -271,7 +274,7 @@ async def update_lending():
         elif not value:
             return 'This field just accept the true value.'
     lending[key] = value
-    await lending.save()
+    lending.save()
     return 'Lending updated' 
 
 @app.post('/user/files/send')
@@ -280,7 +283,7 @@ async def send_user_files():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     RG = json.get('RG', False)
-    if not (RG and await User.get(RG)): 
+    if not (RG and User.get(RG)): 
         return 'Missing RG' if  not RG else 'User not found'
     files = await request.files
     RG_frente = files.get('RG_frente', False)
@@ -307,7 +310,7 @@ async def get_user_file():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     RG = json.get('RG', False)
-    if not (RG and await User.get(RG)): 
+    if not (RG and User.get(RG)): 
         return 'Missing RG' if  not RG else 'User not found'
     file_type = json.get('file_type', False)
     if file_type not in ['RG_frente', 'RG_verso', 'comprovante']: 
@@ -331,10 +334,9 @@ async def register():
         form = await request.form
         email = form.get('email', None)
         password = form.get('password', None)
-        if email and email not in (await Keys.get_keys()).keys():
+        if email and email not in Keys.get_keys().keys():
             if password and check_admin_password(password):
-                key = await Keys.register_new_key(email)
-                print(key)
+                key = Keys.register_new_key(email)
                 await Email.message(
                     email, 
                     f'<p>Essa é sua chave de api, não a compartilhe publicamente!</p><h1>{key}</h1>', 
@@ -350,7 +352,3 @@ async def text():
     if request.method == "POST": 
         print((await request.form)['text'])
     return """<form method="POST"><textarea name="text" style="width: 30em; height: 30em;"></textarea><br><input type="submit"></form> """
-
-@app.route('/', methods=['GET', 'POST'])
-async def testes():
-    return await render_template('teste.html')
