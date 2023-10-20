@@ -5,24 +5,20 @@ import requests
 from threading import Thread
 import time
 
-def _auto_requesting():
-    print('[AUTO REQUESTING STARTED]')
+def _watcher():
+    print('[WATCHER STARTED]')
     while True:
-        # Requests every 25 minutes
-        time.sleep(1500)
-        print('[REQUESTING TO SERVER]')
-        try:
+        for i in range(9):
+            # Checks every 20 minutes
+            time.sleep(1200)
+            print('[REQUESTING TO SERVER]')
             response = requests.get('http://127.0.0.1:8080/register_key')
             if response.status_code == 200:
                 print('[REQUEST DONE]')
-        except Exception as e:
-            print(e)
-
-def _uploader():
-    print('[UPLOADER STARTED]')
-    while True:
-        # Check every three hours
-        time.sleep(10800)
+            else:
+                print('[REQUEST FAILED]')
+        
+        # Check every three hours (9 * 1200 = 10800 seconds = three hours)
         if datetime.datetime.now().hour in [22, 23, 0, 1]:
             start = time.time()
             print('[UPLOADING DATA TO FIRESTORE]')
@@ -32,5 +28,4 @@ def _uploader():
                     collection_ref.document(id).set(document)
             print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
         
-AUTO_REQUESTING = Thread(target=_auto_requesting, daemon=True)
-UPLOADER = Thread(target=_uploader, daemon=True)
+WATCHER = Thread(target=_watcher, daemon=True)

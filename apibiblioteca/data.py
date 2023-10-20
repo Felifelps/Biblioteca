@@ -1,34 +1,25 @@
-from filelock import FileLock
+from asyncio import sleep
 import json
 
 class Data:
     DATABASE = 'data.json'
-    FILELOCK = FileLock(DATABASE + '.lock')
     def __init__(self):
         self.__data = None
+        self.__open = False
         
-    def save_after_updates(self, func):
-        def wrapper(*args, **kwargs):
-            self.connect()
-            result = func(*args, **kwargs)
-            self.commit_and_close()
-            return result
-        return wrapper
-        
-    def connect(self):
-        try:
-            self.FILELOCK.acquire()
-            with open(self.DATABASE, 'r') as file:
-                self.__data = json.load(file)
-        except:
-            pass
+    async def connect(self):
+        while self.__open:
+            await sleep(0.001)
+        self.__open = True
+        with open(self.DATABASE, 'r') as file:
+            self.__data = json.load(file)
     
-    def commit_and_close(self):
+    async def commit_and_close(self):
         with open(self.DATABASE, 'w') as file:
             file.write(json.dumps(self.__data, indent=4))
-        self.FILELOCK.release()
+        self.__open = False
         
-    def __getter__(self):
+    def __getter__(self) -> dict:
         return self.__data
     
     def __getitem__(self, key):
