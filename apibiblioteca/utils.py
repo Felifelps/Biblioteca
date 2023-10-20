@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore, initialize_app
 from mega import Mega
 from os import environ
-import time
+import json
 
 load_dotenv()
 
@@ -15,6 +15,8 @@ for key, value in cred.copy().items():
     if 'private_key_n' in key:
         cred['private_key'] += '\n' + value
         cred.pop(key)
+
+print(json.dumps(cred, indent=4))
 
 initialize_app(
     credentials.Certificate(cred)
