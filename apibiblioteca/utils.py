@@ -15,8 +15,6 @@ for i in range(0, 28):
     private_key.append(cred.pop(f'private_key_n_{i}'))
 cred['private_key'] = '\n'.join(private_key)
 
-print(json.dumps(cred, indent=4))
-
 initialize_app(
     credentials.Certificate(cred)
 )
