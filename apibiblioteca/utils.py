@@ -11,7 +11,7 @@ load_dotenv()
 cred = {key.replace('FIREBASE_', '').lower(): value.replace('\\n', '\n') for key, value in environ.items() if 'FIREBASE' in key}
 
 private_key = ''
-for i in range(0, 27):
+for i in range(0, 28):
     private_key += cred.pop(f'private_key_n_{i}')
 cred['private_key'] = private_key
 
