@@ -18,13 +18,14 @@ class Data:
         with open(self.DATABASE, 'w') as file:
             file.write(json.dumps(self.__data, indent=4))
         self.__open = False
-        
-    def __getter__(self) -> dict:
-        return self.__data
     
     def __getitem__(self, key):
         return self.__data.get(key, None)
     
+    @property
+    def data(self):
+        return self.__data
+        
     def __setitem__(self, key, value):
         self.__data[key] = value
 

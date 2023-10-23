@@ -105,6 +105,7 @@ async def validate_user():
         return 'User not found'
     user.update({'valido': True})
     DATA['users'].update({RG: json})
+    await Email.message(json['email'], '''Olá!. Sua conta foi validada! Use seu RG para entrar no nosso site!''')
     return 'User validated'
 
 @app.post('/user/favorite')
@@ -165,8 +166,10 @@ async def new_book():
     n = json.pop('n', 1)
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
     if missing_fields == []:
+        length = len(DATA['books'])
         json.update({
-            "leitor": False
+            "leitor": False,
+            "collection": f"{length}-{length + n - 1}"
         })
         for i in range(n):
             DATA['books'].update({str(len(DATA['books'])): json})
@@ -219,27 +222,8 @@ async def get_lending():
     lending_id = json.get('lending_id', False)
     if not lending_id: 
         return 'Missing lending_id'
-    lending = DATA['lendings'].get(lending_id, False)
-    if not lending:
-        return 'Lending not found'
-    if not lending['data_finalizacao']:
-        lending_limit = 20 if lending['renovado'] else 10
-        lending_time = (datetime.today() - datetime.strptime(lending['data_emprestimo'], '%d/%m/%y às %H:%M:%S')).days
-        if not lending['pego'] and lending_time > 2:
-            user = DATA['user'].get(lending['leitor'], False)
-            if not user: 
-                return "User not found"
-            book = DATA['books'].get(lending['livro'], False)
-            if not book: 
-                return "Book not found"
-            lending['data_finalizacao'] = today()
-            DATA['users'][user].update({'livro': False})
-            DATA['books'][book].update({'leitor': False})
-        elif lending_time > lending_limit:
-            lending['multa'] = 0.10 * (lending_time - lending_limit)
-        DATA['lendings'].update({lending_id: lending})
-    return lending
-
+    return DATA['lendings'].get(lending_id, 'Lending not found')
+    
 @app.post('/lending/new')
 async def new_lending():
     json = await get_form_or_json()
@@ -265,12 +249,26 @@ async def new_lending():
             'data_emprestimo': today(),
             'renovado': False,
             'pego': False,
-            'data_finalizacao': False
+            'data_finalizacao': False,
         }
     })
     DATA['users'][RG].update({'livro': book_id})
     DATA['books'][book_id].update({'leitor': RG})
     return 'Book lended'
+
+@app.post('/lending/book_get')
+@app.post('/lending/book_returned')
+async def book_lending():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    lending_id = json.get('lending_id', False)
+    if not lending_id: 
+        return 'Missing lending_id'
+    DATA['lendings'][lending_id].update({ 
+        'pego': today() if 'get' in request.url_rule.rule else False
+    })
+    return 'Lending updated'
 
 @app.post('/user/files/send')
 async def send_user_files():
