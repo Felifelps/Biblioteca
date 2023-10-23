@@ -341,6 +341,10 @@ async def register():
         await flash('Email já registrado' if email else 'Email inválido')
     return await render_template('register_email.html')
 
+@app.errorhandler(500)
+async def handle_error(error):
+    return f'An error ocurred: {str(error)}', 500
+
 @app.route('/text/', methods=['GET', 'POST'])
 async def text():
     if request.method == "POST": 
