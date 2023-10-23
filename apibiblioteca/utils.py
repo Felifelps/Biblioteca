@@ -57,7 +57,6 @@ MEGA = Mega()
 MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
 print('[LOGIN DONE]')
         
-
 def today():
     return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
 

@@ -249,7 +249,7 @@ async def new_lending():
     book_id = json.pop('book_id', False)
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
-    user = DATA.data['users'].get(RG, False)
+    user = DATA['users'].get(RG, False)
     if not (user and not user['livro']):
         return 'User already has a book' if user else 'User not found'
     book = DATA['books'].get(book_id, False)
