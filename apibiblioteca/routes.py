@@ -213,32 +213,35 @@ async def all_lendings():
 
 @app.post('/lending')
 async def get_lending():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    lending_id = json.get('lending_id', False)
-    if not lending_id: 
-        return 'Missing lending_id'
-    lending = DATA['lendings'].get(lending_id, False)
-    if not lending:
-        return 'Lending not found'
-    if not lending['data_finalizacao']:
-        lending_limit = 20 if lending['renovado'] else 10
-        lending_time = (datetime.today() - datetime.strptime(lending['data_emprestimo'], '%d/%m/%y às %H:%M:%S')).days
-        if not lending['pego'] and lending_time > 2:
-            user = DATA['user'].get(lending['leitor'], False)
-            if not user: 
-                return "User not found"
-            book = DATA['books'].get(lending['livro'], False)
-            if not book: 
-                return "Book not found"
-            lending['data_finalizacao'] = today()
-            DATA['users'][user].update({'livro': False})
-            DATA['books'][book].update({'leitor': False})
-        elif lending_time > lending_limit:
-            lending['multa'] = 0.10 * (lending_time - lending_limit)
-        DATA['lendings'].update({lending_id: lending})
-    return lending
+    try:
+        json = await get_form_or_json()
+        if not await key_in_json(json):
+            return await render_template('key_required.html')
+        lending_id = json.get('lending_id', False)
+        if not lending_id: 
+            return 'Missing lending_id'
+        lending = DATA['lendings'].get(lending_id, False)
+        if not lending:
+            return 'Lending not found'
+        if not lending['data_finalizacao']:
+            lending_limit = 20 if lending['renovado'] else 10
+            lending_time = (datetime.today() - datetime.strptime(lending['data_emprestimo'], '%d/%m/%y às %H:%M:%S')).days
+            if not lending['pego'] and lending_time > 2:
+                user = DATA['user'].get(lending['leitor'], False)
+                if not user: 
+                    return "User not found"
+                book = DATA['books'].get(lending['livro'], False)
+                if not book: 
+                    return "Book not found"
+                lending['data_finalizacao'] = today()
+                DATA['users'][user].update({'livro': False})
+                DATA['books'][book].update({'leitor': False})
+            elif lending_time > lending_limit:
+                lending['multa'] = 0.10 * (lending_time - lending_limit)
+            DATA['lendings'].update({lending_id: lending})
+        return lending
+    except Exception as e:
+        return str(e)
 
 @app.post('/lending/new')
 async def new_lending():
