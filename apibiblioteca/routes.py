@@ -267,6 +267,7 @@ async def new_lending():
             'multa': 0,
             'data_emprestimo': today(),
             'renovado': False,
+            'pego': False,
             'data_finalizacao': False
         }
     })
