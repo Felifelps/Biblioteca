@@ -63,3 +63,46 @@ def today():
 def check_admin_password(password: str) -> bool:
     return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
 
+MESSAGES = {
+    'user_registered': lambda username: f'''
+<h1>Olá {username}!</h1>
+<p>Seus dados foram enviados para análise.</p>
+<p>Te enviaremos uma reposta por esse email assim que analisarmos.</p>
+    ''',
+    
+    'user_validated': lambda username: f'''
+<h1>Olá {username}!</h1>
+<p>Seus dados foram validados!</p>
+<p>Faça login em nosso <a>site (colocar link)</a> com seu RG e comece a ler</p>
+''',
+
+    'lending_renewed': lambda username, booktitle: f'''
+<h1>Olá {username}!</h1>
+<p>Seu empréstimo do livro {booktitle} foi renovado!</p>
+<p>Agora você tem mais 10 dias para lê-lo. Aproveite!</p>
+''',
+    
+    'book_lended': lambda username, booktitle: f'''
+<h1>Olá {username}!</h1>
+<p>Seu empréstimo do livro {booktitle} foi concluído!</p>
+<b>Venha buscá-lo em até dois dias úteis. Caso contrário, o empréstimo será cancelado.</b>
+''',
+    
+    'lending_finalized_not_get': lambda username, booktitle: f'''
+<h1>Olá {username}!</h1>
+<p>Seu empréstimo do livro {booktitle} foi cancelado devido o fim do prazo de busca do livro.</p>
+''',
+    
+    'days_to_renew_or_return': lambda username, booktitle, days_left: f'''
+<h1>Olá {username}!</h1>
+<p>Você tem {days_left} dia{"s" if days_left != 1 else ""} para devolver o livro {booktitle}</p>    
+
+''',
+
+    'multa_number': lambda username, booktitle, multa: f'''
+<h1>Olá {username}!</h1>
+<p>Seu prazo de entrega do livro {booktitle} expirou {"a 1 dia" if multa == 0.1 else f"fazem {multa*10:.0f} dias"} :(</p>
+Multa acumulada: R${multa:.2f}
+<p>Venha à biblioteca para pagar a multa e devolver ou renovar o livro</p>
+'''
+}

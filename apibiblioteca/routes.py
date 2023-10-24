@@ -2,7 +2,7 @@ from .data import DATA
 from .email import Email
 from .files import Files
 from .keys import Keys
-from .utils import check_admin_password, DATA_REQUIRED_FIELDS, today
+from .utils import check_admin_password, DATA_REQUIRED_FIELDS, MESSAGES, today
 from asyncio import ensure_future
 from datetime import datetime
 from os.path import exists, join
@@ -71,6 +71,7 @@ async def new_user():
             "livro": False
         })
         DATA['users'].update({RG: json})
+        await Email.message(json['email'], MESSAGES['user_registered'](json['nome']))
         return 'User created'
     return f'Missing required parameters: {str(missing_fields)}'
 
@@ -105,7 +106,7 @@ async def validate_user():
         return 'User not found'
     user.update({'valido': True})
     DATA['users'].update({RG: json})
-    await Email.message(json['email'], '''Olá!. Sua conta foi validada! Use seu RG para entrar no nosso site!''')
+    await Email.message(user['email'], MESSAGES['user_validated'](json['nome']))
     return 'User validated'
 
 @app.post('/user/favorite')
@@ -165,15 +166,13 @@ async def new_book():
     #number of copies
     n = json.pop('n', 1)
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
-    if missing_fields == []:
-        length = len(DATA['books'])
+    if missing_fields == [] or missing_fields == ['id']:
         json.update({
-            "leitor": False,
-            "collection": f"{length}-{length + n - 1}"
+            "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
         })
-        for i in range(n):
-            DATA['books'].update({str(len(DATA['books'])): json})
+        DATA['books'].update({str(len(DATA['books'])): json})
         return f'Book{"" if n == 1 else "s"} created'
+    missing_fields.pop(0)
     return f'Missing required parameters: {str(missing_fields)}'
     
 @app.post('/book/update')
@@ -234,11 +233,15 @@ async def new_lending():
     if not (RG and book_id):
         return f'Missing: {"" if RG else "RG"}{", " if RG == book_id else ""}{"" if book_id else "book_id"}'
     user = DATA['users'].get(RG, False)
-    if not (user and not user['livro']):
+    if not user or user['livro']:
         return 'User already has a book' if user else 'User not found'
     book = DATA['books'].get(book_id, False)
-    if not (book and not book['leitor']):
-        return 'Book was already taken' if book else 'Book not found'
+    if not book: 
+        return 'Book not found'
+    availables = [copy['leitor'] for copy in book['copies']]
+    if all(availables):
+        return 'All the copies of this book were already taken.'
+    copy_index = availables.index(False)
     lending_id = str(len(DATA['lendings']))
     DATA['lendings'].update({ 
         lending_id: {
@@ -249,25 +252,38 @@ async def new_lending():
             'data_emprestimo': today(),
             'renovado': False,
             'pego': False,
-            'data_finalizacao': False,
+            'data_finalizacao': False
         }
     })
-    DATA['users'][RG].update({'livro': book_id})
-    DATA['books'][book_id].update({'leitor': RG})
+    user.update({'livro': book_id})
+    book['copies'][copy_index].update({'leitor': RG})
+    await Email.message(user['email'], MESSAGES['book_lended'])
     return 'Book lended'
 
 @app.post('/lending/book_get')
 @app.post('/lending/book_returned')
-async def book_lending():
+@app.post('/lending/renew')
+@app.post('/lending/pay')
+async def update_lending():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
     lending_id = json.get('lending_id', False)
     if not lending_id: 
         return 'Missing lending_id'
-    DATA['lendings'][lending_id].update({ 
-        'pego': today() if 'get' in request.url_rule.rule else False
-    })
+    lending = DATA['lendings'].get(lending_id, False)
+    if not lending:
+        return 'Lending not found'
+    url = request.url_rule.rule
+    update = {}
+    if 'book_' in url:
+        update = {'pego': today() if 'get' in url else False}
+    elif 'renew' in url:
+        update = {'renovado': today()}
+        await Email.message(DATA['user'][lending['leitor']]['email'], MESSAGES['lending_renewed'])
+    elif 'pay' in url:
+        update = {'multa': 0}
+    DATA['lendings'][lending_id].update(update)
     return 'Lending updated'
 
 @app.post('/user/files/send')
