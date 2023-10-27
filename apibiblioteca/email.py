@@ -27,10 +27,16 @@ class Email:
     
     def load_server(func):
         async def wrapper(*args, **kwargs):
-            if Email.SERVER == None:
-                Email.SERVER = await to_thread(SMTP(Email.SMTP_SERVER, Email.SMTP_PORT))
-                await to_thread(Email.SERVER.starttls())
-                await to_thread(Email.SERVER.login(Email.SENDER, Email.PASSWORD))
+            while Email.SERVER == None:
+                print('[CONNECTING TO SMTP SERVER]')
+                try:
+                    Email.SERVER = SMTP(Email.SMTP_SERVER, Email.SMTP_PORT)
+                    Email.SERVER.starttls()
+                    Email.SERVER.login(Email.SENDER, Email.PASSWORD)
+                    print('[CONNECTED TO SMTP SERVER]')
+                    break
+                except Exception as e:
+                    print('[AN ERROR OCURRED]\n', e, '\n[TRYING AGAIN]')
             return await func(*args, **kwargs)
         return wrapper
     
