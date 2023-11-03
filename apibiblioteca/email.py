@@ -5,9 +5,18 @@ This module contains the Email class, that have a function to send emails asynch
 """
 
 from asyncio import to_thread
-from .utils import SERVER, EMAIL_SENDER
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from smtplib import SMTP
+from .utils import EMAIL_SENDER, EMAIL_PASSWORD
+
+print('[CONNECTING TO SMTP SERVER]')
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
+SERVER.starttls()
+SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
+print('[CONNECTED TO SMTP SERVER]')
 
 class Email:
     """
@@ -15,8 +24,6 @@ class Email:
     
     This class contains constants associated to the method used for sendind
     """
-    
-    SERVER = SERVER
     
     async def message(to: str, body: str, subject: str="Bibilioteca") -> None:
         """
@@ -26,6 +33,10 @@ class Email:
         :param body: Body of the email. Can be an html code
         :param subject (default=biblioteca): Subject of the email
         """
+        while SERVER.getreply()[0] != 250:
+            SERVER.starttls()
+            SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        
         message = MIMEMultipart()
         message['From'] = EMAIL_SENDER
         message['To'] = to

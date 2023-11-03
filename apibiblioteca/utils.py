@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore, initialize_app
 from mega import Mega
 from os import environ
-from smtplib import SMTP
 import json
 
 load_dotenv()
@@ -22,15 +21,8 @@ initialize_app(
 
 DB = firestore.client()
 
-print('[CONNECTING TO SMTP SERVER]')
 EMAIL_SENDER = environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
-SMTP_SERVER = 'smtp.gmail.com'
-SMTP_PORT = 587
-SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
-SERVER.starttls()
-SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
-print('[CONNECTED TO SMTP SERVER]')
 
 print('[LOGGING TO MEGA]')
 MEGA = Mega()
