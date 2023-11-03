@@ -342,7 +342,7 @@ async def register():
         form = await request.form
         email = form.get('email', None)
         password = form.get('password', None)
-        if email and email not in Keys.get_keys().keys():
+        if email and email in DATA['keys']:
             if password and check_admin_password(password):
                 key = Keys.register_new_key(email)
                 await Email.message(
