@@ -342,7 +342,7 @@ async def register():
         form = await request.form
         email = form.get('email', None)
         password = form.get('password', None)
-        if email and email in DATA['keys']:
+        if email and email not in DATA['keys']:
             if password and check_admin_password(password):
                 key = Keys.register_new_key(email)
                 await Email.message(
@@ -352,7 +352,8 @@ async def register():
                 )
                 return await render_template('key_sended.html')
             await flash('Senha inválida')
-        await flash('Email já registrado' if email else 'Email inválido')
+        else:
+            await flash('Email já registrado' if email else 'Email inválido')
     return await render_template('register_email.html')
 
 @app.errorhandler(500)
