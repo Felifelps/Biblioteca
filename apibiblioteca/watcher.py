@@ -13,7 +13,7 @@ async def _watcher():
     print('[WATCHER STARTED]')
     while True:
         print('[WATCHER - CHECKING TIME]')
-        if datetime.datetime.now().hour in [4, 5, 6, 7]:
+        if True or datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
             

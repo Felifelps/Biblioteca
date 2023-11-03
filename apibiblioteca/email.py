@@ -33,9 +33,6 @@ class Email:
         :param body: Body of the email. Can be an html code
         :param subject (default=biblioteca): Subject of the email
         """
-        while SERVER.getreply()[0] != 250:
-            SERVER.starttls()
-            SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
         
         message = MIMEMultipart()
         message['From'] = EMAIL_SENDER
@@ -43,7 +40,7 @@ class Email:
         message['Subject'] = subject
         message.attach(MIMEText(body, 'html'))
             
-        await to_thread(lambda: Email.SERVER.sendmail(
+        await to_thread(lambda: SERVER.sendmail(
             EMAIL_SENDER,
             to,
             message.as_string()
