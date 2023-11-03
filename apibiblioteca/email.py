@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from .utils import EMAIL_SENDER, EMAIL_PASSWORD
+from threading import Thread
 
 print('[CONNECTING TO SMTP SERVER]')
 SMTP_SERVER = 'smtp.gmail.com'
@@ -40,9 +41,9 @@ class Email:
         message['Subject'] = subject
         message.attach(MIMEText(body, 'html'))
             
-        await to_thread(lambda: SERVER.sendmail(
+        Thread(target=lambda: SERVER.sendmail(
             EMAIL_SENDER,
             to,
             message.as_string()
-        ))
+        )).start()
     

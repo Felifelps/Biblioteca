@@ -44,11 +44,7 @@ DATA_REQUIRED_FIELDS = {
         "email",
         "CEP",
         "tel_pessoal",
-        "residencia",
-        "profissao",
-        "tel_profissional",
-        "escola",
-        "curso_serie"
+        "residencia"
     ],
     'book': [
         'id',
