@@ -12,10 +12,8 @@ def get_today_minus_date_days(date):
 async def _watcher():
     print('[WATCHER STARTED]')
     while True:
-        time.sleep(10800) #43200
-        # Check every three hours
-        if True or datetime.datetime.now().hour in [4, 5, 6, 7]:
-            
+        print('[WATCHER - CHECKING TIME]')
+        if datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
             
@@ -35,7 +33,7 @@ async def _watcher():
                                 copy.update({'leitor': False})
                         await Email.message(user['email'], MESSAGES['lending_finalized_not_get'](user['nome'], book['titulo']))
                 else:
-                    lending_time = get_today_minus_date_days(lending['renovado'] if lending['renovado'] else lending['pego'])
+                    lending_time = get_today_minus_date_days(lending['pego'])
                     if lending_time > 10:
                         lending.update({'multa': 0.1 * (lending_time - 10)})
                         await Email.message(user['email'], MESSAGES['multa_number'](user['nome'], book['titulo'], 0.1 * (lending_time - 10)))
@@ -53,6 +51,9 @@ async def _watcher():
             print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
             
             await DATA.commit_and_close()
+        
+        # Check every three hours
+        time.sleep(10800) #43200
         
 def watcher():    
     loop = new_event_loop()

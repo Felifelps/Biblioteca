@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from firebase_admin import credentials, firestore, initialize_app
 from mega import Mega
 from os import environ
+from smtplib import SMTP
 import json
 
 load_dotenv()
@@ -21,8 +22,26 @@ initialize_app(
 
 DB = firestore.client()
 
+print('[CONNECTING TO SMTP SERVER]')
 EMAIL_SENDER = environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
+SERVER.starttls()
+SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
+print('[CONNECTED TO SMTP SERVER]')
+
+print('[LOGGING TO MEGA]')
+MEGA = Mega()
+MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
+print('[LOGIN DONE]')
+        
+def today():
+    return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
+
+def check_admin_password(password: str) -> bool:
+    return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
 
 DATA_REQUIRED_FIELDS = {
     'user': [
@@ -51,17 +70,6 @@ DATA_REQUIRED_FIELDS = {
         'prateleira'
     ]
 }
-
-print('[LOGGING TO MEGA]')
-MEGA = Mega()
-MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
-print('[LOGIN DONE]')
-        
-def today():
-    return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
-
-def check_admin_password(password: str) -> bool:
-    return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
 
 MESSAGES = {
     'user_registered': lambda username: f'''

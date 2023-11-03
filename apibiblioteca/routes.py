@@ -250,7 +250,6 @@ async def new_lending():
             'livro': book_id,
             'multa': 0,
             'data_emprestimo': today(),
-            'renovado': False,
             'pego': False,
             'data_finalizacao': False
         }
@@ -279,7 +278,7 @@ async def update_lending():
     if 'book_' in url:
         update = {'pego': today() if 'get' in url else False}
     elif 'renew' in url:
-        update = {'renovado': today()}
+        update = {'pego': today()}
         await Email.message(DATA['user'][lending['leitor']]['email'], MESSAGES['lending_renewed'])
     elif 'pay' in url:
         update = {'multa': 0}
