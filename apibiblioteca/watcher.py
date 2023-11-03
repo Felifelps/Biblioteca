@@ -11,6 +11,14 @@ def get_today_minus_date_days(date):
 
 async def _watcher():
     print('[WATCHER STARTED]')
+    
+    print('[GETTING DATA FROM FIRESTORE]')
+    await DATA.connect()
+    for collection in DATA.data.keys():
+        DATA[collection] = {doc.id: doc.to_dict() for doc in DB.collection(collection).stream()}
+    await DATA.commit_and_close()
+    print('[DATA GOT]')
+
     while True:
         print('[WATCHER - CHECKING TIME]')
         if True or datetime.datetime.now().hour in [4, 5, 6, 7]:

@@ -340,9 +340,9 @@ async def get_user_file():
 async def register():
     if request.method == 'POST':
         form = await request.form
-        email = form.get('email', None)
-        password = form.get('password', None)
-        if email and email not in DATA['keys']:
+        email = form.get('email', False)
+        password = form.get('password', False)
+        if email and email not in DATA['keys'].keys():
             if password and check_admin_password(password):
                 key = Keys.register_new_key(email)
                 await Email.message(
