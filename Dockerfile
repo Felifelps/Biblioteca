@@ -1,8 +1,4 @@
-FROM ubuntu:22.4
-
-RUN apt-get update && \
-    apt-get install -y python3.9 && \
-    apt-get clean
+FROM python:3.9-slim
 
 #Sets workdir to the app folder
 WORKDIR /app
