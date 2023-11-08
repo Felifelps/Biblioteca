@@ -63,973 +63,1445 @@
         }
     },
     "books": {
-        "0": {
+        "1": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
             "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
-            "assuntos": "1.Teste, prototipos",
-            "estante": "2",
-            "autor": "Felipe"
-        },
-        "1": {
-            "CDD": "800",
-            "prateleira": "2",
-            "editora": "prototipos",
-            "edicao": "7",
             "copies": [
                 {
                     "copy_id": 1,
                     "leitor": false
-                },
-                {
-                    "copy_id": 2,
-                    "leitor": false
                 }
             ],
-            "titulo": "Teste",
-            "assuntos": "Testes e prototipos",
-            "estante": "Azul 2",
-            "autor": "felipe"
+            "titulo": "Teste 0",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 0"
         },
         "10": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "10",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 9",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 9"
         },
         "11": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "11",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 10",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 10"
         },
         "12": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "12",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 11",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 11"
         },
         "13": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "13",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 12",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 12"
         },
         "14": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "14",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 13",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 13"
         },
         "15": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "15",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 14",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 14"
         },
         "16": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "16",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 15",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 15"
         },
         "17": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "17",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 16",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 16"
         },
         "18": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "18",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 17",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 17"
         },
         "19": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "19",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 18",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 18"
         },
         "2": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "2",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 1",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 1"
         },
         "20": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "20",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 19",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 19"
         },
         "21": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "21",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 20",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 20"
         },
         "22": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "22",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 21",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 21"
         },
         "23": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "23",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 22",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 22"
         },
         "24": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "24",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 23",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 23"
         },
         "25": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "25",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 24",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 24"
         },
         "26": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "26",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 25",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 25"
         },
         "27": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "27",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 26",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 26"
         },
         "28": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "28",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 27",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 27"
         },
         "29": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "29",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 28",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 28"
         },
         "3": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "3",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 2",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 2"
         },
         "30": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "30",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 29",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 29"
         },
         "31": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "31",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 30",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 30"
         },
         "32": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "32",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 31",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 31"
         },
         "33": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "33",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 32",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 32"
         },
         "34": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "34",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 33",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 33"
         },
         "35": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "35",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 34",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 34"
         },
         "36": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "36",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 35",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 35"
         },
         "37": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "37",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 36",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 36"
         },
         "38": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "38",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 37",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 37"
         },
         "39": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "39",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 38",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 38"
         },
         "4": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "4",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 3",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 3"
         },
         "40": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "40",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 39",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 39"
         },
         "41": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "41",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 40",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 40"
         },
         "42": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "42",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 41",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 41"
         },
         "43": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "43",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 42",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 42"
         },
         "44": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "44",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 43",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 43"
         },
         "45": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "45",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 44",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 44"
         },
         "46": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "46",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 45",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 45"
         },
         "47": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "47",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 46",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 46"
         },
         "48": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "48",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 47",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 47"
         },
         "49": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "49",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 48",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 48"
         },
         "5": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "5",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 4",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 4"
         },
         "50": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "50",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 49",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 49"
         },
         "51": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "51",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 50",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 50"
         },
         "52": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "52",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 51",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 51"
         },
         "53": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "53",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 52",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 52"
         },
         "54": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "54",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 53",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 53"
         },
         "55": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "55",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 54",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 54"
         },
         "56": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "56",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 55",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 55"
         },
         "57": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "57",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 56",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 56"
         },
         "58": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "58",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 57",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 57"
         },
         "59": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "59",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 58",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 58"
         },
         "6": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "6",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 5",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 5"
         },
         "60": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "60",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 59",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 59"
         },
         "61": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "61",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 60",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 60"
         },
         "62": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "62",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 61",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 61"
         },
         "63": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "63",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 62",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 62"
         },
         "64": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "64",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 63",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 63"
         },
         "65": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "65",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 64",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 64"
         },
         "66": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "66",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 65",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 65"
         },
         "67": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "67",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 66",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 66"
         },
         "68": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "68",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 67",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 67"
         },
         "69": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "69",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 68",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 68"
         },
         "7": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "7",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 6",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 6"
         },
         "70": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "70",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 69",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 69"
         },
         "71": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "71",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 70",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 70"
         },
         "72": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "72",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 71",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 71"
         },
         "73": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "73",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 72",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 72"
         },
         "74": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "74",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 73",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 73"
         },
         "75": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "75",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 74",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 74"
         },
         "76": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "76",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 75",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 75"
         },
         "77": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "77",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 76",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 76"
         },
         "78": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "78",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 77",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 77"
         },
         "79": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "79",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 78",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 78"
         },
         "8": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "8",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 7",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 7"
+        },
+        "80": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 79",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 79"
         },
         "9": {
             "CDD": "800",
             "prateleira": "1",
             "leitor": false,
-            "id": "9",
+            "id": "0",
             "editora": "teste",
             "edicao": "teste",
-            "titulo": "Teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 8",
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
-            "autor": "Felipe"
+            "autor": "Autor 8"
         }
     },
     "lendings": {
@@ -1049,7 +1521,7 @@
             "renovado": false,
             "id": "1",
             "data_finalizacao": false,
-            "multa": 38.0,
+            "multa": 38.400000000000006,
             "pego": "09/10/22 \u00e0s 09:41:30",
             "livro": "1"
         },
@@ -1059,7 +1531,7 @@
             "renovado": false,
             "id": "2",
             "data_finalizacao": false,
-            "multa": 0.8,
+            "multa": 1.3,
             "pego": "16/10/23 \u00e0s 08:09:46",
             "livro": "1"
         },
@@ -1069,7 +1541,7 @@
             "renovado": "10/10/23 \u00e0s 08:11:39",
             "id": "3",
             "data_finalizacao": false,
-            "multa": 1.4000000000000001,
+            "multa": 1.9000000000000001,
             "pego": "10/10/23 \u00e0s 08:11:39",
             "livro": "1"
         }

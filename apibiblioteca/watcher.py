@@ -11,7 +11,7 @@ def get_today_minus_date_days(date):
 
 async def _watcher():
     print('[WATCHER STARTED]')
-    
+
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
     for collection in DATA.data.keys():
@@ -21,7 +21,7 @@ async def _watcher():
 
     while True:
         print('[WATCHER - CHECKING TIME]')
-        if True or datetime.datetime.now().hour in [4, 5, 6, 7]:
+        if datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
             
