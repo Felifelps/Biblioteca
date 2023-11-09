@@ -1,0 +1,1549 @@
+{
+    "users": {
+        "2018125194-4": {
+            "data_nascimento": "18/08/2006",
+            "CEP": "63250000",
+            "tel_pessoal": "88994426429",
+            "tel_profissional": "",
+            "escola": "",
+            "valido": false,
+            "data_cadastro": "19/10/23 \u00e0s 10:51:57",
+            "curso_serie": "",
+            "livro": false,
+            "profissao": "",
+            "favoritos": [
+                "4"
+            ],
+            "local_nascimento": "Brejo Santo",
+            "nome": "Felipe",
+            "RG": "2018125194-4",
+            "residencia": "Vila Fronteiro",
+            "email": "felipefelipe23456@gmail.com"
+        },
+        "2018125194-5": {
+            "data_nascimento": "18/08/2006",
+            "CEP": "63250000",
+            "tel_pessoal": "88994426429",
+            "tel_profissional": "",
+            "escola": "",
+            "valido": false,
+            "data_cadastro": "19/10/23 \u00e0s 10:51:57",
+            "curso_serie": "",
+            "livro": false,
+            "profissao": "",
+            "favoritos": [],
+            "local_nascimento": "Brejo Santo",
+            "nome": "Felipe",
+            "RG": "2018125194-5",
+            "residencia": "Vila Fronteiro",
+            "email": "felipefelipe23456@gmail.com"
+        }
+    },
+    "keys": {
+        "adryancaetano871@gmail.com": {
+            "validated": false,
+            "encrypted_key": "b'$2b$12$yzBmCFbAWNNCxQrbX07k9.o6jwd4odbvrR5quOBBreeyELOMlwv1e'",
+            "email": "adryancaetano871@gmail.com",
+            "salt": "b'$2b$12$yzBmCFbAWNNCxQrbX07k9.'"
+        },
+        "felipe.ferreira39@aluno.ce.gov.br": {
+            "encrypted_key": "b'$2b$12$ghpFcSH.3J6wrQbGbWyCCumlzghE5QCOkGm0BrhXuC4Rn1H1nerkC'",
+            "email": "felipe.ferreira39@aluno.ce.gov.br",
+            "salt": "b'$2b$12$ghpFcSH.3J6wrQbGbWyCCu'"
+        },
+        "felipefelipe23456@gmail.com": {
+            "encrypted_key": "b'$2b$12$BgUnZhvM9V3Srqc0u7fnQu6lXoDKc8yOCghq0yOawO7b8ykWrqAG.'",
+            "email": "felipefelipe23456@gmail.com",
+            "salt": "b'$2b$12$BgUnZhvM9V3Srqc0u7fnQu'"
+        },
+        "mestount@gmail.com": {
+            "encrypted_key": "b'$2b$12$oSF06RRRfsSL7/YToURRFO6K7oY7UT1ygXKqTxBrVYtCXrECysITW'",
+            "email": "mestount@gmail.com",
+            "salt": "b'$2b$12$oSF06RRRfsSL7/YToURRFO'"
+        }
+    },
+    "books": {
+        "1": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 0",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 0"
+        },
+        "10": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 9",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 9"
+        },
+        "11": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 10",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 10"
+        },
+        "12": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 11",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 11"
+        },
+        "13": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 12",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 12"
+        },
+        "14": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 13",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 13"
+        },
+        "15": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 14",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 14"
+        },
+        "16": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 15",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 15"
+        },
+        "17": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 16",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 16"
+        },
+        "18": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 17",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 17"
+        },
+        "19": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 18",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 18"
+        },
+        "2": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 1",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 1"
+        },
+        "20": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 19",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 19"
+        },
+        "21": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 20",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 20"
+        },
+        "22": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 21",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 21"
+        },
+        "23": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 22",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 22"
+        },
+        "24": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 23",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 23"
+        },
+        "25": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 24",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 24"
+        },
+        "26": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 25",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 25"
+        },
+        "27": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 26",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 26"
+        },
+        "28": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 27",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 27"
+        },
+        "29": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 28",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 28"
+        },
+        "3": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 2",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 2"
+        },
+        "30": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 29",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 29"
+        },
+        "31": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 30",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 30"
+        },
+        "32": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 31",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 31"
+        },
+        "33": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 32",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 32"
+        },
+        "34": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 33",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 33"
+        },
+        "35": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 34",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 34"
+        },
+        "36": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 35",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 35"
+        },
+        "37": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 36",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 36"
+        },
+        "38": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 37",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 37"
+        },
+        "39": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 38",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 38"
+        },
+        "4": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 3",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 3"
+        },
+        "40": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 39",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 39"
+        },
+        "41": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 40",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 40"
+        },
+        "42": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 41",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 41"
+        },
+        "43": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 42",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 42"
+        },
+        "44": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 43",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 43"
+        },
+        "45": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 44",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 44"
+        },
+        "46": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 45",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 45"
+        },
+        "47": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 46",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 46"
+        },
+        "48": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 47",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 47"
+        },
+        "49": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 48",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 48"
+        },
+        "5": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 4",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 4"
+        },
+        "50": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 49",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 49"
+        },
+        "51": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 50",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 50"
+        },
+        "52": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 51",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 51"
+        },
+        "53": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 52",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 52"
+        },
+        "54": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 53",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 53"
+        },
+        "55": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 54",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 54"
+        },
+        "56": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 55",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 55"
+        },
+        "57": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 56",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 56"
+        },
+        "58": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 57",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 57"
+        },
+        "59": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 58",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 58"
+        },
+        "6": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 5",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 5"
+        },
+        "60": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 59",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 59"
+        },
+        "61": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 60",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 60"
+        },
+        "62": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 61",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 61"
+        },
+        "63": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 62",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 62"
+        },
+        "64": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 63",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 63"
+        },
+        "65": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 64",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 64"
+        },
+        "66": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 65",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 65"
+        },
+        "67": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 66",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 66"
+        },
+        "68": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 67",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 67"
+        },
+        "69": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 68",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 68"
+        },
+        "7": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 6",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 6"
+        },
+        "70": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 69",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 69"
+        },
+        "71": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 70",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 70"
+        },
+        "72": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 71",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 71"
+        },
+        "73": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 72",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 72"
+        },
+        "74": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 73",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 73"
+        },
+        "75": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 74",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 74"
+        },
+        "76": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 75",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 75"
+        },
+        "77": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 76",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 76"
+        },
+        "78": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 77",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 77"
+        },
+        "79": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 78",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 78"
+        },
+        "8": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 7",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 7"
+        },
+        "80": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 79",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 79"
+        },
+        "9": {
+            "CDD": "800",
+            "prateleira": "1",
+            "leitor": false,
+            "id": "0",
+            "editora": "teste",
+            "edicao": "teste",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "titulo": "Teste 8",
+            "assuntos": "1.Teste, prototipos",
+            "estante": "2",
+            "autor": "Autor 8"
+        }
+    },
+    "lendings": {
+        "0": {
+            "data_emprestimo": "13/10/23 \u00e0s 10:15:10",
+            "leitor": "2018125194-5",
+            "renovado": false,
+            "id": "0",
+            "data_finalizacao": "23/10/23 \u00e0s 10:16:55",
+            "multa": 0,
+            "pego": false,
+            "livro": "4"
+        },
+        "1": {
+            "data_emprestimo": "21/10/23 \u00e0s 08:07:39",
+            "leitor": "2018125194-4",
+            "renovado": false,
+            "id": "1",
+            "data_finalizacao": false,
+            "multa": 38.5,
+            "pego": "09/10/22 \u00e0s 09:41:30",
+            "livro": "1"
+        },
+        "2": {
+            "data_emprestimo": "12/10/23 \u00e0s 08:09:46",
+            "leitor": "2018125194-5",
+            "renovado": false,
+            "id": "2",
+            "data_finalizacao": false,
+            "multa": 1.3,
+            "pego": "16/10/23 \u00e0s 08:09:46",
+            "livro": "1"
+        },
+        "3": {
+            "data_emprestimo": "24/10/23 \u00e0s 08:11:39",
+            "leitor": "2018125194-5",
+            "renovado": "10/10/23 \u00e0s 08:11:39",
+            "id": "3",
+            "data_finalizacao": false,
+            "multa": 1.9000000000000001,
+            "pego": "10/10/23 \u00e0s 08:11:39",
+            "livro": "1"
+        }
+    }
+}
