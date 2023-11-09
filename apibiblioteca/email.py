@@ -35,6 +35,9 @@ class Email:
         :param subject (default=biblioteca): Subject of the email
         """
         
+        SERVER = SMTP(SMTP_SERVER, SMTP_PORT)
+        SERVER.starttls()
+        SERVER.login(EMAIL_SENDER, EMAIL_PASSWORD)
         message = MIMEMultipart()
         message['From'] = EMAIL_SENDER
         message['To'] = to
