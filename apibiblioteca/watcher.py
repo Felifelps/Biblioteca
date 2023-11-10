@@ -21,7 +21,7 @@ async def _watcher():
 
     while True:
         print('[WATCHER - CHECKING TIME]')
-        if True or datetime.datetime.now().hour in [4, 5, 6, 7]:
+        if datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
             
@@ -39,14 +39,37 @@ async def _watcher():
                         for copy in DATA['books'][lending['livro']]['copies']:
                             if copy['leitor'] == lending['leitor']:
                                 copy.update({'leitor': False})
-                        await Email.message(user['email'], MESSAGES['lending_finalized_not_get'](user['nome'], book['titulo']))
+                        await Email.message(
+                            user['email'], 
+                            MESSAGES['lending_finalized_not_get'](
+                                user['nome'], 
+                                book['titulo']
+                            ),
+                            'Biblioteca - Empréstimo cancelado'
+                        )
                 else:
                     lending_time = get_today_minus_date_days(lending['pego'])
                     if lending_time > 10:
                         lending.update({'multa': 0.1 * (lending_time - 10)})
-                        await Email.message(user['email'], MESSAGES['multa_number'](user['nome'], book['titulo'], 0.1 * (lending_time - 10)))
+                        await Email.message(
+                            user['email'], 
+                            MESSAGES['multa_number'](
+                                user['nome'], 
+                                book['titulo'], 
+                                0.1 * (lending_time - 10)
+                            ),
+                            f'Biblioteca - Devolução atrasada'
+                        )
                     else:
-                        await Email.message(user['email'], MESSAGES['days_to_renew_or_return'](user['nome'], book['titulo'], 10 - lending_time))
+                        await Email.message(
+                            user['email'], 
+                            MESSAGES['days_to_renew_or_return'](
+                                user['nome'], 
+                                book['titulo'], 
+                                10 - lending_time
+                            ),
+                            f"Biblioteca - Faltam {10 - lending_time} dia{'s' if lending_time == 9 else ''}"
+                        )
                 DATA['lendings'].update({lending_id: lending})
                 
             print('[LENDINGS UPDATED]')

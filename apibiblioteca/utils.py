@@ -35,6 +35,9 @@ def today():
 def check_admin_password(password: str) -> bool:
     return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
 
+def message(message):
+    return {'message': message}
+
 DATA_REQUIRED_FIELDS = {
     'user': [
         "RG",
