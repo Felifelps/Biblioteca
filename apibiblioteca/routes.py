@@ -13,7 +13,7 @@ from quart_cors import cors
 # TODO: TESTES COM ASYNC PYTEST
 #548e0783ca4b16a090b1c5dc38973557
 app = Quart('Biblioteca')
-app = cors(app, allow_origin='*')
+app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
@@ -21,7 +21,8 @@ app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
 async def get_form_or_json():
     json = await request.get_json()
     if not json:
-        json = {key: value for key, value in (await request.form).items()}
+        form = await request.form
+        json = {key: value for key, value in form.items()}
     return json
 
 async def key_in_json(json):

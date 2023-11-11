@@ -58,6 +58,42 @@
             "residencia": "Vila fronteiro",
             "RG_frente": "innosetup-6.2.2.exe",
             "email": "felipefelipe23456@gmail.com"
+        },
+        "2018125194-7": {
+            "nome": "Felipe",
+            "RG": "2018125194-7",
+            "data_nascimento": "2006-08-18",
+            "local_nascimento": "Brejo",
+            "CEP": "63250-000",
+            "residencia": "Vila fronteiro",
+            "tel_pessoal": "88 994426429",
+            "email": "felipefelipe23456@gmail.com",
+            "profissao": "",
+            "tel_profissional": "",
+            "escola": "",
+            "curso_serie": "",
+            "data_cadastro": "11/11/23 \u00e0s 10:29:30",
+            "valido": false,
+            "favoritos": [],
+            "livro": false
+        },
+        "2018125194-8": {
+            "nome": "Felipe",
+            "RG": "2018125194-8",
+            "data_nascimento": "2006-08-18",
+            "local_nascimento": "Brejo",
+            "CEP": "63250-000",
+            "residencia": "Vila fronteiro",
+            "tel_pessoal": "88 994426429",
+            "email": "felipefelipe23456@gmail.com",
+            "profissao": "",
+            "tel_profissional": "",
+            "escola": "",
+            "curso_serie": "",
+            "data_cadastro": "11/11/23 \u00e0s 10:48:53",
+            "valido": false,
+            "favoritos": [],
+            "livro": false
         }
     },
     "keys": {
