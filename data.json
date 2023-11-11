@@ -37,6 +37,27 @@
             "RG": "2018125194-5",
             "residencia": "Vila Fronteiro",
             "email": "felipefelipe23456@gmail.com"
+        },
+        "2018125194-6": {
+            "data_nascimento": "2006-08-18",
+            "CEP": "63250000",
+            "tel_pessoal": "88 994426429",
+            "tel_profissional": "",
+            "escola": "",
+            "valido": false,
+            "data_cadastro": "10/11/23 \u00e0s 11:49:19",
+            "curso_serie": "",
+            "RG_verso": "innosetup-6.2.2.exe",
+            "comprovante": "dotnet-sdk-7.0.402-win-x64.exe",
+            "livro": false,
+            "profissao": "",
+            "favoritos": [],
+            "local_nascimento": "Brejo",
+            "nome": "Felipe",
+            "RG": "2018125194-6",
+            "residencia": "Vila fronteiro",
+            "RG_frente": "innosetup-6.2.2.exe",
+            "email": "felipefelipe23456@gmail.com"
         }
     },
     "keys": {
@@ -1521,7 +1542,7 @@
             "renovado": false,
             "id": "1",
             "data_finalizacao": false,
-            "multa": 38.5,
+            "multa": 38.7,
             "pego": "09/10/22 \u00e0s 09:41:30",
             "livro": "1"
         },
@@ -1531,7 +1552,7 @@
             "renovado": false,
             "id": "2",
             "data_finalizacao": false,
-            "multa": 1.3,
+            "multa": 1.5,
             "pego": "16/10/23 \u00e0s 08:09:46",
             "livro": "1"
         },
@@ -1541,7 +1562,7 @@
             "renovado": "10/10/23 \u00e0s 08:11:39",
             "id": "3",
             "data_finalizacao": false,
-            "multa": 1.9000000000000001,
+            "multa": 2.1,
             "pego": "10/10/23 \u00e0s 08:11:39",
             "livro": "1"
         }

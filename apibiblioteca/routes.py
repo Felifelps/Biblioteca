@@ -61,24 +61,48 @@ async def new_user():
     if not RG: 
         return message('Missing RG')
     if DATA['users'].get(RG):
-        return message('An user with this RG already exists')
+        return message('An user with this RG already exists') 
+    
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['user']))
-    if missing_fields == []:
-        json.update({
-            "data_cadastro": today(),
-            "valido": False,
-            "favoritos": [],
-            "livro": False
-        })
-        DATA['users'].update({RG: json})
-        await Email.message(
-            json['email'], 
-            MESSAGES['user_registered'](json['nome']),
-            "Biblioteca - Dados registrados"
-        )
-        return message('User created')
-    return message(f'Missing required parameters: {str(missing_fields)}')
-
+    if len(missing_fields) > 0:
+        return message(f'Missing required parameters: {str(missing_fields)}')
+    json.update({
+        "data_cadastro": today(),
+        "valido": False,
+        "favoritos": [],
+        "livro": False
+    })
+    
+    files = await request.files
+    RG_frente = files.get('RG_frente', False)
+    if not RG_frente: 
+        return message('Missing RG_frente')
+    RG_verso = files.get('RG_verso', False)
+    if not RG_verso: 
+        return message('Missing RG_verso')
+    comprovante = files.get('comprovante', False)
+    if not comprovante: 
+        return message('Missing comprovante')
+    
+    DATA['users'].update({RG: json})
+    await Email.message(
+        json['email'], 
+        MESSAGES['user_registered'](json['nome']),
+        "Biblioteca - Dados registrados"
+    )
+    
+    async def paralel():
+        print(f'[UPLOADING USER({json["nome"]}) DATA]')
+        for file, description in {RG_frente: 'RG_frente', RG_verso: 'RG_verso', comprovante: 'comprovante'}.items():
+            with open(Files.temp(file.filename), 'wb') as local_file:
+                for i in file:
+                    local_file.write(i)
+            await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
+        print(f'[DATA UPLOADED]')
+    ensure_future(paralel())   
+    
+    return message('User created')
+    
 @app.post('/user/update')
 async def update_user():
     json = await get_form_or_json()
@@ -300,33 +324,6 @@ async def update_lending():
         update = {'multa': 0}
     DATA['lendings'][lending_id].update(update)
     return message('Lending updated')
-
-@app.post('/user/files/send')
-async def send_user_files():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    RG = json.get('RG', False)
-    if not (RG and DATA['users'].get(RG, False)): 
-        return message('Missing RG' if not RG else 'User not found')
-    files = await request.files
-    RG_frente = files.get('RG_frente', False)
-    if not RG_frente: 
-        return message('Missing RG_frente')
-    RG_verso = files.get('RG_verso', False)
-    if not RG_verso: 
-        return message('Missing RG_verso')
-    comprovante = files.get('comprovante', False)
-    if not comprovante: 
-        return message('Missing comprovante')
-    async def paralel():
-        for file, description in {RG_frente: 'RG_frente', RG_verso: 'RG_verso', comprovante: 'comprovante'}.items():
-            with open(Files.temp(file.filename), 'wb') as local_file:
-                for i in file:
-                    local_file.write(i)
-            await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
-    ensure_future(paralel())
-    return message('Enviando arquivos')
 
 @app.post('/user/files/get')
 async def get_user_file():

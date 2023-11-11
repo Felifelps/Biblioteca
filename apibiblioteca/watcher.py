@@ -58,7 +58,7 @@ async def _watcher():
                                 book['titulo'], 
                                 0.1 * (lending_time - 10)
                             ),
-                            f'Biblioteca - Devolução atrasada'
+                            f'Biblioteca - Devolução atrasada em {lending_time - 10}'
                         )
                     else:
                         await Email.message(
@@ -84,7 +84,7 @@ async def _watcher():
             await DATA.commit_and_close()
         
         # Check every three hours
-        time.sleep(10800) #43200
+        time.sleep(10800)
         
 def watcher():    
     loop = new_event_loop()
