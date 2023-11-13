@@ -134,10 +134,10 @@ async def validate_user():
     if not user:
         return message('User not found')
     user.update({'valido': True})
-    DATA['users'].update({RG: json})
+    DATA['users'].update({RG: user})
     await Email.message(
         user['email'], 
-        MESSAGES['user_validated'](json['nome']),
+        MESSAGES['user_validated'](user['nome']),
         "Biblioteca - Conta validada!"
     )
     return message('User validated')
@@ -372,4 +372,4 @@ async def register():
 
 @app.errorhandler(500)
 async def handle_error(error):
-    return message(f'An error ocurred: {str(error)}', 500)
+    return message(f'An error ocurred: {str(error)}'), 500
