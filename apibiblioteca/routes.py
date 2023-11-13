@@ -133,8 +133,7 @@ async def validate_user():
     user = DATA['users'].get(RG, False)
     if not user:
         return message('User not found')
-    user.update({'valido': True})
-    DATA['users'].update({RG: user})
+    DATA['users'][RG].update({'valido': True})
     await Email.message(
         user['email'], 
         MESSAGES['user_validated'](user['nome']),
