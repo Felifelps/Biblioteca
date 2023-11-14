@@ -197,6 +197,9 @@ async def new_book():
         return await render_template('key_required.html')
     #number of copies
     n = json.pop('n', 1)
+    if not n.isdigit():
+        return message('n parameter must be an integer')
+    n = int(n)
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
     if missing_fields == [] or missing_fields == ['id']:
         json.update({
