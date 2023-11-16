@@ -50,7 +50,6 @@ DATA_REQUIRED_FIELDS = {
         "residencia"
     ],
     'book': [
-        'id',
         'titulo',
         'autor',
         'editora',

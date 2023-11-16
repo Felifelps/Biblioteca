@@ -201,12 +201,11 @@ async def new_book():
         return message('n parameter must be an integer')
     n = int(n)
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
-    if missing_fields == [] or missing_fields == ['id']:
-        last_id = str(int(list(DATA['books'].keys())[-1]) + 1)
+    if missing_fields == []:
         json.update({
             "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
         })
-        DATA['books'][last_id] = json
+        DATA['books'].update({str(len(DATA['books'].keys()) + 1): json})
         return message(f'Book{"" if n == 1 else "s"} created')
     missing_fields.pop(0)
     return message(f'Missing required parameters: {str(missing_fields)}')

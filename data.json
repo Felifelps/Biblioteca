@@ -1565,6 +1565,102 @@
             "assuntos": "1.Teste, prototipos",
             "estante": "2",
             "autor": "Autor 8"
+        },
+        "81": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 0",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
+        },
+        "82": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 1",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
+        },
+        "83": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 2",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
+        },
+        "84": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 3",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
+        },
+        "85": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 4",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
+        },
+        "86": {
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares 5",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Felipe",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ]
         }
     },
     "lendings": {
