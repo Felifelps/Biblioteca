@@ -205,7 +205,7 @@ async def new_book():
         json.update({
             "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
         })
-        DATA['books'].update({str(len(DATA['books'])): json})
+        DATA['books'].update({str(len(DATA['books'])) + 1: json})
         return message(f'Book{"" if n == 1 else "s"} created')
     missing_fields.pop(0)
     return message(f'Missing required parameters: {str(missing_fields)}')
