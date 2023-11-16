@@ -14,6 +14,7 @@ async def _watcher():
 
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
+    
     for collection in DATA.data.keys():
         DATA[collection] = {doc.id: doc.to_dict() for doc in DB.collection(collection).stream()}
     await DATA.commit_and_close()
