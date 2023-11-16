@@ -236,12 +236,12 @@ async def delete_book():
     book_id = json.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
-    book = DATA['books'].get(book_id, to_dict=False)
+    book = DATA['books'].get(book_id)
     if not book:
         return message('Book not found')
     DATA['books'].pop(book_id)
     return message('Book deleted')
-    
+
 @app.post('/lendings')
 async def all_lendings():
     if not await key_in_json(await get_form_or_json()):
