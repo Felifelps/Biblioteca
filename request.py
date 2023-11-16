@@ -1,8 +1,8 @@
-import time, requests
+import time, requests, threading
 url='https://apibiblioteca.2.ie-1.fl0.io/book/new'
-url='http://192.168.0.198:8080/book/new'
-for i in range(1000):
-    response = requests.post(url=url, json={
+#url='http://192.168.0.198:8080/book/new'
+for i in range(0, 1000):
+    threading.Thread(target=lambda: print(i, requests.post(url=url, json={
         "key": 'f1563cb61eaf857ce3042c12cd94e774',
         "CDD": "800",
         "prateleira": "1",
@@ -12,6 +12,5 @@ for i in range(1000):
         "assuntos": "1.Mais de mil exemplares",
         "estante": "2",
         "autor": "Felipe"
-    })
-    print(i, response.text)
-    time.sleep(5)
+    }).text)).start()
+    
