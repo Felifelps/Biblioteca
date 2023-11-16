@@ -202,11 +202,11 @@ async def new_book():
     n = int(n)
     missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
     if missing_fields == [] or missing_fields == ['id']:
-        last_id = str(len(DATA['books']))
+        last_id = str(int(list(DATA['books'].keys())[-1]) + 1)
         json.update({
             "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
         })
-        DATA['books'][str(int(list(DATA['books'].keys())[-1])) + 1] = json
+        DATA['books'][last_id] = json
         return message(f'Book{"" if n == 1 else "s"} created')
     missing_fields.pop(0)
     return message(f'Missing required parameters: {str(missing_fields)}')
