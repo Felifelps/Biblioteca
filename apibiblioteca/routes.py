@@ -196,7 +196,7 @@ async def new_book():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     #number of copies
-    n = json.pop('n', "1")
+    n = json.pop('n', '1')
     if not n.isdigit():
         return message('n parameter must be an integer')
     n = int(n)
@@ -205,7 +205,7 @@ async def new_book():
         json.update({
             "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
         })
-        DATA['books'].update({str(len(DATA['books']) + 1): json})
+        DATA['books'][str(len(DATA['books']))] = json
         return message(f'Book{"" if n == 1 else "s"} created')
     missing_fields.pop(0)
     return message(f'Missing required parameters: {str(missing_fields)}')
