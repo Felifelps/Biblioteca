@@ -4,7 +4,7 @@ from .data import DATA
 from .email import Email
 import datetime
 from threading import Thread
-import time, json
+import time, requests
 
 def get_today_minus_date_days(date):
     return (datetime.datetime.today() - datetime.datetime.strptime(date, '%d/%m/%y às %H:%M:%S')).days
@@ -14,6 +14,7 @@ async def _watcher():
 
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
+    
     for collection in DATA.data.keys():
         DATA[collection] = {doc.id: doc.to_dict() for doc in DB.collection(collection).stream()}
     await DATA.commit_and_close()

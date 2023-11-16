@@ -196,7 +196,7 @@ async def new_book():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     #number of copies
-    n = json.pop('n', 1)
+    n = json.pop('n', "1")
     if not n.isdigit():
         return message('n parameter must be an integer')
     n = int(n)
