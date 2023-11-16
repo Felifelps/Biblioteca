@@ -9,7 +9,7 @@ class Data:
         
     async def connect(self):
         while self.__open:
-            await sleep(0.0001)
+            await sleep(0.001)
         self.__open = True
         with open(self.DATABASE, 'r') as file:
             self.__data = json.load(file)

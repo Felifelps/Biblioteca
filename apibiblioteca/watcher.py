@@ -14,6 +14,19 @@ async def _watcher():
 
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
+    for i in range(1000):
+        response = requests.post(url='https://apibiblioteca.2.ie-1.fl0.io/book/new', json={
+            "key": 'f1563cb61eaf857ce3042c12cd94e774',
+            "CDD": "800",
+            "prateleira": "1",
+            "editora": "teste",
+            "edicao": "teste",
+            "titulo": "Mil exemplares",
+            "assuntos": "1.Mais de mil exemplares",
+            "estante": "2",
+            "autor": "Autor 0"
+        })
+        print(response.text)
     for collection in DATA.data.keys():
         DATA[collection] = {doc.id: doc.to_dict() for doc in DB.collection(collection).stream()}
     await DATA.commit_and_close()
