@@ -181,7 +181,7 @@ async def all_books():
     return DATA['books']
 
 @app.post('/books/length')
-async def all_books():
+async def books_len():
     if not await key_in_json(await get_form_or_json()):
         return await render_template('key_required.html')
     return len(DATA['books'])
