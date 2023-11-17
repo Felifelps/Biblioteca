@@ -209,6 +209,7 @@ async def search_books():
     if not await key_in_json(json):
         return await render_template('key_required.html')
     first = {}
+    middle = {}
     last = {}
     for book_id, book in DATA['books'].items():
         for key in json.keys():
@@ -216,11 +217,13 @@ async def search_books():
                 return f'{key} not a valid parameter'
             search = str(json[key]).lower()
             book_value = str(book[key]).lower()
-            if search in book_value:
+            if search == book_value:
                 first[book_id] = book
+            elif search in book_value:
+                middle[book_id] = book
             elif book_value in search:
                 last[book_id] = book
-    return first | last
+    return first | middle | last
 
 @app.post('/book')
 async def get_book():
