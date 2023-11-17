@@ -238,7 +238,7 @@ async def books_subjects():
     if not field or field not in DATA_REQUIRED_FIELDS['book']:
         return 'Invalid field' if field else 'Missing field'
     values = set([book[field] for book in DATA['books'].values()])
-    return {field: list(values)}
+    return {'values': list(values)}
 
 @app.post('/book/new')
 async def new_book():
