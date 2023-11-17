@@ -180,6 +180,12 @@ async def all_books():
         return await render_template('key_required.html')
     return DATA['books']
 
+@app.post('/books/length')
+async def all_books():
+    if not await key_in_json(await get_form_or_json()):
+        return await render_template('key_required.html')
+    return len(DATA['books'])
+
 @app.post('/books/page')
 async def get_book_page():
     json = await get_form_or_json()
