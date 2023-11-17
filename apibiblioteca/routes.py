@@ -208,16 +208,19 @@ async def search_books():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
-    books = {}
+    first = {}
+    last = {}
     for book_id, book in DATA['books'].items():
         for key in json.keys():
             if key not in DATA_REQUIRED_FIELDS['book']:
                 return f'{key} not a valid parameter'
             search = str(json[key]).lower()
             book_value = str(book[key]).lower()
-            if search in book_value or book_value in search:
-                books[book_id] = book
-    return books
+            if search in book_value:
+                first[book_id] = book
+            elif book_value in search:
+                last[book_id] = book
+    return first | last
 
 @app.post('/book')
 async def get_book():
