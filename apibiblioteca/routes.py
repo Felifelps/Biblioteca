@@ -13,7 +13,7 @@ from quart_cors import cors
 # TODO: TESTES COM ASYNC PYTEST
 #548e0783ca4b16a090b1c5dc38973557
 app = Quart('Biblioteca')
-#app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
+app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
