@@ -24,7 +24,6 @@ async def _watcher():
         if datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
-            
             print('[UPDATING LENDINGS AND SENDING EMAILS]')
             for lending_id, lending in DATA['lendings'].items():
                 if lending['data_finalizacao']:

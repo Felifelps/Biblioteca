@@ -180,6 +180,39 @@ async def all_books():
         return await render_template('key_required.html')
     return DATA['books']
 
+@app.post('/books/page')
+async def get_book_page():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    page = json.get('page', False)
+    if not page or page > (len(DATA['books'])//24) + 1:
+        return 'Page out of the range' if page else 'Missing page parameter'
+    start = (24 * (int(page) - 1)) + 1
+    books = {}
+    for i in range(start, start + 24):
+        try:
+            books[str(i)] = DATA['books'][str(i)]
+        except:
+            break
+    return books
+
+@app.post('/books/search')
+async def search_books():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    books = {}
+    for book_id, book in DATA['books'].items():
+        for key in json.keys():
+            if key not in DATA_REQUIRED_FIELDS['book']:
+                return f'{key} not a valid parameter'
+            search = str(json[key]).lower()
+            book_value = str(book[key]).lower()
+            if search in book_value or book_value in search:
+                books[book_id] = book
+    return books
+
 @app.post('/book')
 async def get_book():
     json = await get_form_or_json()
