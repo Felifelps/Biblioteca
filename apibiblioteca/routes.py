@@ -229,21 +229,16 @@ async def get_book():
         return message('Missing book_id')
     return DATA['books'].get(book_id, message('Book not found'))   
 
-@app.post('/books/authors')
-async def books_authors():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    authors = set([book['autor'] for book in DATA['books'].values()])
-    return {"authors": list(authors)}
-
-@app.post('/books/subjects')
+@app.post('/books/field_values')
 async def books_subjects():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
-    subjects = set([book['assuntos'] for book in DATA['books'].values()])
-    return {"subjects": list(subjects)}
+    field = json.get('field', False)
+    if not field or field not in DATA_REQUIRED_FIELDS['book']:
+        return 'Invalid field' if field else 'Missing field'
+    values = set([book[field] for book in DATA['books'].values()])
+    return {field: list(values)}
 
 @app.post('/book/new')
 async def new_book():
