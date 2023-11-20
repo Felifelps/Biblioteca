@@ -196,9 +196,11 @@ async def get_book_page():
         return 'Page out of the range' if page else 'Missing page parameter'
     start = (24 * (int(page) - 1)) + 1
     books = {}
+    book_ids = list(DATA['books'].keys())
     for i in range(start, start + 24):
         try:
-            books[str(i)] = DATA['books'][str(i)]
+            id = book_ids[i]
+            books[id] = DATA['books'][id]
         except:
             break
     return books
