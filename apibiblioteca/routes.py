@@ -194,9 +194,10 @@ async def get_book_page():
     page = json.get('page', False)
     if not page or page > (len(DATA['books'])//24) + 1:
         return 'Page out of the range' if page else 'Missing page parameter'
-    start = (24 * (int(page) - 1)) + 1
+    start = (24 * (int(page) - 1))
     books = {}
     book_ids = list(DATA['books'].keys())
+    book_ids.sort(key=lambda x: int(x))
     for i in range(start, start + 24):
         try:
             id = book_ids[i]

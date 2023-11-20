@@ -120,24 +120,6 @@
         }
     },
     "books": {
-        "1": {
-            "CDD": "800",
-            "prateleira": "1",
-            "leitor": false,
-            "id": "0",
-            "editora": "teste",
-            "edicao": "teste",
-            "copies": [
-                {
-                    "copy_id": 1,
-                    "leitor": false
-                }
-            ],
-            "titulo": "Teste 0",
-            "assuntos": "1.Teste, prototipos",
-            "estante": "2",
-            "autor": "Autor 0"
-        },
         "10": {
             "CDD": "800",
             "prateleira": "1",

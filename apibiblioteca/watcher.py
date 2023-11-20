@@ -11,6 +11,7 @@ def get_today_minus_date_days(date):
 
 async def _watcher():
     print('[WATCHER STARTED]')
+    return 0
 
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()    
