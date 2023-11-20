@@ -32,6 +32,8 @@ print('[LOGIN DONE]')
 def today():
     return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
 
+def check_admin_login(login: str) -> bool:
+    return checkpw(bytes(login, encoding='utf-8'), bytes(environ.get('ADMIN_LOGIN'), encoding='utf-8'))
 def check_admin_password(password: str) -> bool:
     return checkpw(bytes(password, encoding='utf-8'), bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8'))
 

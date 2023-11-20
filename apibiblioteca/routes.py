@@ -2,9 +2,8 @@ from .data import DATA
 from .email import Email
 from .files import Files
 from .keys import Keys
-from .utils import check_admin_password, DATA_REQUIRED_FIELDS, MESSAGES, message, today
+from .utils import  check_admin_login, check_admin_password, DATA_REQUIRED_FIELDS, MESSAGES, message, today
 from asyncio import ensure_future
-from datetime import datetime
 from os.path import exists, join
 from quart import flash, Quart, render_template, request, send_file
 from quart_cors import cors
@@ -403,6 +402,24 @@ async def get_user_file():
         return message('File not found')
     except PermissionError as e:
         return message('An error ocurred')
+
+
+@app.post('/admin/check')
+async def admin_check():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    login = json.get('login', False)
+    if not login: 
+        return message('Missing login')
+    password = json.get('password', False)
+    if not password: 
+        return message('Missing password')
+    if not check_admin_login(login):
+        return message('Login invalid')
+    if not check_admin_password(password):
+        return message('Password invalid')
+    return message('Alright')
 
 #---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/register_key', methods=['GET', 'POST'])
