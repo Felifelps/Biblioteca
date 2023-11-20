@@ -73,14 +73,17 @@ async def _watcher():
                 
             print('[LENDINGS UPDATED]')
             
+            backup_data = DATA.data
+            
+            await DATA.commit_and_close()
             print('[UPLOADING DATA TO FIRESTORE]')
-            for collection in DATA.data:
+            for collection in backup_data:
                 for id, document in DATA[collection].items(): 
                     collection_ref = DB.collection(collection)
                     collection_ref.document(id).set(document)
             print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
             
-            await DATA.commit_and_close()
+            
         
         # Check every three hours
         time.sleep(10800)
