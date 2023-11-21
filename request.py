@@ -1,6 +1,9 @@
 import time, requests, threading, random
-url='https://apibiblioteca.2.ie-1.fl0.io/book/new'
+url='https://apibiblioteca.2.ie-1.fl0.io/users'
 #url='http://192.168.0.198:8080/book/new'
+response = requests.post(url=url)
+print(response.text)
+quit()
 for i in range(0, 100):
     threading.Thread(target=lambda: print(i, requests.post(url=url, json={
         "key": 'f1563cb61eaf857ce3042c12cd94e774',

@@ -12,6 +12,7 @@ from quart_cors import cors
 # TODO: DOCUMENTAR TODAS AS VIEWS E REVER A DOCUMENTAÇÃO GERAL
 # TODO: TESTES COM ASYNC PYTEST
 #548e0783ca4b16a090b1c5dc38973557
+
 app = Quart('Biblioteca')
 app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
 
@@ -37,11 +38,7 @@ async def commit_and_close_data(response):
     await DATA.commit_and_close()
     return response
 
-@app.post('/users')
-async def all_users():
-    if not await key_in_json(await get_form_or_json()):
-        return await render_template('key_required.html')
-    return DATA['users']
+#----------> USER ROUTES
 
 @app.post('/user')
 async def get_user():
@@ -61,13 +58,18 @@ async def get_user_page():
     page = json.get('page', False)
     if not page or page > (len(DATA['users'])//24) + 1:
         return 'Page out of the range' if page else 'Missing page parameter'
+    type = json.get('type', False)
+    if not type or type not in ['valid', 'invalid']:
+        return 'type must be one of: valid, invalid' if type else 'Missing type parameter'
     start = (24 * (int(page) - 1))
+    valid = type == 'valid'
     users = {}
     RGs = list(DATA['users'].keys())
     for i in range(start, start + 24):
         try:
             RG = RGs[i]
-            users[RG] = DATA['users'][RG]
+            if users[RG]['valido'] == valid:
+                users[RG] = DATA['users'][RG]
         except:
             break
     return users
@@ -81,7 +83,7 @@ async def search_users():
     for RG, user in DATA['users'].items():
         for key in json.keys():
             if key not in DATA_REQUIRED_FIELDS['user']:
-                return f'{key} not a valid parameter'
+                return f'{key} is not a valid parameter'
             search = str(json[key]).lower()
             user_value = str(user[key]).lower()
             if search == user_value or search in user_value:
@@ -215,6 +217,8 @@ async def delete_user():
     DATA['users'].pop(RG)
     return message('User deleted')
 
+#----------> BOOK ROUTES
+
 @app.post('/books')
 async def all_books():
     if not await key_in_json(await get_form_or_json()):
@@ -336,6 +340,7 @@ async def delete_book():
     DATA['books'].pop(book_id)
     return message('Book deleted')
 
+#----------> LENDING ROUTES
 @app.post('/lendings')
 async def all_lendings():
     if not await key_in_json(await get_form_or_json()):
