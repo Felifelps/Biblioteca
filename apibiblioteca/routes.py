@@ -4,6 +4,7 @@ from .files import Files
 from .keys import Keys
 from .utils import  check_admin_login, check_admin_password, DATA_REQUIRED_FIELDS, MESSAGES, message, today
 from asyncio import ensure_future
+from os import environ
 from os.path import exists, join
 from quart import flash, Quart, render_template, request, send_file
 from quart_cors import cors
@@ -15,7 +16,7 @@ app = Quart('Biblioteca')
 app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
-app.secret_key = "1d8bb19a04c8dc8bbe4e73eeffdb9796"
+app.secret_key = environ.get('SECRET_KEY')
 
 async def get_form_or_json():
     json = await request.get_json()
