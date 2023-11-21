@@ -150,7 +150,7 @@ async def new_user():
             "RG_verso": links[1],
             "comprovante": links[2]
         })
-        DATA.commit_and_close()
+        await DATA.commit_and_close()
         print(f'[DATA UPLOADED]')
     ensure_future(paralel())   
     
