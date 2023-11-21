@@ -64,7 +64,6 @@ async def get_user_page():
     start = (24 * (int(page) - 1))
     users = {}
     RGs = list(DATA['users'].keys())
-    RGs.sort(key=lambda x: int(x))
     for i in range(start, start + 24):
         try:
             RG = RGs[i]
