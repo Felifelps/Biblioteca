@@ -137,11 +137,20 @@ async def new_user():
     
     async def paralel():
         print(f'[UPLOADING USER({json["nome"]}) DATA]')
+        links = []
         for file, description in {RG_frente: 'RG_frente', RG_verso: 'RG_verso', comprovante: 'comprovante'}.items():
             with open(Files.temp(file.filename), 'wb') as local_file:
                 for i in file:
                     local_file.write(i)
             await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
+            links.append(Files.get_link(Files.get_file(f'{RG}-{description}')))
+        await DATA.connect()
+        DATA['users'][RG].update({
+            "RG_frente": links[0],
+            "RG_verso": links[1],
+            "comprovante": links[2]
+        })
+        DATA.commit_and_close()
         print(f'[DATA UPLOADED]')
     ensure_future(paralel())   
     
