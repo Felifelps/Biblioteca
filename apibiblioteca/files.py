@@ -38,7 +38,7 @@ class Files:
         return Files.files
     
     async def get_link(file):
-        return MEGA.get_link(file)
+        return await to_thread(lambda: MEGA.get_link(file))
 
     async def download(filename: str, rename_to: str=None) -> tuple:
         """
