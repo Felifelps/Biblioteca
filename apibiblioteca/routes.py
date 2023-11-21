@@ -53,6 +53,42 @@ async def get_user():
         return DATA['users'].get(RG, message('User not found'))
     return message('Missing RG')
 
+@app.post('/users/page')
+async def get_user_page():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    page = json.get('page', False)
+    if not page or page > (len(DATA['users'])//24) + 1:
+        return 'Page out of the range' if page else 'Missing page parameter'
+    start = (24 * (int(page) - 1))
+    users = {}
+    RGs = list(DATA['users'].keys())
+    RGs.sort(key=lambda x: int(x))
+    for i in range(start, start + 24):
+        try:
+            RG = RGs[i]
+            users[RG] = DATA['users'][RG]
+        except:
+            break
+    return users
+
+@app.post('/users/search')
+async def search_users():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    data = {}
+    for RG, user in DATA['users'].items():
+        for key in json.keys():
+            if key not in DATA_REQUIRED_FIELDS['user']:
+                return f'{key} not a valid parameter'
+            search = str(json[key]).lower()
+            user_value = str(user[key]).lower()
+            if search == user_value or search in user_value:
+                data[RG] = user
+    return data
+
 @app.post('/user/new')
 async def new_user():
     json = await get_form_or_json()
@@ -103,7 +139,7 @@ async def new_user():
     ensure_future(paralel())   
     
     return message('User created')
-    
+
 @app.post('/user/update')
 async def update_user():
     json = await get_form_or_json()
