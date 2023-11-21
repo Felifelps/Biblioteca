@@ -89,6 +89,12 @@ async def search_users():
                 data[RG] = user
     return data
 
+@app.post('/users/length')
+async def users_len():
+    if not await key_in_json(await get_form_or_json()):
+        return await render_template('key_required.html')
+    return {'len': len(DATA['users'])}
+
 @app.post('/user/new')
 async def new_user():
     json = await get_form_or_json()
