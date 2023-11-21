@@ -68,7 +68,7 @@ async def get_user_page():
     for i in range(start, start + 24):
         try:
             RG = RGs[i]
-            if users[RG]['valido'] == valid:
+            if DATA['users'][RG]['valido'] == valid:
                 users[RG] = DATA['users'][RG]
         except:
             break
