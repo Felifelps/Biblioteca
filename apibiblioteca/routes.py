@@ -143,7 +143,7 @@ async def new_user():
                 for i in file:
                     local_file.write(i)
             await Files.upload(file.filename, f'{RG}-{description}.' + file.filename.split('.')[-1])
-            links.append(Files.get_link(Files.get_file(f'{RG}-{description}')))
+            links.append(await Files.get_link(await Files.get_file(f'{RG}-{description}')))
         await DATA.connect()
         DATA['users'][RG].update({
             "RG_frente": links[0],
@@ -153,7 +153,6 @@ async def new_user():
         await DATA.commit_and_close()
         print(f'[DATA UPLOADED]')
     ensure_future(paralel())   
-    
     return message('User created')
 
 @app.post('/user/update')
