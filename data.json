@@ -1,4 +1,5 @@
 {
+    "tokens": {},
     "users": {
         "2018125194-4": {
             "data_nascimento": "18/08/2006",
@@ -92,6 +93,24 @@
             "local_nascimento": "Brejo",
             "nome": "Felipe",
             "RG": "2018125194-9",
+            "residencia": "Vila fronteiro",
+            "email": "felipefelipe23456@gmail.com"
+        },
+        "2018125195-2": {
+            "data_nascimento": "1202-08-19",
+            "CEP": "63250-000",
+            "tel_pessoal": "88 994426429",
+            "tel_profissional": "",
+            "escola": "",
+            "valido": false,
+            "data_cadastro": "21/11/23 \u00e0s 13:57:28",
+            "curso_serie": "",
+            "livro": false,
+            "profissao": "",
+            "favoritos": [],
+            "local_nascimento": "Brejo",
+            "nome": "Felipe",
+            "RG": "2018125195-2",
             "residencia": "Vila fronteiro",
             "email": "felipefelipe23456@gmail.com"
         }
@@ -3195,7 +3214,7 @@
             "renovado": false,
             "id": "1",
             "data_finalizacao": false,
-            "multa": 39.7,
+            "multa": 39.900000000000006,
             "pego": "09/10/22 \u00e0s 09:41:30",
             "livro": "1"
         },
@@ -3205,7 +3224,7 @@
             "renovado": false,
             "id": "2",
             "data_finalizacao": false,
-            "multa": 2.5,
+            "multa": 2.7,
             "pego": "16/10/23 \u00e0s 08:09:46",
             "livro": "1"
         },
@@ -3215,7 +3234,7 @@
             "renovado": "10/10/23 \u00e0s 08:11:39",
             "id": "3",
             "data_finalizacao": false,
-            "multa": 3.1,
+            "multa": 3.3000000000000003,
             "pego": "10/10/23 \u00e0s 08:11:39",
             "livro": "1"
         }

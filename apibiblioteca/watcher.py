@@ -1,13 +1,10 @@
 from asyncio import new_event_loop
-from .utils import DB, MESSAGES, today
+from .utils import DB, get_today_minus_date_days, MESSAGES, today
 from .data import DATA
 from .email import Email
 import datetime
 from threading import Thread
 import time
-
-def get_today_minus_date_days(date):
-    return (datetime.datetime.today() - datetime.datetime.strptime(date, '%d/%m/%y às %H:%M:%S')).days
 
 async def _watcher():
     print('[WATCHER STARTED]')
@@ -21,9 +18,16 @@ async def _watcher():
 
     while True:
         print('[WATCHER - CHECKING TIME]')
-        if datetime.datetime.now().hour in [4, 5, 6, 7]:
+        if True or datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
             await DATA.connect()
+            
+            print('[UPDATING TOKENS]')
+            for token, date in DATA['tokens'].items():
+                if get_today_minus_date_days(date) > 0:
+                    DATA['tokens'].pop(token)
+            print('[TOKENS UPDATED]')
+                    
             print('[UPDATING LENDINGS AND SENDING EMAILS]')
             for lending_id, lending in DATA['lendings'].items():
                 if lending['data_finalizacao']:

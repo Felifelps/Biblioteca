@@ -2,12 +2,24 @@ from .data import DATA
 from .email import Email
 from .files import Files
 from .keys import Keys
-from .utils import  check_admin_login, check_admin_password, DATA_REQUIRED_FIELDS, MESSAGES, message, today
+from .utils import (
+        check_admin_login, 
+        check_admin_password, 
+        DATA_REQUIRED_FIELDS, 
+        date_to_str,
+        get_today_minus_date_days,
+        MESSAGES, 
+        message, 
+        str_to_date,
+        today
+    )
 from asyncio import ensure_future
+import datetime
 from os import environ
 from os.path import exists, join
 from quart import flash, Quart, render_template, request, send_file
 from quart_cors import cors
+import secrets
 
 # TODO: DOCUMENTAR TODAS AS VIEWS E REVER A DOCUMENTAÇÃO GERAL
 # TODO: TESTES COM ASYNC PYTEST
@@ -459,8 +471,8 @@ async def get_user_file():
         return message('An error ocurred')
 
 
-@app.post('/admin/check')
-async def admin_check():
+@app.post('/admin/login')
+async def admin_login():
     json = await get_form_or_json()
     if not await key_in_json(json):
         return await render_template('key_required.html')
@@ -474,7 +486,19 @@ async def admin_check():
         return message('Login invalid')
     if not check_admin_password(password):
         return message('Password invalid')
-    return message('Alright')
+    token = secrets.token_hex(32)
+    DATA['tokens'][token] = date_to_str(str_to_date(today()) + datetime.timedelta(days=1))
+    return {'token': token}
+
+@app.post('/admin/check')
+async def admin_check():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    token = json.get('token', False)
+    if not token: 
+        return message('Missing token')
+    return message(token in DATA['tokens'])
 
 #---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/register_key', methods=['GET', 'POST'])
