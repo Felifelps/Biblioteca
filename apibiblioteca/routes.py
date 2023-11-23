@@ -26,7 +26,7 @@ import secrets
 #548e0783ca4b16a090b1c5dc38973557
 
 app = Quart('Biblioteca')
-app = cors(app, allow_origin='*', allow_headers='*', allow_methods='*')
+app = cors(app, allow_origin='https://apibiblioteca.2.ie-1.fl0.io')
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
