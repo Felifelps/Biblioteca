@@ -340,6 +340,14 @@ async def update_book():
     if not book:
         return message('Book not found')
     for key, value in json.items():
+        if key == 'n':
+            DATA['books'][str(book_id)]['copies'] = []
+            for i in range(int(key)):
+                DATA['books'][str(book_id)]['copies'].append({
+                    'copy_id': str(i + 1),
+                    'leitor': False
+                })
+            continue
         DATA['books'][str(book_id)].update({key: value})
     return message('Book updated')
 
