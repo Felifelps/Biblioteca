@@ -342,9 +342,9 @@ async def update_book():
     for key, value in json.items():
         if key == 'n':
             DATA['books'][str(book_id)]['copies'] = []
-            for i in range(int(key)):
+            for i in range(1, int(key) + 1):
                 DATA['books'][str(book_id)]['copies'].append({
-                    'copy_id': str(i + 1),
+                    'copy_id': str(i),
                     'leitor': False
                 })
             continue
