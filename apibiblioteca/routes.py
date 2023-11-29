@@ -340,10 +340,7 @@ async def update_book():
     if not book:
         return message('Book not found')
     for key, value in json.items():
-        if key not in DATA_REQUIRED_FIELDS['book'] or key != 'copies':
-            return message('There is an invalid field: ' + key)
-        book.update({key: value})
-    DATA['books'].update({str(book_id): json})
+        DATA['books'][str(book_id)].update({key: value})
     return message('Book updated')
 
 @app.post('/book/delete')
