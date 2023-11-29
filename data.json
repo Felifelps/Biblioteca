@@ -139,5 +139,166 @@
         }
     },
     "books": {
+        "1": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Daniel Aarão, Reis Filho",
+            "copies": [
+                "teste"
+            ],
+            "edicao": "2° edição",
+            "editora": "Expressão Papelar",
+            "estante": "Amarela",
+            "prateleira": "Não informada",
+            "titulo": "Imagens da Revolução"
+        },
+        "2": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Alicia Almeida Loureiro",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "edicao": "7° edição",
+            "editora": "PAPIRUS",
+            "estante": "Amarela",
+            "prateleira": "Não informado",
+            "titulo": "O Ensino de Música na Escola Fundamental"
+        },
+        "3": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Walda de Andrade ",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "edicao": "1° Edição",
+            "editora": "Global",
+            "estante": "Amarela",
+            "prateleira": "Não informado",
+            "titulo": "Curso de Capacitação para Biblioteca"
+        },
+        "4": {
+            "CDD": "300",
+            "assuntos": "N informado",
+            "autor": "Rubem Alves",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                },
+                {
+                    "copy_id": 2,
+                    "leitor": false
+                },
+                {
+                    "copy_id": 3,
+                    "leitor": false
+                }
+            ],
+            "edicao": "20º",
+            "editora": "Cortez",
+            "estante": "Amarela ",
+            "prateleira": "N informada",
+            "titulo": "Conversa com quem gosta de ensinar"
+        },
+        "5": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Elian Alabi Luici",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "edicao": "8° edição",
+            "editora": "SARAIVA",
+            "estante": "Amarela",
+            "prateleira": "Não informado",
+            "titulo": "As Regiões Brasileiras"
+        },
+        "6": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Fernando Alcoforado",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "edicao": "1°",
+            "editora": "NOBEL",
+            "estante": "Amarela",
+            "prateleira": "Não informado",
+            "titulo": "De Collor a FHC "
+        },
+        "7": {
+            "CDD": "300",
+            "assuntos": "Não Informado",
+            "autor": "Rubem Alves",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                },
+                {
+                    "copy_id": 2,
+                    "leitor": false
+                },
+                {
+                    "copy_id": 3,
+                    "leitor": false
+                }
+            ],
+            "edicao": "17º",
+            "editora": "Cortez",
+            "estante": "Amarela",
+            "prateleira": "Não informada",
+            "titulo": "Estórias de quem gosta de ensinar"
+        },
+        "8": {
+            "CDD": "300",
+            "assuntos": "Não informado",
+            "autor": "Leo Alcantara",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                }
+            ],
+            "edicao": "1°",
+            "editora": "Não informado",
+            "estante": "Amarela",
+            "prateleira": "Não informado",
+            "titulo": "O Novo Ceará"
+        },
+        "11": {
+            "CDD": "300",
+            "assuntos": "-",
+            "autor": "Angel Alsina",
+            "copies": [
+                {
+                    "copy_id": 1,
+                    "leitor": false
+                },
+                {
+                    "copy_id": 2,
+                    "leitor": false
+                }
+            ],
+            "edicao": "1°",
+            "editora": "BASE",
+            "estante": "Amarela",
+            "prateleira": "-",
+            "titulo": "Competências Matemáticas"
+        }
     }
 }
