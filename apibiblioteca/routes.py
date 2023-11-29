@@ -344,7 +344,7 @@ async def update_book():
             DATA['books'][str(book_id)].update({'copies': [{
                     'copy_id': str(i),
                     'leitor': False
-                } for i in range(1, int(key) + 1)]})
+                } for i in range(1, int(value) + 1)]})
             continue
         DATA['books'][str(book_id)].update({key: value})
     return message('Book updated')
