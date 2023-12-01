@@ -1,8 +1,9 @@
 from asyncio import new_event_loop
 from .utils import DB, get_today_minus_date_days, MESSAGES, today
 from .data import DATA
-from .email import Email
 import datetime
+from .email import Email
+import requests
 from threading import Thread
 import time
 
@@ -27,7 +28,8 @@ async def _watcher():
                 if get_today_minus_date_days(date) > 0:
                     DATA['tokens'].pop(token)
             print('[TOKENS UPDATED]')
-                    
+            
+            """        
             print('[UPDATING LENDINGS AND SENDING EMAILS]')
             for lending_id, lending in DATA['lendings'].items():
                 if lending['data_finalizacao']:
@@ -77,18 +79,19 @@ async def _watcher():
                 DATA['lendings'].update({lending_id: lending})
                 
             print('[LENDINGS UPDATED]')
+            """
             
-            backup_data = DATA.data
             
-            await DATA.commit_and_close()
             print('[UPLOADING DATA TO FIRESTORE]')
-            for collection in backup_data:
+            for collection in DATA.data:
                 for id, document in DATA[collection].items(): 
                     collection_ref = DB.collection(collection)
                     collection_ref.document(id).set(document)
             print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
             
+            await DATA.commit_and_close()
             
+            print(requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key').text)
         
         # Check every three hours
         time.sleep(10800)
