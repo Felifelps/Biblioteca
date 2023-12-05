@@ -18,6 +18,10 @@ async def _watcher():
     print('[DATA GOT]')
 
     while True:
+        print('[AUTO-REQUESTING]')
+        
+        print(requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key').text)
+        
         print('[WATCHER - CHECKING TIME]')
         if datetime.datetime.now().hour in [4, 5, 6, 7]:
             start = time.time()
@@ -90,8 +94,6 @@ async def _watcher():
             print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
             
             await DATA.commit_and_close()
-            
-            print(requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key').text)
         
         # Check every three hours
         time.sleep(10800)
