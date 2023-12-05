@@ -503,6 +503,13 @@ async def admin_check():
         return message('Missing token')
     return message(token in DATA['tokens'])
 
+@app.get('/data/json/save')
+async def return_data():
+    json = await get_form_or_json()
+    if not await key_in_json(json):
+        return await render_template('key_required.html')
+    return await send_file('data.json')
+
 #---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/register_key', methods=['GET', 'POST'])
 async def register():

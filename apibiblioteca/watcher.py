@@ -21,7 +21,7 @@ async def _watcher():
         print('[AUTO-REQUESTING]')
         
         try:
-            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key')
+            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key', timeout=50)
             if response.status_code == 200:
                 print(response.text)
             else:
@@ -29,23 +29,27 @@ async def _watcher():
         except:
             pass
         
+        await Files.upload('data.json', temp=False, delete=False)
+        
         start = time.time()
         await DATA.connect()
-        
-        print('[UPDATING TOKENS]')
-        for token, date in DATA['tokens'].items():
-            if get_today_minus_date_days(date) > 0:
-                DATA['tokens'].pop(token)
-        print('[TOKENS UPDATED]')
-        
-        print('[UPLOADING DATA TO FIRESTORE]')
-        for collection in DATA.data:
-            for id, document in DATA[collection].items(): 
-                collection_ref = DB.collection(collection)
-                collection_ref.document(id).set(document)
-        print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
-        
-        await DATA.commit_and_close()
+        try:
+            print('[UPDATING TOKENS]')
+            for token, date in DATA['tokens'].items():
+                if get_today_minus_date_days(date) > 0:
+                    DATA['tokens'].pop(token)
+            print('[TOKENS UPDATED]')
+            
+            print('[UPLOADING DATA TO FIRESTORE]')
+            for collection in DATA.data:
+                for id, document in DATA[collection].items(): 
+                    collection_ref = DB.collection(collection)
+                    collection_ref.document(id).set(document)
+            print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
+        except Exception as e:
+            print(e)
+        finally:
+            await DATA.commit_and_close()
     
         # Check every three hours
         time.sleep(10800)

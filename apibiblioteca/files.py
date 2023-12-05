@@ -66,7 +66,7 @@ class Files:
             pass
         return file
     
-    async def upload(file_path: str, rename_to: str=None, temp: bool=True) -> None:
+    async def upload(file_path: str, rename_to: str=None, temp: bool=True, delete: bool=True) -> None:
         """
         Uploads a file from some path to Mega, then deletes it.
         
@@ -84,7 +84,7 @@ class Files:
             ))
         except PermissionError as e:
             pass
-        remove(file_path)
+        remove(file_path) if delete else print()
     
     async def future_remove(name: str, time=150) -> None:
         """
