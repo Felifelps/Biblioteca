@@ -20,7 +20,14 @@ async def _watcher():
     while True:
         print('[AUTO-REQUESTING]')
         
-        print(requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key').text)
+        try:
+            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key')
+            if response.status_code == 200:
+                print(response.text)
+            else:
+                print('[REQUEST FAILED]')
+        except:
+            pass
         
         print('[WATCHER - CHECKING TIME]')
         if datetime.datetime.now().hour in [4, 5, 6, 7]:
