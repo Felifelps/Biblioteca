@@ -85,7 +85,16 @@ class Files:
         except PermissionError as e:
             pass
         remove(file_path) if delete else print()
-    
+        
+    async def destroy_file(file_name):
+        await to_thread(
+            MEGA.destroy_url(
+                await Files.get_link(
+                    await Files.get_file(file_name)
+                    )
+                )
+            )
+        
     async def future_remove(name: str, time=150) -> None:
         """
         Sleeps a time then deletes the given file

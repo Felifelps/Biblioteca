@@ -21,7 +21,7 @@ async def _watcher():
         print('[AUTO-REQUESTING]')
         
         try:
-            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key', timeout=50)
+            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key')
             if response.status_code == 200:
                 print(response.text)
             else:
@@ -29,16 +29,20 @@ async def _watcher():
         except:
             pass
         
+        await Files.destroy_file('data.json')
         await Files.upload('data.json', temp=False, delete=False)
         
         start = time.time()
         await DATA.connect()
         try:
-            print('[UPDATING TOKENS]')
-            for token, date in DATA['tokens'].items():
-                if get_today_minus_date_days(date) > 0:
-                    DATA['tokens'].pop(token)
-            print('[TOKENS UPDATED]')
+            try:
+                print('[UPDATING TOKENS]')
+                for token, date in DATA['tokens'].items():
+                    if get_today_minus_date_days(date) > 0:
+                        DATA['tokens'].pop(token)
+                print('[TOKENS UPDATED]')
+            except: 
+                pass
             
             print('[UPLOADING DATA TO FIRESTORE]')
             for collection in DATA.data:
@@ -52,7 +56,7 @@ async def _watcher():
             await DATA.commit_and_close()
     
         # Check every three hours
-        time.sleep(10800)
+        time.sleep(500)
         
         """        
         print('[UPDATING LENDINGS AND SENDING EMAILS]')
