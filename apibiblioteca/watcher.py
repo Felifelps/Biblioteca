@@ -30,26 +30,21 @@ async def _watcher():
         start = time.time()
         await DATA.connect()
         try:
-            try:
-                print('[UPDATING TOKENS]')
-                for token, date in DATA['tokens'].items():
-                    if get_today_minus_date_days(date) > 0:
-                        DATA['tokens'].pop(token)
-                print('[TOKENS UPDATED]')
-            except: 
-                pass
-            
-            print('[UPLOADING DATA TO FIRESTORE]')
-            for collection in DATA.data:
-                if collection == 'tokens': continue
-                for id, document in DATA[collection].items(): 
-                    collection_ref = DB.collection(collection)
-                    collection_ref.document(id).set(document)
-            print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
-        except Exception as e:
-            print(e)
+            print('[UPDATING TOKENS]')
+            for token, date in DATA['tokens'].items():
+                if get_today_minus_date_days(date) > 0:
+                    DATA['tokens'].pop(token)
+            print('[TOKENS UPDATED]')
         finally:
+            data_backup = DATA.data
             await DATA.commit_and_close()
+        print('[UPLOADING DATA TO FIRESTORE]')
+        for collection in data_backup:
+            if collection == 'tokens': continue
+            for id, document in data_backup[collection].items(): 
+                collection_ref = DB.collection(collection)
+                collection_ref.document(id).set(document)
+        print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
     
         # Waits 1 hour an half
         time.sleep(5400)
