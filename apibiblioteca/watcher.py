@@ -41,6 +41,7 @@ async def _watcher():
             
             print('[UPLOADING DATA TO FIRESTORE]')
             for collection in DATA.data:
+                if collection == 'tokens': continue
                 for id, document in DATA[collection].items(): 
                     collection_ref = DB.collection(collection)
                     collection_ref.document(id).set(document)
@@ -52,61 +53,7 @@ async def _watcher():
     
         # Waits 1 hour an half
         time.sleep(5400)
-        
-        """        
-        print('[UPDATING LENDINGS AND SENDING EMAILS]')
-        for lending_id, lending in DATA['lendings'].items():
-            if lending['data_finalizacao']:
-                continue
-            user = DATA['users'][lending['leitor']]
-            book = DATA['books'][lending['livro']]
-            if not lending['pego']:
-                lending_time = get_today_minus_date_days(lending['data_emprestimo'])
-                if lending_time > 2:
-                    lending.update({'data_finalizacao': today()})
-                    user.update({'livro': False})
-                    for copy in DATA['books'][lending['livro']]['copies']:
-                        if copy['leitor'] == lending['leitor']:
-                            copy.update({'leitor': False})
-                    # await Email.message(
-                    #     user['email'], 
-                    #     MESSAGES['lending_finalized_not_get'](
-                    #         user['nome'], 
-                    #         book['titulo']
-                    #     ),
-                    #     'Biblioteca - Empréstimo cancelado'
-                    #)
-            else:
-                lending_time = get_today_minus_date_days(lending['pego'])
-                if lending_time > 10:
-                    lending.update({'multa': 0.1 * (lending_time - 10)})
-                    # await Email.message(
-                    #     user['email'], 
-                    #     MESSAGES['multa_number'](
-                    #         user['nome'], 
-                    #         book['titulo'], 
-                    #         0.1 * (lending_time - 10)
-                    #     ),
-                    #    f'Biblioteca - Devolução atrasada em {lending_time - 10}'
-                    #)
-                else:
-                    # await Email.message(
-                    #     user['email'], 
-                    #     MESSAGES['days_to_renew_or_return'](
-                    #         user['nome'], 
-                    #         book['titulo'], 
-                    #         10 - lending_time
-                    #     ),
-                    #    f"Biblioteca - Faltam {10 - lending_time} dia{'s' if lending_time == 9 else ''}"
-                    #)
-                    pass
-            DATA['lendings'].update({lending_id: lending})
-            
-        print('[LENDINGS UPDATED]')
-        """
-        
-        
-        
+
 def watcher():    
     loop = new_event_loop()
     loop.run_until_complete(_watcher())
