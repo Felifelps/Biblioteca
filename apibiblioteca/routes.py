@@ -503,9 +503,16 @@ async def admin_check():
         return message('Missing token')
     return message(token in DATA['tokens'])
 
-@app.get('/data/json/get/guarantee')
+@app.route('/data/json/access/', methods=['GET', 'POST'])
 async def return_data():
-    return await send_file('data.json')
+    if request.method == 'POST':
+        form = await request.form
+        password = form.get('password', False)
+        if password and check_admin_password(password):
+            return await send_file('data.json')
+        await flash('Senha inválida')
+    return await render_template('get_data.html')
+    
 
 #---------------------- GENERATING API KEY ROUTES ----------------------#
 @app.route('/register_key', methods=['GET', 'POST'])

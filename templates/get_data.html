@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %} Dados {% endblock %}
+{% block content %}
+    <h1>Digite a senha</h1>
+    {% for message in get_flashed_messages() %}
+        <h4 style='color: red;'> {{ message }} </h4>
+    {% endfor %}
+    <form method="POST">
+        <input name="password" type="password" placeholder="Digite a senha do administrador" required>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+{% endblock %}
