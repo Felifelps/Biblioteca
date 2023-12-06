@@ -1,8 +1,6 @@
 from asyncio import new_event_loop
-from .utils import DB, get_today_minus_date_days, MESSAGES, today
+from .utils import DB, get_today_minus_date_days
 from .data import DATA
-import datetime
-from .files import Files
 import requests
 from threading import Thread
 import time
@@ -52,8 +50,8 @@ async def _watcher():
         finally:
             await DATA.commit_and_close()
     
-        # Check every three hours
-        time.sleep(60)
+        # Waits 1 hour an half
+        time.sleep(5400)
         
         """        
         print('[UPDATING LENDINGS AND SENDING EMAILS]')
