@@ -29,9 +29,6 @@ async def _watcher():
         except:
             pass
         
-        await Files.destroy_file('data.json')
-        await Files.upload('data.json', temp=False, delete=False)
-        
         start = time.time()
         await DATA.connect()
         try:
