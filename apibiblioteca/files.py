@@ -88,7 +88,7 @@ class Files:
         
     async def destroy_file(file_name):
         await to_thread(
-            MEGA.destroy_url(
+            MEGA.delete_url(
                 await Files.get_link(
                     await Files.get_file(file_name)
                     )
