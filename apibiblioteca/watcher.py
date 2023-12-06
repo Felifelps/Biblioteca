@@ -56,7 +56,7 @@ async def _watcher():
             await DATA.commit_and_close()
     
         # Check every three hours
-        time.sleep(500)
+        time.sleep(60)
         
         """        
         print('[UPDATING LENDINGS AND SENDING EMAILS]')
