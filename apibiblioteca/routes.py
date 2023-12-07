@@ -40,15 +40,15 @@ async def connect_data():
     await DATA.connect()
     global JSON
     JSON = await request.get_json()
+    if not JSON:
+        form = await request.form
+        JSON = {key: value for key, value in form.items()}
     if request.url.split('/')[-1] in [
         'update',
         'new',
         'delete',
         'data'
         ]:
-        if not JSON:
-            form = await request.form
-            JSON = {key: value for key, value in form.items()}
         token_valid = JSON and JSON.get('token', False) and DATA['tokens'].get(JSON.pop('token'), False)
         if not token_valid:
             return message('token invalid')
