@@ -40,13 +40,11 @@ async def connect_data():
     await DATA.connect()
     global JSON
     JSON = await request.get_json()
-    if request.url.split('/')[-1] not in [
-        'page', 
-        'check',
-        'login',
-        'books',
-        'length',
-        'search'
+    if request.url.split('/')[-1] in [
+        'update',
+        'new',
+        'delete',
+        'data'
         ]:
         if not JSON:
             form = await request.form
