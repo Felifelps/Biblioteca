@@ -1,29 +1,33 @@
 from .data import DATA
-from .email import Email
-from .files import Files
-from .keys import Keys
+#from .email import Email
+#from .files import Files
+#from .keys import Keys
 from .utils import (
         check_admin_login, 
         check_admin_password, 
         DATA_REQUIRED_FIELDS, 
         date_to_str,
-        get_today_minus_date_days,
-        MESSAGES, 
+        #get_today_minus_date_days,
+        #MESSAGES, 
         message, 
         str_to_date,
         today
     )
-from asyncio import ensure_future
+#from asyncio import ensure_future
 import datetime
 from os import environ
-from os.path import exists, join
-from quart import flash, Quart, render_template, request, send_file
+#from os.path import exists, join
+import pandas as pd
+from quart import Quart, request, send_file
 from quart_cors import cors
+import unicodedata
 import secrets
 
 # TODO: DOCUMENTAR TODAS AS VIEWS E REVER A DOCUMENTAÇÃO GERAL
 # TODO: TESTES COM ASYNC PYTEST
 #548e0783ca4b16a090b1c5dc38973557
+
+JSON = {}
 
 app = Quart('Biblioteca')
 app = cors(app, allow_origin='https://bibliotecamilagres.netlify.app')
@@ -31,25 +35,186 @@ app = cors(app, allow_origin='https://bibliotecamilagres.netlify.app')
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
 
-async def get_form_or_json():
-    json = await request.get_json()
-    if not json:
-        form = await request.form
-        json = {key: value for key, value in form.items()}
-    return json
-
-async def key_in_json(json):
-    return json and json.get('key', False) and Keys.get_email_from_key(json.pop('key'))
-
 @app.before_request
 async def connect_data():
     await DATA.connect()
+    global JSON
+    JSON = await request.get_json()
+    if request.url.split('/')[-1] not in [
+        'page', 
+        'check',
+        'login',
+        'books',
+        'length',
+        'search'
+        ]:
+        if not JSON:
+            form = await request.form
+            JSON = {key: value for key, value in form.items()}
+        token_valid = JSON and JSON.get('token', False) and DATA['tokens'].get(JSON.pop('token'), False)
+        if not token_valid:
+            return message('token invalid')
     
 @app.after_request
 async def commit_and_close_data(response):
     await DATA.commit_and_close()
     return response
 
+@app.post('/books')
+async def all_books():
+    return DATA['books']
+
+@app.post('/books/length')
+async def books_len():
+    return {'len': len(DATA['books'])}
+
+@app.post('/books/page')
+async def get_book_page():
+    page = JSON.get('page', False)
+    if not page or page > (len(DATA['books'])//24) + 1:
+        return 'Page out of the range' if page else 'Missing page parameter'
+    start = (24 * (int(page) - 1))
+    books = {}
+    book_ids = list(DATA['books'].keys())
+    book_ids.sort(key=lambda x: int(x))
+    for i in range(start, start + 24):
+        try:
+            id = book_ids[i]
+            books[id] = DATA['books'][id]
+        except:
+            break
+    return books
+
+@app.post('/books/search')
+async def search_books():
+    data = {}
+    for book_id, book in DATA['books'].items():
+        for key in JSON.keys():
+            if key not in DATA_REQUIRED_FIELDS['book']:
+                return f'{key} not a valid parameter'
+            search = ''.join(
+                (c for c in unicodedata.normalize('NFD', str(JSON[key]).lower()) if unicodedata.category(c) != 'Mn')
+            )
+            book_value = ''.join(
+                (c for c in unicodedata.normalize('NFD', str(book[key]).lower()) if unicodedata.category(c) != 'Mn')
+            )
+            if search == book_value or search in book_value:
+                data[book_id] = book
+    return data
+
+@app.post('/book')
+async def get_book():
+    book_id = JSON.get('book_id', False)
+    if not book_id: 
+        return message('Missing book_id')
+    return DATA['books'].get(book_id, message('Book not found'))   
+
+@app.post('/books/field_values')
+async def books_field_values():
+    field = JSON.get('field', False)
+    if not field or field not in DATA_REQUIRED_FIELDS['book']:
+        return 'Invalid field' if field else 'Missing field'
+    values = set([book[field] for book in DATA['books'].values()])
+    return {'values': list(values)}
+
+@app.post('/book/new')
+async def new_book():
+    #number of copies
+    quantidade = JSON.get('quantidade', 1)
+    if isinstance(quantidade, str):
+        return message('quantidade parameter must be an integer')
+    missing_fields = list(filter(lambda x: x not in JSON.keys(), DATA_REQUIRED_FIELDS['book']))
+    if missing_fields == []:
+        last_id = max(list(map(lambda x: int(x), DATA['books'].keys())))
+        DATA['books'].update({str(last_id + 1): JSON})
+        return message(f'Book{"" if int(quantidade) == 1 else "s"} created')
+    missing_fields.pop(0)
+    return message(f'Missing required parameters: {str(missing_fields)}')
+    
+@app.post('/book/update')
+async def update_book():
+    book_id = JSON.pop('book_id', False)
+    if not book_id: 
+        return message('Missing book_id')
+    book = DATA['books'].get(book_id, False)
+    if not book:
+        return message('Book not found')
+    for key, value in JSON.items():
+        if key == 'n':
+            DATA['books'][str(book_id)].update({'copies': [{
+                    'copy_id': str(i),
+                    'leitor': False
+                } for i in range(1, int(value) + 1)]})
+            continue
+        DATA['books'][str(book_id)].update({key: value})
+    return message('Book updated')
+
+@app.post('/book/delete')
+async def delete_book():
+    book_id = JSON.pop('book_id', False)
+    if not book_id:
+        return message('Missing book_id')
+    book = DATA['books'].get(book_id)
+    if not book:
+        return message('Book not found')
+    DATA['books'].pop(book_id)
+    return message('Book deleted')
+
+@app.post('/admin/login')
+async def admin_login():
+    login = JSON.get('login', False)
+    if not login: 
+        return message('Missing login')
+    password = JSON.get('password', False)
+    if not password: 
+        return message('Missing password')
+    if not check_admin_login(login):
+        return message('Login invalid')
+    if not check_admin_password(password):
+        return message('Password invalid')
+    token = secrets.token_hex(32)
+    DATA['tokens'][token] = date_to_str(str_to_date(today()) + datetime.timedelta(days=1))
+    return {'token': token}
+
+@app.post('/admin/check')
+async def admin_check():
+    token = JSON.get('token', False)
+    if not token: 
+        return message('Missing token')
+    return message(token in DATA['tokens'])
+
+@app.post('/get/data')
+async def return_data():
+    df = pd.DataFrame(data=DATA['books'])
+    df.T.to_excel('livros.xlsx', index=True)
+    return await send_file('livros.xlsx', as_attachment=True)
+
+@app.errorhandler(500)
+async def handle_error(error):
+    return message(f'An error ocurred: {str(error)}'), 500
+
+"""
+
+@app.route('/register_key', methods=['GET', 'POST'])
+async def register():
+    if request.method == 'POST':
+        form = await request.form
+        email = form.get('email', False)
+        password = form.get('password', False)
+        if email and email not in DATA['keys'].keys():
+            if password and check_admin_password(password):
+                key = Keys.register_new_key(email)
+                await Email.message(
+                    email, 
+                    f'<p>Essa é sua chave de api, não a compartilhe publicamente!</p><h1>{key}</h1>', 
+                    'Biblioteca - Chave de api'
+                )
+                return await render_template('key_sended.html')
+            await flash('Senha inválida')
+        else:
+            await flash('Email já registrado' if email else 'Email inválido')
+    return await render_template('register_email.html')
+    
 #----------> USER ROUTES
 
 @app.post('/user')
@@ -104,8 +269,6 @@ async def search_users():
 
 @app.post('/users/length')
 async def users_len():
-    if not await key_in_json(await get_form_or_json()):
-        return await render_template('key_required.html')
     return {'len': len(DATA['users'])}
 
 @app.post('/user/new')
@@ -237,138 +400,9 @@ async def delete_user():
     DATA['users'].pop(RG)
     return message('User deleted')
 
-#----------> BOOK ROUTES
-
-@app.post('/books')
-async def all_books():
-    if not await key_in_json(await get_form_or_json()):
-        return await render_template('key_required.html')
-    return DATA['books']
-
-@app.post('/books/length')
-async def books_len():
-    if not await key_in_json(await get_form_or_json()):
-        return await render_template('key_required.html')
-    return {'len': len(DATA['books'])}
-
-@app.post('/books/page')
-async def get_book_page():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    page = json.get('page', False)
-    if not page or page > (len(DATA['books'])//24) + 1:
-        return 'Page out of the range' if page else 'Missing page parameter'
-    start = (24 * (int(page) - 1))
-    books = {}
-    book_ids = list(DATA['books'].keys())
-    book_ids.sort(key=lambda x: int(x))
-    for i in range(start, start + 24):
-        try:
-            id = book_ids[i]
-            books[id] = DATA['books'][id]
-        except:
-            break
-    return books
-
-@app.post('/books/search')
-async def search_books():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    data = {}
-    for book_id, book in DATA['books'].items():
-        for key in json.keys():
-            if key not in DATA_REQUIRED_FIELDS['book']:
-                return f'{key} not a valid parameter'
-            search = str(json[key]).lower()
-            book_value = str(book[key]).lower()
-            if search == book_value or search in book_value:
-                data[book_id] = book
-    return data
-
-@app.post('/book')
-async def get_book():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    book_id = json.get('book_id', False)
-    if not book_id: 
-        return message('Missing book_id')
-    return DATA['books'].get(book_id, message('Book not found'))   
-
-@app.post('/books/field_values')
-async def books_subjects():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    field = json.get('field', False)
-    if not field or field not in DATA_REQUIRED_FIELDS['book']:
-        return 'Invalid field' if field else 'Missing field'
-    values = set([book[field] for book in DATA['books'].values()])
-    return {'values': list(values)}
-
-@app.post('/book/new')
-async def new_book():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    #number of copies
-    n = json.pop('n', '1')
-    if not n.isdigit():
-        return message('n parameter must be an integer')
-    n = int(n)
-    missing_fields = list(filter(lambda x: x not in json.keys(), DATA_REQUIRED_FIELDS['book']))
-    if missing_fields == []:
-        json.update({
-            "copies": [{"copy_id": i, "leitor": False} for i in range(1, n + 1)]
-        })
-        last_id = max(list(map(lambda x: int(x), DATA['books'].keys())))
-        DATA['books'].update({str(last_id + 1): json})
-        return message(f'Book{"" if n == 1 else "s"} created')
-    missing_fields.pop(0)
-    return message(f'Missing required parameters: {str(missing_fields)}')
-    
-@app.post('/book/update')
-async def update_book():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    book_id = json.pop('book_id', False)
-    if not book_id: 
-        return message('Missing book_id')
-    book = DATA['books'].get(book_id, False)
-    if not book:
-        return message('Book not found')
-    for key, value in json.items():
-        if key == 'n':
-            DATA['books'][str(book_id)].update({'copies': [{
-                    'copy_id': str(i),
-                    'leitor': False
-                } for i in range(1, int(value) + 1)]})
-            continue
-        DATA['books'][str(book_id)].update({key: value})
-    return message('Book updated')
-
-@app.post('/book/delete')
-async def delete_book():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    book_id = json.pop('book_id', False)
-    if not book_id:
-        return message('Missing book_id')
-    book = DATA['books'].get(book_id)
-    if not book:
-        return message('Book not found')
-    DATA['books'].pop(book_id)
-    return message('Book deleted')
-
 #----------> LENDING ROUTES
 @app.post('/lendings')
 async def all_lendings():
-    if not await key_in_json(await get_form_or_json()):
-        return await render_template('key_required.html')
     return DATA['lendings']
 
 @app.post('/lending')
@@ -473,69 +507,4 @@ async def get_user_file():
         return message('File not found')
     except PermissionError as e:
         return message('An error ocurred')
-
-
-@app.post('/admin/login')
-async def admin_login():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    login = json.get('login', False)
-    if not login: 
-        return message('Missing login')
-    password = json.get('password', False)
-    if not password: 
-        return message('Missing password')
-    if not check_admin_login(login):
-        return message('Login invalid')
-    if not check_admin_password(password):
-        return message('Password invalid')
-    token = secrets.token_hex(32)
-    DATA['tokens'][token] = date_to_str(str_to_date(today()) + datetime.timedelta(days=1))
-    return {'token': token}
-
-@app.post('/admin/check')
-async def admin_check():
-    json = await get_form_or_json()
-    if not await key_in_json(json):
-        return await render_template('key_required.html')
-    token = json.get('token', False)
-    if not token: 
-        return message('Missing token')
-    return message(token in DATA['tokens'])
-
-@app.route('/data/json/access/', methods=['GET', 'POST'])
-async def return_data():
-    if request.method == 'POST':
-        form = await request.form
-        password = form.get('password', False)
-        if password and check_admin_password(password):
-            return await send_file('data.json')
-        await flash('Senha inválida')
-    return await render_template('get_data.html')
-    
-
-#---------------------- GENERATING API KEY ROUTES ----------------------#
-@app.route('/register_key', methods=['GET', 'POST'])
-async def register():
-    if request.method == 'POST':
-        form = await request.form
-        email = form.get('email', False)
-        password = form.get('password', False)
-        if email and email not in DATA['keys'].keys():
-            if password and check_admin_password(password):
-                key = Keys.register_new_key(email)
-                await Email.message(
-                    email, 
-                    f'<p>Essa é sua chave de api, não a compartilhe publicamente!</p><h1>{key}</h1>', 
-                    'Biblioteca - Chave de api'
-                )
-                return await render_template('key_sended.html')
-            await flash('Senha inválida')
-        else:
-            await flash('Email já registrado' if email else 'Email inválido')
-    return await render_template('register_email.html')
-
-@app.errorhandler(500)
-async def handle_error(error):
-    return message(f'An error ocurred: {str(error)}'), 500
+"""

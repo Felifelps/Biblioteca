@@ -2,9 +2,9 @@ from bcrypt import checkpw, gensalt, hashpw
 import datetime
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore, initialize_app
-from mega import Mega
+#from mega import Mega
 from os import environ
-import json
+#import json
 
 load_dotenv()
 
@@ -24,10 +24,10 @@ DB = firestore.client()
 EMAIL_SENDER = environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = environ.get('EMAIL_PASSWORD')
 
-print('[LOGGING TO MEGA]')
-MEGA = Mega()
-MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
-print('[LOGIN DONE]')
+#print('[LOGGING TO MEGA]')
+#MEGA = Mega()
+#MEGA.login(environ.get('MEGA_LOGIN'), environ.get('MEGA_PASSWORD'))
+#print('[LOGIN DONE]')
     
 def today():
     return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')  
@@ -68,7 +68,8 @@ DATA_REQUIRED_FIELDS = {
         'CDD',
         'assuntos',
         'estante',
-        'prateleira'
+        'prateleira',
+        'quantidade'
     ]
 }
 
@@ -115,3 +116,4 @@ Multa acumulada: R${multa:.2f}
 <p>Venha à biblioteca para pagar a multa e devolver ou renovar o livro</p>
 '''
 }
+
