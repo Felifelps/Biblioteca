@@ -118,8 +118,8 @@ async def books_field_values():
 @app.post('/book/new')
 async def new_book():
     #number of copies
-    quantidade = JSON.get('quantidade', 1)
-    if isinstance(quantidade, str):
+    quantidade = JSON.get('quantidade', '1')
+    if isinstance(quantidade, str) and not quantidade.isdigit():
         return message('quantidade parameter must be an integer')
     missing_fields = list(filter(lambda x: x not in JSON.keys(), DATA_REQUIRED_FIELDS['book']))
     if missing_fields == []:
@@ -138,12 +138,6 @@ async def update_book():
     if not book:
         return message('Book not found')
     for key, value in JSON.items():
-        if key == 'n':
-            DATA['books'][str(book_id)].update({'copies': [{
-                    'copy_id': str(i),
-                    'leitor': False
-                } for i in range(1, int(value) + 1)]})
-            continue
         DATA['books'][str(book_id)].update({key: value})
     return message('Book updated')
 
