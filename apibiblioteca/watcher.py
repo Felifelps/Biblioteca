@@ -16,17 +16,6 @@ async def _watcher():
     print('[DATA GOT]')
 
     while True:
-        print('[AUTO-REQUESTING]')
-        
-        try:
-            response = requests.get('https://apibiblioteca.2.ie-1.fl0.io/register_key')
-            if response.status_code == 200:
-                print(response.text)
-            else:
-                print('[REQUEST FAILED]')
-        except:
-            pass
-        
         start = time.time()
         await DATA.connect()
         try:
