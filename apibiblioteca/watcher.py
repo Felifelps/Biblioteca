@@ -36,7 +36,12 @@ async def _watcher():
         print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
     
         # Waits 1 hour an half
-        time.sleep(5400)
+        # And requests every 22,5 minutes
+        for i in range(4):
+            print('[AUTOREQUESTING]')
+            response = requests.post('https://bibliotecamilagres.onrender.com/books')
+            print('[REQUEST DONE]', response.status_code)
+            time.sleep(1350)
 
 def watcher():    
     loop = new_event_loop()
