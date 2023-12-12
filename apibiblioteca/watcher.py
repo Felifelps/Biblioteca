@@ -39,7 +39,7 @@ async def _watcher():
         # And requests every 15 minutes
         for i in range(6):
             print('[AUTOREQUESTING]')
-            response = requests.post('https://bibliotecamilagres.onrender.com/books')
+            response = requests.post('https://bibliotecamilagres-503s.onrender.com/books')
             print('[REQUEST DONE]', response.status_code)
             time.sleep(900)
 
