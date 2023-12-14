@@ -2,7 +2,7 @@ from .data import DATA
 from .utils import (
     check_admin_login,
     check_admin_password,
-    DATA_REQUIRED_FIELDS,
+    BOOK_REQUIRED_FIELDS,
     date_to_str,
     message,
     standardize_search_string,
@@ -81,7 +81,7 @@ async def search_books():
     data = {}
     for book_id, book in DATA['books'].items():
         for key in JSON.keys():
-            if key not in DATA_REQUIRED_FIELDS['book']:
+            if key not in BOOK_REQUIRED_FIELDS:
                 return f'{key} not a valid parameter'
             search = standardize_search_string(JSON[key])
             book_value = standardize_search_string(book[key])
@@ -93,7 +93,7 @@ async def search_books():
 @app.post('/books/field_values')
 async def books_field_values():
     field = JSON.get('field', False)
-    if not field or field not in DATA_REQUIRED_FIELDS['book']:
+    if not field or field not in BOOK_REQUIRED_FIELDS:
         return 'Invalid field' if field else 'Missing field'
     values = set([book[field] for book in DATA['books'].values()])
     return {'values': list(values)}
@@ -107,7 +107,7 @@ async def new_book():
     missing_fields = list(
         filter(
             lambda x: x not in JSON.keys(),
-            DATA_REQUIRED_FIELDS['book']
+            BOOK_REQUIRED_FIELDS
         )
     )
     if missing_fields == []:
