@@ -53,12 +53,12 @@ async def commit_and_close_data(response):
     return response
 
 
-@app.get('/books/length')
+@app.post('/books/length')
 async def books_len():
     return {'len': len(DATA['books'])}
 
 
-@app.get('/books/page')
+@app.post('/books/page')
 async def get_book_page():
     page = JSON.get('page', False)
     if not page or page > (len(DATA['books'])//24) + 1:
@@ -76,7 +76,7 @@ async def get_book_page():
     return books
 
 
-@app.get('/books/search')
+@app.post('/books/search')
 async def search_books():
     data = {}
     for book_id, book in DATA['books'].items():
@@ -90,7 +90,7 @@ async def search_books():
     return data
 
 
-@app.get('/books/field_values')
+@app.post('/books/field_values')
 async def books_field_values():
     field = JSON.get('field', False)
     if not field or field not in DATA_REQUIRED_FIELDS['book']:
