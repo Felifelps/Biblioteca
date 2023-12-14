@@ -81,16 +81,14 @@ def standardize_search_string(string):
     return ''.join(list)
 
 
-DATA_REQUIRED_FIELDS = {
-    'book': [
-        'titulo',
-        'autor',
-        'editora',
-        'edicao',
-        'CDD',
-        'assuntos',
-        'estante',
-        'prateleira',
-        'quantidade'
-    ]
-}
+BOOK_REQUIRED_FIELDS = [
+    'titulo',
+    'autor',
+    'editora',
+    'edicao',
+    'CDD',
+    'assuntos',
+    'estante',
+    'prateleira',
+    'quantidade'
+]
