@@ -5,13 +5,16 @@ import requests
 from threading import Thread
 import time
 
+
 async def _watcher():
     print('[WATCHER STARTED]')
 
     print('[GETTING DATA FROM FIRESTORE]')
-    await DATA.connect()    
+    await DATA.connect()
     for collection in DATA.data.keys():
-        DATA[collection] = {doc.id: doc.to_dict() for doc in DB.collection(collection).stream()}
+        DATA[collection] = {
+            doc.id: doc.to_dict() for doc in DB.collection(collection).stream()
+        }
     await DATA.commit_and_close()
     print('[DATA GOT]')
 
@@ -29,22 +32,31 @@ async def _watcher():
             await DATA.commit_and_close()
         print('[UPLOADING DATA TO FIRESTORE]')
         for collection in data_backup:
-            if collection == 'tokens': continue
-            for id, document in data_backup[collection].items(): 
+            if collection == 'tokens':
+                continue
+            for id, document in data_backup[collection].items():
                 collection_ref = DB.collection(collection)
                 collection_ref.document(id).set(document)
-        print(f'[DATA UPLOADED TO FIRESTORE IN {time.time() - start:.2f} SECONDS]')
-    
+        print(
+            '[DATA UPLOADED TO FIRESTORE IN',
+            str(time.time() - start)[:4],
+            'SECONDS]'
+        )
+
         # Waits 1 hour an half
         # And requests every 15 minutes
         for i in range(6):
             print('[AUTOREQUESTING]')
-            response = requests.post('https://bibliotecamilagres-503s.onrender.com/books')
+            response = requests.post(
+                'https://bibliotecamilagres-503s.onrender.com/books'
+            )
             print('[REQUEST DONE]', response.status_code)
             time.sleep(900)
 
-def watcher():    
+
+def watcher():
     loop = new_event_loop()
     loop.run_until_complete(_watcher())
-        
+
+
 WATCHER = Thread(target=watcher, name='WATCHER', daemon=True)
