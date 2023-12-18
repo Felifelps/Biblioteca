@@ -111,7 +111,10 @@ async def new_book():
         )
     )
     if missing_fields == []:
-        last_id = max(list(map(lambda x: int(x), DATA['books'].keys())))
+        if len(DATA['books'].keys()) == 0:
+            last_id = 1
+        else:
+            last_id = max(list(map(lambda x: int(x), DATA['books'].keys())))
         DATA['books'].update({str(last_id + 1): JSON})
         return message(f'Book{"" if int(quantidade) == 1 else "s"} created')
     missing_fields.pop(0)
