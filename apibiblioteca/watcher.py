@@ -8,7 +8,7 @@ import time
 
 async def _watcher():
     print('[WATCHER STARTED]')
-
+    
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
     for collection in DATA.data.keys():
