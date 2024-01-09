@@ -83,8 +83,8 @@ async def search_books():
         for key in JSON.keys():
             if key not in BOOK_REQUIRED_FIELDS:
                 return f'{key} not a valid parameter'
-            search = standardize_search_string(JSON[key])
-            book_value = standardize_search_string(book[key])
+            search = standardize_search_string(str(JSON[key]))
+            book_value = standardize_search_string(str(book[key]))
             if search == book_value or search in book_value:
                 data[book_id] = book
     return data

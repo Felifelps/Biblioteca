@@ -9,6 +9,7 @@ import time
 async def _watcher():
     print('[WATCHER STARTED]')
 
+    '''
     print('[GETTING DATA FROM FIRESTORE]')
     await DATA.connect()
     for collection in DATA.data.keys():
@@ -17,6 +18,10 @@ async def _watcher():
         }
     await DATA.commit_and_close()
     print('[DATA GOT]')
+    '''
+    
+    books_uploaded = 0
+    requests_diary_limit = 19500
 
     while True:
         start = time.time()
@@ -28,24 +33,34 @@ async def _watcher():
                     DATA['tokens'].pop(token)
             print('[TOKENS UPDATED]')
         finally:
-            data_backup = DATA.data
+            data_backup_keys = list(DATA['books'].keys())
+            data_backup_values = list(DATA['books'].values())
             await DATA.commit_and_close()
+            
         print('[UPLOADING DATA TO FIRESTORE]')
-        for collection in data_backup:
-            if collection == 'tokens':
-                continue
-            for id, document in data_backup[collection].items():
-                collection_ref = DB.collection(collection)
-                collection_ref.document(id).set(document)
+        
+        if len(data_backup_keys) > requests_diary_limit:
+            final_books = books_uploaded + requests_diary_limit 
+        else:
+            final_books = len(data_backup_keys) - 1
+        
+        for document in data_backup_values[books_uploaded: final_books]:
+            collection_ref = DB.collection('books')
+            collection_ref.document(data_backup_keys[books_uploaded]).set(document)
+            books_uploaded += 1
+            
+        if books_uploaded >= len(data_backup_keys):
+            books_uploaded = 0
+            
         print(
             '[DATA UPLOADED TO FIRESTORE IN',
             str(time.time() - start)[:4],
             'SECONDS]'
         )
 
-        # Waits 1 hour an half
+        # Waits 1 day
         # And requests every 15 minutes
-        for i in range(6):
+        for i in range(96):
             print('[AUTOREQUESTING]')
             response = requests.post(
                 'https://bibliotecamilagres-503s.onrender.com/books'
