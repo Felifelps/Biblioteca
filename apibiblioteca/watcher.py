@@ -47,7 +47,7 @@ async def _watcher():
             collection_ref.document(data_backup_keys[books_uploaded]).set(document)
             books_uploaded += 1
             
-        if books_uploaded >= len(data_backup_keys):
+        if books_uploaded >= len(data_backup_keys) - 1:
             books_uploaded = 0
             
         print(
