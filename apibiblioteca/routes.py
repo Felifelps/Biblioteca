@@ -119,7 +119,6 @@ async def update_book():
         return message('Missing book_id')
     try:
         book = Book.get_by_id(int(book_id))
-        print(model_to_dict(book))
     except Exception as e:
         return message('Book not found')
     for key, value in JSON.items():
@@ -128,16 +127,15 @@ async def update_book():
     return message('Book updated')
 
 
-@app.delete('/book/delete')
+@app.post('/book/delete')
 async def delete_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
-    book = DATA['books'].get(book_id)
-    if not book:
-        return message('Book not found')
-    DATA['books'].pop(book_id)
-    return message('Book deleted')
+    return message(
+        'Book not found' if not Book.delete_by_id(
+            int(book_id)
+        ) else 'Book deleted' )
 
 
 @app.post('/admin/login')
@@ -153,9 +151,7 @@ async def admin_login():
     if not check_admin_password(password):
         return message('Password invalid')
     token = secrets.token_hex(32)
-    DATA['tokens'][token] = date_to_str(
-        str_to_date(today()) + datetime.timedelta(days=1)
-    )
+    
     return {'token': token}
 
 
