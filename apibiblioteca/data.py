@@ -1,9 +1,9 @@
 from asyncio import sleep
-import json
+import json, sqlite3
 
 
 class Data:
-    DATABASE = 'data.json'
+    DATABASE = 'data.db'
 
     def __init__(self):
         self.__data = None

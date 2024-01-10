@@ -121,7 +121,7 @@ async def new_book():
     return message(f'Missing required parameters: {str(missing_fields)}')
 
 
-@app.put('/book/update')
+@app.post('/book/update')
 async def update_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
@@ -134,7 +134,7 @@ async def update_book():
     return message('Book updated')
 
 
-@app.delete('/book/delete')
+@app.post('/book/delete')
 async def delete_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
