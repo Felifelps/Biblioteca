@@ -3,7 +3,7 @@ import json, sqlite3
 
 
 class Data:
-    DATABASE = 'data.db'
+    DATABASE = 'data.json'
 
     def __init__(self):
         self.__data = None
