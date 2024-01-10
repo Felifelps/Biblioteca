@@ -86,7 +86,7 @@ BOOK_REQUIRED_FIELDS = [
     'autor',
     'editora',
     'edicao',
-    'CDD',
+    'cdd',
     'assuntos',
     'estante',
     'prateleira',

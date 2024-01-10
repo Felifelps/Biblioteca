@@ -25,5 +25,7 @@ class Token(Model):
         
 db.connect()
 
-db.create_tables([Book, Token])
+db.create_tables([Book, Token], safe=True)
+
+db.close()
 
