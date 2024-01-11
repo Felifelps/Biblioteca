@@ -1,5 +1,4 @@
 from .models import Book, Token, db, model_to_dict
-from .data import DATA
 from .utils import (
     check_admin_login,
     check_admin_password,
@@ -161,8 +160,8 @@ async def admin_check():
 
 @app.post('/get/data')
 async def return_data():
-    df = pd.DataFrame(data=DATA['books'])
-    df.T.to_excel('livros.xlsx', index=True)
+    df = pd.DataFrame(data=[model_to_dict(book) for book in Book.select()])
+    df.to_excel('livros.xlsx', index=True)
     return await send_file('livros.xlsx', as_attachment=True)
 
 
