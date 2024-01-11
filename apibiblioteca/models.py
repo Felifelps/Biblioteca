@@ -1,4 +1,5 @@
 from peewee import SqliteDatabase, Model, CharField, IntegerField, DateField
+from playhouse.shortcuts import model_to_dict
 import secrets, datetime
 
 db = SqliteDatabase('database.db')
@@ -19,19 +20,23 @@ class Book(Model):
         
 class Token(Model):
     id = CharField(primary_key=True, default=lambda: secrets.token_hex(16), unique=True)
-    date = CharField(default=lambda: datetime.datetime.today().strftime('%d/%m/%y'))
+    date = DateField(default=datetime.datetime.today)
 
     class Meta:
         database = db
         
-    def is_valid(self):
+    def validate(self):
         today = datetime.datetime.today()
-        date = datetime.datetime.strptime(self.date, 
+        diff = today - self.date
+        print(diff.days)
+        if diff.days != 0:
+            Token.delete_by_id(self.id)
         
 db.connect()
 
 db.create_tables([Book, Token], safe=True)
 
+'''
 import pandas
 
 dt = pandas.read_json('data.json')
@@ -44,8 +49,6 @@ for i in data['books'].values():
     a = Book.create(**i)
     a.save()
     
+'''
 
-    
-
-db.close()
 

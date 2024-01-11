@@ -1,22 +1,17 @@
-from .models import Book, Token, db
-from peewee import fn
+from .models import Book, Token, db, model_to_dict
 from .data import DATA
 from .utils import (
     check_admin_login,
     check_admin_password,
     BOOK_REQUIRED_FIELDS,
-    date_to_str,
     message,
     standardize_search_string,
-    str_to_date,
-    today
 )
 import datetime
 from os import environ
 import pandas as pd
 from quart import Quart, request, send_file
 from quart_cors import cors
-from playhouse.shortcuts import model_to_dict
 import secrets
 
 JSON = {}
@@ -30,7 +25,6 @@ app.secret_key = environ.get('SECRET_KEY')
 
 @app.before_request
 async def connect_data():
-    db.connect()
     global JSON
     JSON = await request.get_json()
     if not JSON:
@@ -52,7 +46,6 @@ async def connect_data():
 
 @app.after_request
 async def commit_and_close_data(response):
-    db.close()
     return response
 
 
@@ -150,17 +143,20 @@ async def admin_login():
         return message('Login invalid')
     if not check_admin_password(password):
         return message('Password invalid')
-    token = secrets.token_hex(32)
-    
-    return {'token': token}
-
+    return {'token': Token.create().id}
 
 @app.post('/admin/check')
 async def admin_check():
     token = JSON.get('token', False)
     if not token:
         return message('Missing token')
-    return message(token in DATA['tokens'])
+    result = True
+    try:
+        Token.get_by_id(token)
+    except Exception as e:
+        result = False
+    return message(result)
+    
 
 
 @app.post('/get/data')
@@ -172,4 +168,5 @@ async def return_data():
 
 @app.errorhandler(500)
 async def handle_error(error):
+    db.close()
     return message(f'An error ocurred: {str(error)}'), 500
