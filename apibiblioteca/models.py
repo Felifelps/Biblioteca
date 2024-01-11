@@ -36,19 +36,3 @@ db.connect()
 
 db.create_tables([Book, Token], safe=True)
 
-'''
-import pandas
-
-dt = pandas.read_json('data.json')
-
-data = dt.to_dict()
-
-for i in data['books'].values():
-    i.update({'cdd': i['CDD']})
-    i.pop('CDD')
-    a = Book.create(**i)
-    a.save()
-    
-'''
-
-
