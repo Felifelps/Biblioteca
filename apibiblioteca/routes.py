@@ -30,10 +30,10 @@ async def connect_data():
         form = await request.form
         JSON = {key: value for key, value in form.items()}
     if request.url.split('/')[-1] in [
-            #'update',
-            #'new',
-            #'delete',
-            #'data'
+            'update',
+            'new',
+            'delete',
+            'data'
             ]:
         token_valid = JSON and JSON.get('token', False)
         token_valid = token_valid and Token.get_by_id(
