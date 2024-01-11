@@ -12,7 +12,9 @@ async def _watcher():
     print('[GETTING BOOKS FROM FIRESTORE]')
     
     for doc in DB.collection('books').stream():
-        Book.create(**doc.to_dict())
+        data = doc.to_dict()
+        data.pop('id')
+        Book.create(**data)
         
     print('[BOOKS GOT]')
 
