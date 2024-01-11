@@ -1,4 +1,4 @@
-from .models import Book, Token, model_to_dict
+from .models import db, Book, Token, model_to_dict
 from .utils import (
     check_admin_login,
     check_admin_password,
@@ -44,6 +44,7 @@ async def connect_data():
 
 @app.after_request
 async def commit_and_close_data(response):
+    db.commit()
     return response
 
 
@@ -166,4 +167,5 @@ async def return_data():
 
 @app.errorhandler(500)
 async def handle_error(error):
+    db.session_rollback()
     return message(f'An error ocurred: {str(error)}'), 500
