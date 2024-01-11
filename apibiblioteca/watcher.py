@@ -1,6 +1,6 @@
 from asyncio import new_event_loop
 from .utils import DB
-from .models import db, Token, Book, model_to_dict
+from .models import Token, Book, model_to_dict
 import requests
 from threading import Thread
 import time

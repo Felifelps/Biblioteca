@@ -1,4 +1,4 @@
-from .models import Book, Token, db, model_to_dict
+from .models import Book, Token, model_to_dict
 from .utils import (
     check_admin_login,
     check_admin_password,
