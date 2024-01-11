@@ -38,7 +38,7 @@ db.create_tables([Book, Token], safe=True)
 
 print('[GETTING BOOKS FROM FIRESTORE]')
     
-for doc in db.collection('books').stream():
+for doc in DB.collection('books').stream():
     data = doc.to_dict()
     data.pop('id')
     Book.create(**data)
