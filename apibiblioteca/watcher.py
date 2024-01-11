@@ -8,7 +8,7 @@ import time
 
 async def _watcher():
     print('[WATCHER STARTED]')
-    '''
+    
     print('[GETTING BOOKS FROM FIRESTORE]')
     
     for doc in DB.collection('books').stream():
@@ -17,7 +17,7 @@ async def _watcher():
         Book.create(**data)
         
     print('[BOOKS GOT]')
-    '''
+    
     while True:
         start = time.time()
 
@@ -31,11 +31,13 @@ async def _watcher():
         print('[UPLOADING DATA TO FIRESTORE]')
         
         books_collection = DB.collection('books')
-        i = 0
+        
         for book in Book.select():
-            print(i)
-            books_collection.document(str(book.id)).set(model_to_dict(book))
-            i += 1
+            try:
+                books_collection.document(str(book.id)).set(model_to_dict(book))
+            except Exception as e:
+                print(e)
+                break
             
         print(
             '[DATA UPLOADED TO FIRESTORE IN',
