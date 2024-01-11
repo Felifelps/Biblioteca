@@ -1,13 +1,10 @@
-from .data import DATA
+from .models import Book, Token, db, model_to_dict
 from .utils import (
     check_admin_login,
     check_admin_password,
     BOOK_REQUIRED_FIELDS,
-    date_to_str,
     message,
     standardize_search_string,
-    str_to_date,
-    today
 )
 import datetime
 from os import environ
@@ -27,21 +24,20 @@ app.secret_key = environ.get('SECRET_KEY')
 
 @app.before_request
 async def connect_data():
-    await DATA.connect()
     global JSON
     JSON = await request.get_json()
     if not JSON:
         form = await request.form
         JSON = {key: value for key, value in form.items()}
     if request.url.split('/')[-1] in [
-            'update',
-            'new',
-            'delete',
-            'data']:
+            #'update',
+            #'new',
+            #'delete',
+            #'data'
+            ]:
         token_valid = JSON and JSON.get('token', False)
-        token_valid = token_valid and DATA['tokens'].get(
-            JSON.pop('token'),
-            False
+        token_valid = token_valid and Token.get_by_id(
+            JSON.pop('token')
         )
         if not token_valid:
             return message('token invalid')
@@ -49,45 +45,40 @@ async def connect_data():
 
 @app.after_request
 async def commit_and_close_data(response):
-    await DATA.commit_and_close()
     return response
 
 
 @app.post('/books/length')
 async def books_len():
-    return {'len': len(DATA['books'])}
+    return {'len': len(Book.select())}
 
 
 @app.post('/books/page')
 async def get_book_page():
     page = JSON.get('page', False)
-    if not page or page > (len(DATA['books'])//24) + 1:
+    if not page or int(page) > (len(Book.select())//24) + 1:
         return 'Page out of the range' if page else 'Missing page parameter'
     start = (24 * (int(page) - 1))
+    result = Book.select().limit((start + 24) - start).offset(start)
     books = {}
-    book_ids = list(DATA['books'].keys())
-    book_ids.sort(key=lambda x: int(x))
-    for i in range(start, start + 24):
-        try:
-            id = book_ids[i]
-            books[id] = DATA['books'][id]
-        except Exception as e:
-            break
+    for i, data in enumerate(map(lambda x: model_to_dict(x), result)):
+        books[str(i + start + 1)] = data
     return books
 
 
 @app.post('/books/search')
 async def search_books():
-    data = {}
-    for book_id, book in DATA['books'].items():
-        for key in JSON.keys():
+    all_books = list(map(lambda x: model_to_dict(x), Book.select()))
+    for book in all_books.copy():
+        for key, search in JSON.items():
             if key not in BOOK_REQUIRED_FIELDS:
                 return f'{key} not a valid parameter'
-            search = standardize_search_string(str(JSON[key]))
-            book_value = standardize_search_string(str(book[key]))
-            if search == book_value or search in book_value:
-                data[book_id] = book
-    return data
+            search = standardize_search_string(search)
+            value = standardize_search_string(book[key])
+            if value == search or search in value:
+                continue
+            all_books.pop(all_books.index(book))
+    return all_books
 
 
 @app.post('/books/field_values')
@@ -95,15 +86,12 @@ async def books_field_values():
     field = JSON.get('field', False)
     if not field or field not in BOOK_REQUIRED_FIELDS:
         return 'Invalid field' if field else 'Missing field'
-    values = set([book[field] for book in DATA['books'].values()])
-    return {'values': list(values)}
+    values = set([getattr(book, field) for book in Book.select()])
+    return list(values)
 
 
 @app.post('/book/new')
 async def new_book():
-    quantidade = JSON.get('quantidade', '1')
-    if isinstance(quantidade, str) and not quantidade.isdigit():
-        return message('quantidade parameter must be an integer')
     missing_fields = list(
         filter(
             lambda x: x not in JSON.keys(),
@@ -111,14 +99,9 @@ async def new_book():
         )
     )
     if missing_fields == []:
-        if len(DATA['books'].keys()) == 0:
-            last_id = 1
-        else:
-            last_id = max(list(map(lambda x: int(x), DATA['books'].keys())))
-        DATA['books'].update({str(last_id + 1): JSON})
-        return message(f'Book{"" if int(quantidade) == 1 else "s"} created')
-    missing_fields.pop(0)
-    return message(f'Missing required parameters: {str(missing_fields)}')
+        print(model_to_dict(Book.create(**JSON)))
+        return message(f'Book{"" if int(JSON["quantidade"]) == 1 else "s"} created')
+    return message(f'Missing required parameters: {"".join(missing_fields)}')
 
 
 @app.post('/book/update')
@@ -126,11 +109,13 @@ async def update_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
-    book = DATA['books'].get(book_id, False)
-    if not book:
+    try:
+        book = Book.get_by_id(int(book_id))
+    except Exception as e:
         return message('Book not found')
     for key, value in JSON.items():
-        DATA['books'][str(book_id)].update({key: value})
+        exec(f"book.{key} = value")
+    book.save()
     return message('Book updated')
 
 
@@ -139,11 +124,10 @@ async def delete_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
-    book = DATA['books'].get(book_id)
-    if not book:
-        return message('Book not found')
-    DATA['books'].pop(book_id)
-    return message('Book deleted')
+    return message(
+        'Book not found' if not Book.delete_by_id(
+            int(book_id)
+        ) else 'Book deleted' )
 
 
 @app.post('/admin/login')
@@ -158,28 +142,30 @@ async def admin_login():
         return message('Login invalid')
     if not check_admin_password(password):
         return message('Password invalid')
-    token = secrets.token_hex(32)
-    DATA['tokens'][token] = date_to_str(
-        str_to_date(today()) + datetime.timedelta(days=1)
-    )
-    return {'token': token}
-
+    return {'token': Token.create().id}
 
 @app.post('/admin/check')
 async def admin_check():
     token = JSON.get('token', False)
     if not token:
         return message('Missing token')
-    return message(token in DATA['tokens'])
+    result = True
+    try:
+        Token.get_by_id(token)
+    except Exception as e:
+        result = False
+    return message(result)
+    
 
 
 @app.post('/get/data')
 async def return_data():
-    df = pd.DataFrame(data=DATA['books'])
-    df.T.to_excel('livros.xlsx', index=True)
+    df = pd.DataFrame(data=[model_to_dict(book) for book in Book.select()])
+    df.to_excel('livros.xlsx', index=True)
     return await send_file('livros.xlsx', as_attachment=True)
 
 
 @app.errorhandler(500)
 async def handle_error(error):
+    db.close()
     return message(f'An error ocurred: {str(error)}'), 500

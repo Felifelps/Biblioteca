@@ -25,24 +25,6 @@ initialize_app(
 DB = firestore.client()
 
 
-def today():
-    return datetime.datetime.today().strftime('%d/%m/%y às %H:%M:%S')
-
-
-def date_to_str(date):
-    return date.strftime('%d/%m/%y às %H:%M:%S')
-
-
-def str_to_date(str):
-    return datetime.datetime.strptime(str, '%d/%m/%y às %H:%M:%S')
-
-
-def get_today_minus_date_days(date):
-    today_date = datetime.datetime.today()
-    date = datetime.datetime.strptime(date, '%d/%m/%y às %H:%M:%S')
-    return (today_date - date).days
-
-
 def check_admin_login(login: str) -> bool:
     return checkpw(
         bytes(
@@ -86,7 +68,7 @@ BOOK_REQUIRED_FIELDS = [
     'autor',
     'editora',
     'edicao',
-    'CDD',
+    'cdd',
     'assuntos',
     'estante',
     'prateleira',
