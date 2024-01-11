@@ -1,6 +1,7 @@
 from peewee import SqliteDatabase, Model, CharField, IntegerField, DateField
 from playhouse.shortcuts import model_to_dict
 import secrets, datetime
+from .utils import DB
 
 db = SqliteDatabase('database.db')
 
@@ -34,3 +35,12 @@ class Token(Model):
             Token.delete_by_id(self.id)
 
 db.create_tables([Book, Token], safe=True)
+
+print('[GETTING BOOKS FROM FIRESTORE]')
+    
+for doc in db.collection('books').stream():
+    data = doc.to_dict()
+    data.pop('id')
+    Book.create(**data)
+    
+print('[BOOKS GOT]')
