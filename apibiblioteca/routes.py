@@ -11,7 +11,6 @@ from os import environ
 import pandas as pd
 from quart import Quart, request, send_file
 from quart_cors import cors
-import secrets
 
 JSON = {}
 
@@ -167,5 +166,4 @@ async def return_data():
 
 @app.errorhandler(500)
 async def handle_error(error):
-    db.close()
     return message(f'An error ocurred: {str(error)}'), 500

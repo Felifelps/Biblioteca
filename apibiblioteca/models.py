@@ -30,7 +30,6 @@ class Token(Model):
     def validate(self):
         today = datetime.datetime.today()
         diff = today - self.date
-        print(diff.days)
         if diff.days != 0:
             Token.delete_by_id(self.id)
 
