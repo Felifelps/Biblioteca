@@ -35,5 +35,3 @@ class Token(Model):
             Token.delete_by_id(self.id)
 
 db.create_tables([Book, Token], safe=True)
-
-
