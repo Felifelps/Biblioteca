@@ -9,6 +9,15 @@ import time, datetime
 async def _watcher():
     print('[WATCHER STARTED]')
     
+    print('[GETTING BOOKS FROM FIRESTORE]')
+    
+    for doc in DB.collection('books').stream():
+        data = doc.to_dict()
+        data.pop('id')
+        Book.create(**data)
+        
+    print('[BOOKS GOT]')
+    
     while True:
         print('[AUTOREQUESTING]')
         response = requests.post(

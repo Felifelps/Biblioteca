@@ -35,12 +35,3 @@ class Token(Model):
             Token.delete_by_id(self.id)
 
 db.create_tables([Book, Token], safe=True)
-
-print('[GETTING BOOKS FROM FIRESTORE]')
-    
-for doc in DB.collection('books').stream():
-    data = doc.to_dict()
-    data.pop('id')
-    Book.create(**data)
-    
-print('[BOOKS GOT]')
