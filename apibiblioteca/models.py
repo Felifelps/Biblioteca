@@ -4,6 +4,8 @@ import secrets, datetime
 
 db = SqliteDatabase('database.db')
 
+db.connect()
+
 class Book(Model):
     cdd = CharField()
     assuntos = CharField()
@@ -31,8 +33,6 @@ class Token(Model):
         print(diff.days)
         if diff.days != 0:
             Token.delete_by_id(self.id)
-        
-db.connect()
 
 db.create_tables([Book, Token], safe=True)
 
