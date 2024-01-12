@@ -26,7 +26,7 @@ async def _watcher():
         print('[REQUEST DONE]', response.status_code)
         time.sleep(900)
         
-        if datetime.datetime.now().hour == 11:
+        if datetime.datetime.now().hour == 0:
             
             db.commit()
             
