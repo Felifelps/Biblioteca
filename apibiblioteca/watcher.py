@@ -11,6 +11,8 @@ async def _watcher():
     print('[GETTING BOOKS FROM FIRESTORE]')
 
     books = [book.to_dict() for book in DB.collection('books').stream()]
+    
+    books.sort(key=lambda x: x.pop('id'))
 
     for book in books:
         Book.create(**book)
