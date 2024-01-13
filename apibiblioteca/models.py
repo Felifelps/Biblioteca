@@ -1,13 +1,13 @@
 from peewee import SqliteDatabase, Model, CharField, IntegerField, DateField
 from playhouse.shortcuts import model_to_dict
 import secrets, datetime
-from .utils import DB
 
 db = SqliteDatabase('database.db')
 
 db.connect()
 
 class Book(Model):
+    id = IntegerField(primary_key=True, default=lambda: len(Book.select()) + 1, unique=True)
     cdd = CharField()
     assuntos = CharField()
     autor = CharField()
