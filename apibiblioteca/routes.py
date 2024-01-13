@@ -15,7 +15,7 @@ from flask_cors import CORS
 JSON = {}
 
 app = Flask('Biblioteca')
-app = CORS(app, allow_origin='https://bibliotecamilagres.netlify.app')
+CORS(app, resources={r"/api/*": {"origins": 'https://bibliotecamilagres.netlify.app'}})
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
