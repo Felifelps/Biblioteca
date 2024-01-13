@@ -7,7 +7,7 @@ db = SqliteDatabase('database.db')
 db.connect()
 
 class Book(Model):
-    id = IntegerField(primary_key=True, default=lambda: len(Book.select()) + 1, unique=True)
+    id = IntegerField(primary_key=True, unique=True)
     cdd = CharField()
     assuntos = CharField()
     autor = CharField()
