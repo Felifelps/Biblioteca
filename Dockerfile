@@ -12,6 +12,3 @@ COPY . .
 
 #Expose the server port
 EXPOSE 8080
-
-#Starts the server
-CMD ["hypercorn", "app:app", "--bind", "0.0.0.0:8080", "--workers", "1"]
