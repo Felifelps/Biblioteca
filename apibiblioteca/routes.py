@@ -16,7 +16,7 @@ JSON = {}
 
 app = Quart('Biblioteca')
 app = cors(app, allow_origin=['https://bibliotecamilagres.netlify.app',
-                            'https://bibliotecamilagres-503s.onrender.com/books'])
+                            'https://bibliotecamilagres-xll1.onrender.com'])
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
