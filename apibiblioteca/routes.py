@@ -10,12 +10,12 @@ import datetime
 from os import environ
 import pandas as pd
 from flask import Flask, request, send_file
-from flask_cors import cors
+from flask_cors import CORS
 
 JSON = {}
 
 app = Flask('Biblioteca')
-app = cors(app, allow_origin='https://bibliotecamilagres.netlify.app')
+app = CORS(app, allow_origin='https://bibliotecamilagres.netlify.app')
 
 app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
