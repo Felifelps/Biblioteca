@@ -75,7 +75,7 @@ async def get_book_page():
     start = (24 * (int(page) - 1))
     result = Book.select().limit((start + 24) - start).offset(start)
     books = {}
-    for i, data in enumerate(map(lambda x: model_to_dict(x), result)):
+    for i, data in enumerate(map(model_to_dict, result)):
         books[str(i + start + 1)] = data
     return books
 
@@ -83,7 +83,7 @@ async def get_book_page():
 @app.post('/books/search')
 async def search_books():
     """ Search for books in the database based on the provided parameters. """
-    all_books = list(map(lambda x: model_to_dict(x), Book.select()))
+    all_books = list(map(model_to_dict, Book.select()))
     for book in all_books.copy():
         for key, search in app.JSON.items():
             if key not in BOOK_REQUIRED_FIELDS:
@@ -116,8 +116,8 @@ async def new_book():
         )
     )
     if missing_fields == []:
-        print(model_to_dict(Book.create(**JSON)))
-        message_s = "" if int(JSON["quantidade"]) == 1 else "s"
+        print(model_to_dict(Book.create(**app.JSON)))
+        message_s = "" if int(app.JSON["quantidade"]) == 1 else "s"
         return message(f'Book{message_s} created')
     return message(f'Missing required parameters: {"".join(missing_fields)}')
 
