@@ -47,9 +47,6 @@ async def _watcher():
     # Fetching books data from Firestore
     books = [book.to_dict() for book in DB.collection('books').stream()]
 
-    # Sorting books by their IDs
-    books.sort(key=lambda x: x.pop('id'))
-
     # Loop through each book
     for book in books:
         # Create a new book record in the local SQLite database
