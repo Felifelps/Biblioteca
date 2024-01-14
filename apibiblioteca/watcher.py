@@ -26,6 +26,7 @@ the loop as a daemon thread.
 from asyncio import new_event_loop
 from threading import Thread
 import datetime
+import requests
 import time
 from playhouse.shortcuts import model_to_dict
 from .utils import DB
@@ -58,8 +59,17 @@ async def _watcher():
 
     # Infinite loop
     while True:
-        # Wait for 1 hour
-        time.sleep(3600)
+        # Auto requests every 15 minutes
+        # Totalizing 1 hour
+        for i in range(4):
+            print('[REQUESTING]')
+            response = requests.post(
+                'https://bibliotecamilagres-xll1.onrender.com/books/length',
+                data={},
+                timeout=1000
+            )
+            print('[REQUESTED', response.status_code, ']')
+            time.sleep(900)
 
         # If the hour is 0
         if datetime.datetime.now().hour == 0:
