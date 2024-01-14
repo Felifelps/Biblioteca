@@ -1,5 +1,3 @@
-.venv
-
 .vscode
 
 .credentials
@@ -7,7 +5,3 @@
 __pycache__
 
 .env
-
-temp
-
-docs
