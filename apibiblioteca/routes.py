@@ -6,7 +6,6 @@ from .utils import (
     message,
     standardize_search_string,
 )
-import datetime
 from os import environ
 import pandas as pd
 from flask import Flask, request, send_file
@@ -15,7 +14,6 @@ JSON = {}
 
 app = Flask('Biblioteca')
 
-app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
 
 
