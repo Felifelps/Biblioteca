@@ -8,11 +8,13 @@ from .utils import (
 )
 from os import environ
 import pandas as pd
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
+from flask_cors import CORS
 
 JSON = {}
 
 app = Flask('Biblioteca')
+cors = CORS(app, resources={r"*": {"origins": "https://bibliotecamilagres.netlify.app"}})
 
 app.secret_key = environ.get('SECRET_KEY')
 
@@ -35,7 +37,7 @@ def connect_data():
             JSON.pop('token')
         )
         if not token_valid:
-            return message('token invalid')
+            return jsonify(message('token invalid'))
 
 
 @app.after_request
@@ -46,20 +48,20 @@ def commit_and_close_data(response):
 
 @app.post('/books/length')
 def books_len():
-    return {'len': len(Book.select())}
+    return jsonify({'len': len(Book.select())})
 
 
 @app.post('/books/page')
 def get_book_page():
     page = JSON.get('page', False)
     if not page or int(page) > (len(Book.select())//24) + 1:
-        return 'Page out of the range' if page else 'Missing page parameter'
+        return jsonify('Page out of the range' if page else 'Missing page parameter')
     start = (24 * (int(page) - 1))
     result = Book.select().limit((start + 24) - start).offset(start)
     books = {}
     for i, data in enumerate(map(lambda x: model_to_dict(x), result)):
         books[str(i + start + 1)] = data
-    return books
+    return jsonify(books)
 
 
 @app.post('/books/search')
@@ -68,22 +70,22 @@ def search_books():
     for book in all_books.copy():
         for key, search in JSON.items():
             if key not in BOOK_REQUIRED_FIELDS:
-                return f'{key} not a valid parameter'
+                return jsonify(f'{key} not a valid parameter')
             search = standardize_search_string(search)
             value = standardize_search_string(book[key])
             if value == search or search in value:
                 continue
             all_books.pop(all_books.index(book))
-    return all_books
+    return jsonify(all_books)
 
 
 @app.post('/books/field_values')
 def books_field_values():
     field = JSON.get('field', False)
     if not field or field not in BOOK_REQUIRED_FIELDS:
-        return 'Invalid field' if field else 'Missing field'
+        return jsonify('Invalid field' if field else 'Missing field')
     values = set([getattr(book, field) for book in Book.select()])
-    return list(values)
+    return jsonify(list(values))
 
 
 @app.post('/book/new')
@@ -96,61 +98,59 @@ def new_book():
     )
     if missing_fields == []:
         print(model_to_dict(Book.create(**JSON)))
-        return message(f'Book{"" if int(JSON["quantidade"]) == 1 else "s"} created')
-    return message(f'Missing required parameters: {"".join(missing_fields)}')
+        return jsonify(message(f'Book{"" if int(JSON["quantidade"]) == 1 else "s"} created'))
+    return jsonify(message(f'Missing required parameters: {"".join(missing_fields)}'))
 
 
 @app.post('/book/update')
 def update_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
-        return message('Missing book_id')
+        return jsonify(message('Missing book_id'))
     try:
         book = Book.get_by_id(int(book_id))
     except Exception as e:
-        return message('Book not found')
+        return jsonify(message('Book not found'))
     for key, value in JSON.items():
         exec(f"book.{key} = value")
     book.save()
-    return message('Book updated')
+    return jsonify(message('Book updated'))
 
 
 @app.post('/book/delete')
 def delete_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
-        return message('Missing book_id')
-    return message(
-        'Book not found' if not Book.delete_by_id(
-            int(book_id)
-        ) else 'Book deleted' )
+        return jsonify(message('Missing book_id'))
+    message_text = 'Book not found' if not Book.delete_by_id(int(book_id)) else 'Book deleted'
+    return jsonify(message(message_text))
 
 
 @app.post('/admin/login')
 def admin_login():
     login = JSON.get('login', False)
     if not login:
-        return message('Missing login')
+        return jsonify(message('Missing login'))
     password = JSON.get('password', False)
     if not password:
-        return message('Missing password')
+        return jsonify(message('Missing password'))
     if not check_admin_login(login):
-        return message('Login invalid')
+        return jsonify(message('Login invalid'))
     if not check_admin_password(password):
-        return message('Password invalid')
-    return {'token': Token.create().id}
+        return jsonify(message('Password invalid'))
+    return jsonify({'token': Token.create().id})
 
 @app.post('/admin/check')
 def admin_check():
     token = JSON.get('token', False)
     if not token:
-        return message('Missing token')
+        return jsonify(message('Missing token'))
     result = True
     try:
         Token.get_by_id(token)
     except Exception as e:
         result = False
-    return message(result)
+    return jsonify(message(result))
     
 
 
@@ -164,4 +164,4 @@ def return_data():
 @app.errorhandler(500)
 def handle_error(error):
     db.session_rollback()
-    return message(f'An error ocurred: {str(error)}'), 500
+    return jsonify(message(f'An error ocurred: {str(error)}'), 500)
