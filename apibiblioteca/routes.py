@@ -43,11 +43,13 @@ async def connect_data():
             'delete',
             'data'
             ]:
-        token_valid = app.JSON and app.JSON.get('token', False)
-        token_valid = token_valid and Token.get_by_id(
-            app.JSON.pop('token')
-        )
-        if not token_valid:
+        try:
+            if not (app.JSON and app.JSON.get('token', False)):
+                raise Exception('Not valid!')
+            Token.get_by_id(
+                app.JSON.pop('token')
+            )
+        except Exception as e:
             return message('token invalid')
 
 
