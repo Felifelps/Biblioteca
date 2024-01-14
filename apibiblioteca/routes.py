@@ -6,7 +6,6 @@ from .utils import (
     message,
     standardize_search_string,
 )
-import datetime
 from os import environ
 import pandas as pd
 from quart import Quart, request, send_file
@@ -17,26 +16,25 @@ JSON = {}
 app = Quart('Biblioteca')
 app = cors(app, allow_origin='https://bibliotecamilagres.netlify.app')
 
-app.config["EXPLAIN_TEMPLATE_LOADING"] = False
 app.secret_key = environ.get('SECRET_KEY')
+app.JSON = {}
 
 
 @app.before_request
 async def connect_data():
-    global JSON
-    JSON = await request.get_json()
-    if not JSON:
+    app.JSON = await request.get_json()
+    if not app.JSON:
         form = await request.form
-        JSON = {key: value for key, value in form.items()}
+        app.JSON = dict(form.items())
     if request.url.split('/')[-1] in [
             'update',
             'new',
             'delete',
             'data'
             ]:
-        token_valid = JSON and JSON.get('token', False)
+        token_valid = app.JSON and app.JSON.get('token', False)
         token_valid = token_valid and Token.get_by_id(
-            JSON.pop('token')
+            app.JSON.pop('token')
         )
         if not token_valid:
             return message('token invalid')
@@ -55,7 +53,7 @@ async def books_len():
 
 @app.post('/books/page')
 async def get_book_page():
-    page = JSON.get('page', False)
+    page = app.JSON.get('page', False)
     if not page or int(page) > (len(Book.select())//24) + 1:
         return 'Page out of the range' if page else 'Missing page parameter'
     start = (24 * (int(page) - 1))
@@ -70,7 +68,7 @@ async def get_book_page():
 async def search_books():
     all_books = list(map(lambda x: model_to_dict(x), Book.select()))
     for book in all_books.copy():
-        for key, search in JSON.items():
+        for key, search in app.JSON.items():
             if key not in BOOK_REQUIRED_FIELDS:
                 return f'{key} not a valid parameter'
             search = standardize_search_string(search)
@@ -83,7 +81,7 @@ async def search_books():
 
 @app.post('/books/field_values')
 async def books_field_values():
-    field = JSON.get('field', False)
+    field = app.JSON.get('field', False)
     if not field or field not in BOOK_REQUIRED_FIELDS:
         return 'Invalid field' if field else 'Missing field'
     values = set([getattr(book, field) for book in Book.select()])
@@ -94,7 +92,7 @@ async def books_field_values():
 async def new_book():
     missing_fields = list(
         filter(
-            lambda x: x not in JSON.keys(),
+            lambda x: x not in app.JSON.keys(),
             BOOK_REQUIRED_FIELDS
         )
     )
@@ -106,14 +104,14 @@ async def new_book():
 
 @app.post('/book/update')
 async def update_book():
-    book_id = JSON.pop('book_id', False)
+    book_id = app.JSON.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
     try:
         book = Book.get_by_id(int(book_id))
     except Exception as e:
         return message('Book not found')
-    for key, value in JSON.items():
+    for key, value in app.JSON.items():
         exec(f"book.{key} = value")
     book.save()
     return message('Book updated')
@@ -121,7 +119,7 @@ async def update_book():
 
 @app.post('/book/delete')
 async def delete_book():
-    book_id = JSON.pop('book_id', False)
+    book_id = app.JSON.pop('book_id', False)
     if not book_id:
         return message('Missing book_id')
     return message(
@@ -132,10 +130,10 @@ async def delete_book():
 
 @app.post('/admin/login')
 async def admin_login():
-    login = JSON.get('login', False)
+    login = app.JSON.get('login', False)
     if not login:
         return message('Missing login')
-    password = JSON.get('password', False)
+    password = app.JSON.get('password', False)
     if not password:
         return message('Missing password')
     if not check_admin_login(login):
@@ -146,7 +144,7 @@ async def admin_login():
 
 @app.post('/admin/check')
 async def admin_check():
-    token = JSON.get('token', False)
+    token = app.JSON.get('token', False)
     if not token:
         return message('Missing token')
     result = True
