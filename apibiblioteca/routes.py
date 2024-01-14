@@ -46,12 +46,12 @@ def commit_and_close_data(response):
     return response
 
 
-@app.post('/books/length')
+@app.route('/books/length', methods=['POST', 'OPTIONS'])
 def books_len():
     return {'len': len(Book.select())}
 
 
-@app.post('/books/page')
+@app.route('/books/page', methods=['POST', 'OPTIONS'])
 def get_book_page():
     page = JSON.get('page', False)
     if not page or int(page) > (len(Book.select())//24) + 1:
@@ -64,7 +64,7 @@ def get_book_page():
     return books
 
 
-@app.post('/books/search')
+@app.route('/books/search', methods=['POST', 'OPTIONS'])
 def search_books():
     all_books = list(map(lambda x: model_to_dict(x), Book.select()))
     for book in all_books.copy():
@@ -79,7 +79,7 @@ def search_books():
     return all_books
 
 
-@app.post('/books/field_values')
+@app.route('/books/field_values', methods=['POST', 'OPTIONS'])
 def books_field_values():
     field = JSON.get('field', False)
     if not field or field not in BOOK_REQUIRED_FIELDS:
@@ -88,7 +88,7 @@ def books_field_values():
     return list(values)
 
 
-@app.post('/book/new')
+@app.route('/book/new', methods=['POST', 'OPTIONS'])
 def new_book():
     missing_fields = list(
         filter(
@@ -102,7 +102,7 @@ def new_book():
     return message(f'Missing required parameters: {"".join(missing_fields)}')
 
 
-@app.post('/book/update')
+@app.route('/book/update', methods=['POST', 'OPTIONS'])
 def update_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
@@ -117,7 +117,7 @@ def update_book():
     return message('Book updated')
 
 
-@app.post('/book/delete')
+@app.route('/book/delete', methods=['POST', 'OPTIONS'])
 def delete_book():
     book_id = JSON.pop('book_id', False)
     if not book_id:
@@ -126,7 +126,7 @@ def delete_book():
     return message(message_text)
 
 
-@app.post('/admin/login')
+@app.route('/admin/login', methods=['POST', 'OPTIONS'])
 def admin_login():
     login = JSON.get('login', False)
     if not login:
@@ -140,7 +140,7 @@ def admin_login():
         return message('Password invalid')
     return {'token': Token.create().id}
 
-@app.post('/admin/check')
+@app.route('/admin/check', methods=['POST', 'OPTIONS'])
 def admin_check():
     token = JSON.get('token', False)
     if not token:
@@ -154,7 +154,7 @@ def admin_check():
 
 
 
-@app.post('/get/data')
+@app.route('/get/data', methods=['POST', 'OPTIONS'])
 def return_data():
     df = pd.DataFrame(data=[model_to_dict(book) for book in Book.select()])
     df.to_excel('livros.xlsx', index=True)
