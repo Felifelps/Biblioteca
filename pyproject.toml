@@ -5,7 +5,7 @@ description = "A Quart API for Biblioteca Municipal de Milagres - CE"
 authors = ["Felifelps <felipefelipe23456@gmail.com>"]
 readme = "README.md"
 
-[tool.poetry.dependencies]s
+[tool.poetry.dependencies]
 python = "^3.9"
 firebase-admin = "^6.2.0"
 bcrypt = "^4.0.1"
