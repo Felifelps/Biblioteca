@@ -1,4 +1,4 @@
-# Apibiblioteca
+# Biblioteca API
 
 Quart API for the Municipal Library of Milagres - CE
 
