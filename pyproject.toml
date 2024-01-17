@@ -19,6 +19,7 @@ quart-cors = "^0.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pycodestyle = "^2.11.1"
+pytest-asyncio = "^0.23.3"
 
 [build-system]
 requires = ["poetry-core"]

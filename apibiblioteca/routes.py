@@ -71,7 +71,8 @@ async def get_book_page():
     """ Return a page of books from the database. """
     page = app.JSON.get('page', False)
     if not page or int(page) > (len(Book.select())//24) + 1:
-        return 'Page out of the range' if page else 'Missing page parameter'
+        msg = 'Page out of the range' if page else 'Missing page parameter'
+        return message(msg)
     start = (24 * (int(page) - 1))
     result = Book.select().limit((start + 24) - start).offset(start)
     books = {}
@@ -87,7 +88,7 @@ async def search_books():
     for book in all_books.copy():
         for key, search in app.JSON.items():
             if key not in BOOK_REQUIRED_FIELDS:
-                return f'{key} not a valid parameter'
+                return message(f'{key} is not a valid parameter')
             search = standardize_search_string(search)
             value = standardize_search_string(book[key])
             if value == search or search in value:
@@ -101,7 +102,8 @@ async def books_field_values():
     """ Return the unique values for a given field in the books table. """
     field = app.JSON.get('field', False)
     if not field or field not in BOOK_REQUIRED_FIELDS:
-        return 'Invalid field' if field else 'Missing field'
+        msg = 'Invalid field' if field else 'Missing field'
+        return message(msg)
     values = set([getattr(book, field) for book in Book.select()])
     return list(values)
 
@@ -116,7 +118,6 @@ async def new_book():
         )
     )
     if missing_fields == []:
-        print(model_to_dict(Book.create(**app.JSON)))
         message_s = "" if int(app.JSON["quantidade"]) == 1 else "s"
         return message(f'Book{message_s} created')
     return message(f'Missing required parameters: {"".join(missing_fields)}')

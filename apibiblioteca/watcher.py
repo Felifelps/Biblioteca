@@ -26,8 +26,8 @@ the loop as a daemon thread.
 from asyncio import new_event_loop
 from threading import Thread
 import datetime
-import requests
 import time
+import requests
 from playhouse.shortcuts import model_to_dict
 from .utils import DB
 from .models import (
@@ -40,19 +40,26 @@ async def _watcher():
     """
     Asynchronous function that contains the main logic of the watcher script
     """
+
     print('[WATCHER STARTED]')
 
-    print('[GETTING BOOKS FROM FIRESTORE]')
+    print(len(list(Book.select())))
 
-    # Fetching books data from Firestore
-    books = [book.to_dict() for book in DB.collection('books').stream()]
+    
+    # Checks if the database is empty
+    if len(list(Book.select())) == 0:
 
-    # Loop through each book
-    for book in books:
-        # Create a new book record in the local SQLite database
-        Book.create(**book)
+        print('[GETTING BOOKS FROM FIRESTORE]')
 
-    print('[BOOKS GOT]')
+        # Fetching books data from Firestore
+        books = [book.to_dict() for book in DB.collection('books').stream()]
+
+        # Loop through each book
+        for book in books:
+            # Create a new book record in the local SQLite database
+            Book.create(**book)
+
+        print('[BOOKS GOT]')
 
     # Infinite loop
     while True:
