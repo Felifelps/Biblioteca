@@ -63,9 +63,9 @@ async def _watcher():
 
     # Infinite loop
     while True:
-        # Auto requests every 15 minutes
+        # Auto requests every 10 minutes
         # Totalizing 1 hour
-        for i in range(4):
+        for i in range(6):
             print('[REQUESTING]')
             response = requests.post(
                 'https://bibliotecamilagres-xll1.onrender.com/books/length',
@@ -73,7 +73,7 @@ async def _watcher():
                 timeout=1000
             )
             print('[REQUESTED', response.status_code, ']')
-            time.sleep(900)
+            time.sleep(600)
 
         # If the hour is 0
         if datetime.datetime.now().hour == 0:
