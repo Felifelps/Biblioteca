@@ -119,6 +119,7 @@ async def new_book():
     )
     if missing_fields == []:
         message_s = "" if int(app.JSON["quantidade"]) == 1 else "s"
+        Book.create(**app.JSON)
         return message(f'Book{message_s} created')
     return message(f'Missing required parameters: {"".join(missing_fields)}')
 
