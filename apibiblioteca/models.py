@@ -6,8 +6,9 @@ and a function to validate the token.
 
 """
 
-import secrets
 import datetime
+import secrets
+import os
 from peewee import (
     SqliteDatabase,
     Model,
@@ -15,6 +16,8 @@ from peewee import (
     IntegerField,
     DateField
 )
+
+DATABASE_WAS_ALERADY_CREATED = os.path.exists('database.db')
 
 db = SqliteDatabase('database.db')
 

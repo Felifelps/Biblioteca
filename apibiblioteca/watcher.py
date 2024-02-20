@@ -26,14 +26,14 @@ the loop as a daemon thread.
 from asyncio import new_event_loop
 from threading import Thread
 import datetime
-import os
 import time
 import requests
 from playhouse.shortcuts import model_to_dict
 from .utils import DB
 from .models import (
     Token,
-    Book
+    Book,
+    DATABASE_WAS_ALERADY_CREATED
 )
 
 
@@ -44,7 +44,7 @@ async def _watcher():
 
     print('[WATCHER STARTED]')
 
-    if not os.path.exists("database.db"):
+    if not DATABASE_WAS_ALERADY_CREATED:
 
         print(len(list(Book.select())))
 
