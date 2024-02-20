@@ -14,7 +14,7 @@ from peewee import (
     Model,
     CharField,
     IntegerField,
-    DateField
+    DateTimeField
 )
 
 DATABASE_WAS_ALERADY_CREATED = os.path.exists('database.db')
@@ -95,7 +95,7 @@ class Token(Model):
         default=lambda: secrets.token_hex(16),
         unique=True
     )
-    date = DateField(default=datetime.datetime.today)
+    date = DateTimeField(default=datetime.datetime.today)
 
     class Meta:
         """

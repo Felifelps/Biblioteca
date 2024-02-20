@@ -74,7 +74,7 @@ async def _watcher():
                 data={},
                 timeout=1000
             )
-            print('[REQUESTED', response.status_code, ']')
+            print(f'[REQUESTED {response.status_code}]')
             time.sleep(600)
 
         # If the hour is 0
@@ -94,11 +94,13 @@ async def _watcher():
             print('[UPLOADING DATA TO FIRESTORE]')
 
             # Get the books collection from Firestore
+
             books_collection = DB.collection('books')
 
-            # Loop through each book in the local SQLite database
+            books = {book.id: book.to_dict() for book in books_collection.get()}
+
+            # Updates all the books
             for book in Book.select():
-                print(book.id)
                 try:
                     # Upload the book data to Firestore
                     books_collection.document(
@@ -107,6 +109,16 @@ async def _watcher():
                 except Exception as e:
                     print(e)
                     break
+
+            # Delete books
+            for book_id in books:
+                try:
+                    Book.get_by_id(str(book_id))
+                except Exception as e:
+                    print(e)
+                    books_collection.document(
+                        str(book_id)
+                    ).delete()
 
             message = (
                 '[DATA UPLOADED TO FIRESTORE IN',
