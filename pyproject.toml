@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-firebase-admin = "^6.2.0"
 bcrypt = "^4.0.1"
 python-dotenv = "^1.0.0"
 pandas = "^2.1.3"
@@ -16,6 +15,9 @@ peewee = "^3.17.0"
 gunicorn = "^21.2.0"
 quart = "^0.19.4"
 quart-cors = "^0.7.0"
+psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.9.9"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pycodestyle = "^2.11.1"

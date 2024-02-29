@@ -1,13 +1,6 @@
-""" This module contains the watcher script which is responsible for:
-
-- Periodically fetching books data from a Firestore database and
-storing it in a local SQLite database.
-
-- Validating and updating token records in the
-local SQLite database.
-
-- Uploading the latest books data from the local SQLite
-database to the Firestore database.
+""" This module contains the 'watcher' function, which is 
+responsible for validating tokens daily and for making 
+requests to the API.
 
 The watcher script runs as a daemon thread and is started by
 invoking the watcher() function.
@@ -28,13 +21,7 @@ from threading import Thread
 import datetime
 import time
 import requests
-from playhouse.shortcuts import model_to_dict
-from .utils import DB
-from .models import (
-    Token,
-    Book,
-    DATABASE_WAS_ALERADY_CREATED
-)
+from .models import Token
 
 
 async def _watcher():
@@ -44,30 +31,12 @@ async def _watcher():
 
     print('[WATCHER STARTED]')
 
-    if not DATABASE_WAS_ALERADY_CREATED:
-
-        print(len(list(Book.select())))
-
-        # Checks if the database is empty
-        if len(list(Book.select())) == 0:
-
-            print('[GETTING BOOKS FROM FIRESTORE]')
-
-            # Fetching books data from Firestore
-            books = [book.to_dict() for book in DB.collection('books').stream()]
-
-            # Loop through each book
-            for book in books:
-                # Create a new book record in the local SQLite database
-                Book.create(**book)
-
-            print('[BOOKS GOT]')
-
     # Infinite loop
     while True:
         # Auto requests every 10 minutes
         # Totalizing 1 hour
-        for i in range(6):
+        counter = 0
+        while counter < 6:
             print('[REQUESTING]')
             response = requests.post(
                 'https://bibliotecamilagres-xll1.onrender.com/books/length',
@@ -76,6 +45,7 @@ async def _watcher():
             )
             print(f'[REQUESTED {response.status_code}]')
             time.sleep(600)
+            counter += 1
 
         # If the hour is 0
         if datetime.datetime.now().hour == 0:
@@ -87,47 +57,6 @@ async def _watcher():
                 token.validate()
 
             print('[TOKENS UPDATED]')
-
-            # Measure the time taken to upload the data to Firestore
-            start = time.time()
-
-            print('[UPLOADING DATA TO FIRESTORE]')
-
-            # Get the books collection from Firestore
-
-            books_collection = DB.collection('books')
-
-            books = {book.id: book.to_dict() for book in books_collection.get()}
-
-            # Updates all the books
-            for book in Book.select():
-                try:
-                    # Upload the book data to Firestore
-                    books_collection.document(
-                        str(book.id)
-                    ).set(model_to_dict(book))
-                except Exception as e:
-                    print(e)
-                    break
-
-            # Delete books
-            for book_id in books:
-                try:
-                    Book.get_by_id(str(book_id))
-                except Exception as e:
-                    print(e)
-                    books_collection.document(
-                        str(book_id)
-                    ).delete()
-
-            message = (
-                '[DATA UPLOADED TO FIRESTORE IN',
-                str(time.time() - start)[:4],
-                'SECONDS]'
-            )
-
-            print(*message)
-
 
 def watcher():
     """

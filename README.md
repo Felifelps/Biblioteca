@@ -4,7 +4,7 @@ Quart API for the Municipal Library of Milagres - CE
 
 ## 📝 Description
 
-This API, developed using [Quart](https://pgjones.gitlab.io/quart/) (an asynchronous web framework for Flask), provides functionalities to interact with the Municipal Library of Milagres - CE. It utilizes [Firebase](https://firebase.google.com/) for data storage, [Peewee ORM](http://docs.peewee-orm.com/) for database interaction, and includes features such as administrator authentication, manipulation of book data, and export to Excel. The project is managed and packaged with [Poetry](https://python-poetry.org/), a Python dependency management tool.
+This API, developed using [Quart](https://pgjones.gitlab.io/quart/) (an asynchronous web framework for Flask), provides functionalities to interact with the Municipal Library of Milagres - CE. It utilizes the [Render](https://render.com/) platform for hosting and data storage, [Peewee ORM](http://docs.peewee-orm.com/) for database interaction, and includes features such as administrator authentication, manipulation of book data, and export to Excel. The project is managed and packaged with [Poetry](https://python-poetry.org/), a Python dependency management tool.
 
 ## 🌐 Website and Hosting
 
@@ -26,6 +26,5 @@ The frontend using this API is available at [Biblioteca Milagres](https://biblio
 ## 🚀 Technologies Used
 
 - [Quart](https://pgjones.gitlab.io/quart/) (Asynchronous web framework for Flask) 🌐
-- [Firebase](https://firebase.google.com/) (Data Storage) 🔥
 - [Peewee ORM](http://docs.peewee-orm.com/) (Database Interaction) 🗃️
 - [Poetry](https://python-poetry.org/) (Dependency Management) 📦

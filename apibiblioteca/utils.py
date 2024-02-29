@@ -1,5 +1,4 @@
-"""This module contains various utility functions for working
-with a Firestore database.
+"""This module contains various utility functions for the project.
 
 Functions:
 - check_admin_login: checks if the given login matches
@@ -17,39 +16,32 @@ document in the Firestore database
 
 """
 
-from os import environ
+import os
 import unicodedata
+
 from bcrypt import checkpw
 from dotenv import load_dotenv
-from firebase_admin import (
-    credentials,
-    firestore,
-    initialize_app
-)
-
 
 # Load environment variables
 load_dotenv()
 
-# Extract and format Firebase credentials from environment variables
-cred = {}
-for key, value in environ.items():
-    if 'FIREBASE' in key:
-        cred[key.replace('FIREBASE_', '').lower()] = value.replace('\\n', '\n')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-private_key = [cred.pop(f'private_key_n_{i}') for i in range(28)]
-cred['private_key'] = '\n'.join(private_key)
+DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
 
-# Initialize Firestore database
-initialize_app(credentials.Certificate(cred))
-DB = firestore.client()
+DATABASE_USER = os.environ.get('DATABASE_USER')
 
+DATABASE_HOST = os.environ.get('DATABASE_HOST')
+
+DATABASE_PORT = os.environ.get('DATABASE_PORT')
+
+DATABASE_NAME = os.environ.get('DATABASE_NAME')
 
 def check_admin_login(login: str) -> bool:
     """Check if the given login matches the admin login."""
     return checkpw(
         bytes(login, encoding='utf-8'),
-        bytes(environ.get('ADMIN_LOGIN'), encoding='utf-8')
+        bytes(os.environ.get('ADMIN_LOGIN'), encoding='utf-8')
     )
 
 
@@ -57,7 +49,7 @@ def check_admin_password(password: str) -> bool:
     """Check if the given password matches the admin password."""
     return checkpw(
         bytes(password, encoding='utf-8'),
-        bytes(environ.get('ADMIN_PASSWORD'), encoding='utf-8')
+        bytes(os.environ.get('ADMIN_PASSWORD'), encoding='utf-8')
     )
 
 

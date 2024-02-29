@@ -8,23 +8,38 @@ and a function to validate the token.
 
 import datetime
 import secrets
-import os
 from peewee import (
-    SqliteDatabase,
+    PostgresqlDatabase,
     Model,
     CharField,
     IntegerField,
     DateTimeField
 )
 
-DATABASE_WAS_ALERADY_CREATED = os.path.exists('database.db')
-
-db = SqliteDatabase('database.db')
-
-db.connect()
+from .utils import DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD
 
 
-class Book(Model):
+
+db = PostgresqlDatabase(
+    DATABASE_NAME,
+    user=DATABASE_USER,
+    password=DATABASE_PASSWORD,
+    host=DATABASE_HOST,
+    port=DATABASE_PORT
+)
+
+
+class BaseModel(Model):
+    """
+    Base class for peewee models
+    """
+    class Meta:
+        """
+        MetaData Peewee Class
+        """
+        database = db
+
+class Book(BaseModel):
     """
     The Book model represents a book in the library and has
     the following fields:
@@ -65,14 +80,8 @@ class Book(Model):
     quantidade = IntegerField()
     titulo = CharField()
 
-    class Meta:
-        """
-        MetaData Peewee Class
-        """
-        database = db
 
-
-class Token(Model):
+class Token(BaseModel):
     """The Token model represents a token used to validate the user's
     session and has the following fields:
 
@@ -97,12 +106,6 @@ class Token(Model):
     )
     date = DateTimeField(default=datetime.datetime.today)
 
-    class Meta:
-        """
-        MetaData Peewee Class
-        """
-        database = db
-
     def validate(self):
         """
         Checks if the token is still valid by comparing
@@ -115,5 +118,7 @@ class Token(Model):
         if diff.days != 0:
             Token.delete_by_id(self.id)
 
+
+db.connect()
 
 db.create_tables([Book, Token], safe=True)
